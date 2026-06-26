@@ -1,0 +1,3340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhilSurv — Project Kickoff Template</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0D1B2A;
+    --ink2: #1C3148;
+    --paper: #F7F4EF;
+    --cream: #EDE9E1;
+    --accent: #C84B2F;
+    --accent2: #1B6CA8;
+    --gold: #B8892A;
+    --green: #2A7A4A;
+    --border: #D5CFC4;
+    --muted: #7A7268;
+    --white: #FFFFFF;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 15px; scroll-behavior: smooth; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── PRINT BUTTON ── */
+  .print-btn {
+    position: fixed; top: 18px; right: 20px; z-index: 999;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 6px;
+    padding: 8px 18px; font-size: 13px; font-family: 'Outfit', sans-serif;
+    font-weight: 500; cursor: pointer; letter-spacing: .04em;
+    transition: background .15s;
+  }
+  .print-btn:hover { background: #a33a20; }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 32px 48px 28px;
+    border-bottom: 3px solid var(--accent);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;
+    flex-wrap: wrap;
+  }
+  .masthead-left {}
+  .brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px; letter-spacing: .01em;
+    color: var(--paper);
+  }
+  .brand span { color: var(--accent); }
+  .doc-title {
+    font-size: 12px; font-weight: 500; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--muted); margin-top: 4px;
+  }
+  .masthead-meta {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px 28px;
+    font-size: 12px; color: #aaa; align-self: flex-end;
+  }
+  .masthead-meta span { font-weight: 600; color: var(--paper); }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    background: var(--ink2);
+    display: flex; gap: 0; overflow-x: auto;
+    border-bottom: 2px solid var(--accent);
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    background: transparent; border: none; color: #8FA8C0;
+    padding: 12px 20px; font-size: 12px; font-weight: 500;
+    letter-spacing: .07em; text-transform: uppercase;
+    cursor: pointer; white-space: nowrap;
+    border-bottom: 3px solid transparent; margin-bottom: -2px;
+    transition: color .15s, border-color .15s;
+    font-family: 'Outfit', sans-serif;
+  }
+  .tab-btn:hover { color: var(--paper); }
+  .tab-btn.active { color: var(--paper); border-bottom-color: var(--accent); }
+
+  /* ── MAIN CONTENT ── */
+  .main { max-width: 1100px; margin: 0 auto; padding: 32px 32px 64px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── SECTION HEADERS ── */
+  .sec-head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 22px; padding-bottom: 10px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .sec-head h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px; color: var(--ink);
+  }
+  .sec-tag {
+    font-size: 10px; font-weight: 600; letter-spacing: .12em;
+    text-transform: uppercase; background: var(--accent);
+    color: #fff; border-radius: 4px; padding: 2px 8px;
+  }
+  .sec-tag.blue { background: var(--accent2); }
+  .sec-tag.gold { background: var(--gold); }
+  .sec-tag.green { background: var(--green); }
+  .sec-note {
+    font-size: 12px; color: var(--accent); font-weight: 500;
+    background: #FDF0EC; border: 1px solid #F5C4B3;
+    border-radius: 6px; padding: 8px 14px; margin-bottom: 18px;
+  }
+
+  /* ── FORM GRID ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; }
+  .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  .form-grid.full { grid-template-columns: 1fr; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field.span2 { grid-column: span 2; }
+  .field.span3 { grid-column: span 3; }
+  label {
+    font-size: 11px; font-weight: 600; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  label .req { color: var(--accent); margin-left: 2px; }
+  input[type=text], input[type=date], input[type=number], select, textarea {
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: 6px; padding: 9px 12px; font-size: 14px;
+    color: var(--ink); font-family: 'Outfit', sans-serif;
+    transition: border-color .15s, box-shadow .15s;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none; border-color: var(--accent2);
+    box-shadow: 0 0 0 3px rgba(27,108,168,.12);
+  }
+  textarea { min-height: 72px; resize: vertical; }
+  select { cursor: pointer; }
+
+  /* ── DIVIDERS ── */
+  .sub-head {
+    font-size: 11px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--accent2);
+    margin: 24px 0 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sub-head::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ── CHECKLIST TABLE ── */
+  .check-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .check-table thead tr {
+    background: var(--ink); color: var(--paper);
+  }
+  .check-table thead th {
+    padding: 10px 12px; text-align: left; font-size: 11px;
+    font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+  }
+  .check-table tbody tr:nth-child(even) { background: var(--cream); }
+  .check-table tbody tr:hover { background: #EAF3FB; }
+  .check-table tbody td { padding: 8px 12px; vertical-align: middle; border-bottom: 1px solid var(--border); }
+  .check-table input[type=checkbox] {
+    width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); border: none; border-radius: 0; padding: 0; box-shadow: none;
+  }
+  .check-table input[type=checkbox]:focus { box-shadow: none; border-color: transparent; }
+  .check-table input[type=text] {
+    border: 1px solid var(--border); border-radius: 4px; padding: 5px 8px;
+    font-size: 12px; width: 100%; background: var(--white);
+  }
+  .row-num { color: var(--muted); font-size: 11px; font-family: 'DM Mono', monospace; min-width: 28px; }
+  .done-row td { text-decoration: line-through; color: var(--muted); }
+
+  /* ── GANTT ── */
+  .gantt-wrap { overflow-x: auto; }
+  .gantt-table { border-collapse: collapse; font-size: 12px; min-width: 900px; }
+  .gantt-table th, .gantt-table td {
+    border: 1px solid var(--border); padding: 6px 8px; white-space: nowrap;
+  }
+  .gantt-table thead { background: var(--ink); color: var(--paper); }
+  .gantt-table thead th { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
+  .gantt-table tbody tr:nth-child(even) { background: var(--cream); }
+  .gantt-bar { height: 18px; border-radius: 3px; background: var(--accent2); }
+  .gantt-progress { height: 100%; border-radius: 3px; background: var(--green); }
+  .gantt-add { margin-top: 10px; }
+
+  /* ── SUMMARY CARDS ── */
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .stat-card .s-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 6px; }
+  .stat-card .s-val { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--ink); }
+  .stat-card .s-val.red { color: var(--accent); }
+  .stat-card .s-val.blue { color: var(--accent2); }
+  .stat-card .s-val.green { color: var(--green); }
+
+  /* ── COST TABLE ── */
+  .cost-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .cost-table thead { background: var(--ink2); color: var(--paper); }
+  .cost-table thead th { padding: 9px 12px; text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+  .cost-table tbody td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  .cost-table tbody tr:hover { background: var(--cream); }
+  .cost-table tfoot { background: var(--cream); font-weight: 600; border-top: 2px solid var(--border); }
+  .cost-table tfoot td { padding: 9px 12px; }
+  .num { text-align: right; font-family: 'DM Mono', monospace; }
+  .activity-head { background: #EAF3FB !important; font-weight: 600; color: var(--accent2); font-size: 12px; }
+
+  /* ── ATTENDEES ── */
+  .attendee-list { display: flex; flex-direction: column; gap: 8px; }
+  .attendee-row { display: grid; grid-template-columns: 1fr 1fr 36px; gap: 8px; align-items: center; }
+  .add-row-btn {
+    background: var(--cream); border: 1.5px dashed var(--border);
+    color: var(--accent2); border-radius: 6px; padding: 7px 14px;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    font-family: 'Outfit', sans-serif; margin-top: 8px;
+    transition: background .12s;
+  }
+  .add-row-btn:hover { background: #dce8f2; }
+  .del-btn {
+    background: #FEE; border: 1px solid #FCC; color: var(--accent);
+    border-radius: 4px; width: 28px; height: 28px; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── INSURANCE / ACCREDITATION ── */
+  .status-sel {
+    padding: 4px 8px; border-radius: 4px; font-size: 12px;
+    border: 1px solid var(--border); font-family: 'Outfit', sans-serif;
+    cursor: pointer; min-width: 140px;
+  }
+  .status-ok { background: #e8f6ed; color: var(--green); }
+  .status-pending { background: #FFF8E6; color: var(--gold); }
+  .status-missing { background: #fef0ec; color: var(--accent); }
+
+  /* ── POST PROJECT ── */
+  .post-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  .post-card {
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 18px;
+  }
+  .post-card h4 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; }
+
+  /* ── PROGRESS RING ── */
+  .progress-wrap { display: flex; align-items: center; gap: 20px; padding: 18px; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; margin-bottom: 20px; }
+  .ring-svg { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: var(--cream); stroke-width: 8; }
+  .ring-fg { fill: none; stroke: var(--green); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset .5s; }
+  .ring-label { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--ink); }
+  .ring-sub { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+
+  /* ── FOOTER ── */
+  .page-foot { text-align: center; margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); }
+
+  /* ── PRINT ── */
+  @media print {
+    .print-btn, .nav-tabs { display: none !important; }
+    .panel { display: block !important; page-break-after: always; }
+    body { background: #fff; }
+    .masthead { background: #0D1B2A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @media (max-width: 700px) {
+    .form-grid, .form-grid.three { grid-template-columns: 1fr; }
+    .field.span2, .field.span3 { grid-column: span 1; }
+    .masthead { padding: 20px; }
+    .main { padding: 18px 14px 48px; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .post-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── SAVE BAR ── */
+  .save-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 998;
+    background: var(--ink2); border-top: 2px solid var(--accent2);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 28px; gap: 16px; flex-wrap: wrap;
+  }
+  .save-bar-info { display: flex; align-items: center; gap: 14px; }
+  .save-dot {
+    width: 9px; height: 9px; border-radius: 50%; background: #4A6A8A;
+    transition: background .4s; flex-shrink: 0;
+  }
+  .save-dot.saved  { background: #4CAF7D; }
+  .save-dot.dirty  { background: var(--gold); }
+  .save-dot.saving { background: var(--gold); animation: blink .7s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+  .save-label { font-size: 12px; color: #8FA8C0; }
+  .save-label strong { color: var(--paper); font-weight: 500; }
+  .save-meta  { font-size: 11px; color: #567089; }
+  .save-btns  { display: flex; align-items: center; gap: 10px; }
+  .btn-save {
+    background: var(--accent2); color: #fff; border: none;
+    border-radius: 6px; padding: 9px 24px;
+    font-size: 13px; font-weight: 600; font-family: 'Outfit', sans-serif;
+    cursor: pointer; letter-spacing: .04em;
+    display: flex; align-items: center; gap: 8px;
+    transition: background .15s, transform .1s;
+  }
+  .btn-save:hover  { background: #155d93; }
+  .btn-save:active { transform: scale(.97); }
+  .btn-save:disabled { opacity: .55; cursor: not-allowed; }
+  .btn-print2 {
+    background: transparent; color: #8FA8C0;
+    border: 1.5px solid #3A5570; border-radius: 6px;
+    padding: 8px 16px; font-size: 12px; font-weight: 500;
+    font-family: 'Outfit', sans-serif; cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-print2:hover { background: #3A5570; color: #fff; }
+  .toast {
+    position: fixed; bottom: 70px; left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: #0D1B2A; color: var(--paper);
+    border-radius: 8px; padding: 10px 22px;
+    font-size: 13px; font-weight: 500;
+    box-shadow: 0 4px 24px rgba(0,0,0,.45);
+    z-index: 9999; opacity: 0; pointer-events: none;
+    transition: opacity .25s, transform .25s; white-space: nowrap;
+    border-left: 4px solid var(--accent2);
+  }
+  .toast.show  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.ok    { border-left-color: #4CAF7D; }
+  .toast.err   { border-left-color: var(--accent); }
+  /* push content above bar */
+  .main { padding-bottom: 90px !important; }
+  @media print { .save-bar, .toast { display: none !important; } }
+
+
+
+  /* ── GANTT SUB-TABS ── */
+  .gantt-subtabs {
+    display: flex; gap: 0; margin-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+  }
+  .gantt-stab {
+    background: transparent; border: none;
+    padding: 9px 22px; font-size: 12px; font-weight: 600;
+    letter-spacing: .07em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer;
+    border-bottom: 3px solid transparent; margin-bottom: -2px;
+    font-family: 'Outfit', sans-serif;
+    transition: color .15s, border-color .15s;
+  }
+  .gantt-stab:hover { color: var(--ink); }
+  .gantt-stab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+  .gantt-view { display: none; }
+  .gantt-view.active { display: block; }
+
+  /* ── EXTERNAL GANTT (client view) ── */
+  .ext-gantt-wrap { overflow-x: auto; margin-top: 8px; }
+  .ext-gantt-table {
+    border-collapse: collapse; font-size: 13px;
+    min-width: 800px; width: 100%;
+  }
+  .ext-gantt-table thead tr:first-child { background: var(--ink); color: var(--paper); }
+  .ext-gantt-table thead tr:last-child  { background: var(--ink2); color: #8FA8C0; }
+  .ext-gantt-table thead th {
+    padding: 8px 10px; text-align: center;
+    font-size: 10px; letter-spacing: .07em; text-transform: uppercase;
+    border: 1px solid #2A3F55;
+  }
+  .ext-gantt-table thead th.act-col { text-align: left; min-width: 180px; }
+  .ext-gantt-table tbody td {
+    border: 1px solid var(--border); padding: 6px 8px;
+    vertical-align: middle; font-size: 12px;
+  }
+  .ext-gantt-table tbody tr:nth-child(even) { background: var(--cream); }
+  .ext-gantt-table tbody tr:hover { background: #EAF3FB; }
+  .ext-cell-bar {
+    height: 16px; border-radius: 3px;
+    background: var(--accent2); opacity: .85;
+    position: relative; min-width: 4px;
+  }
+  .ext-cell-prog {
+    height: 100%; border-radius: 3px;
+    background: var(--green); opacity: .9;
+  }
+  .ext-today-line {
+    border-left: 2px dashed var(--accent);
+  }
+  .ext-gantt-legend {
+    display: flex; gap: 18px; font-size: 11px;
+    margin-bottom: 12px; flex-wrap: wrap; align-items: center;
+  }
+  .ext-gantt-legend span {
+    display: flex; align-items: center; gap: 5px;
+  }
+  .ext-gantt-legend .swatch {
+    width: 14px; height: 10px; border-radius: 2px; flex-shrink: 0;
+  }
+  .ext-gantt-header {
+    background: var(--cream); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px 24px;
+  }
+  .ext-gantt-header .gh-item { font-size: 12px; }
+  .ext-gantt-header .gh-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing:.07em; margin-bottom: 2px; }
+  .ext-gantt-header .gh-val   { font-weight: 600; color: var(--ink); }
+  .btn-refresh-gantt {
+    background: var(--cream); border: 1.5px solid var(--border);
+    color: var(--accent2); border-radius: 6px; padding: 7px 16px;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    font-family: 'Outfit', sans-serif; margin-left: 10px;
+    transition: background .12s;
+  }
+  .btn-refresh-gantt:hover { background: #dce8f2; }
+  @media print {
+    .gantt-subtabs { display: none !important; }
+    .gantt-view { display: block !important; page-break-inside: avoid; }
+  }
+
+  /* ── ABC PRICE LIST ── */
+  #abcTbody tr { cursor: pointer; }
+  #abcTbody tr:hover { background: #EAF3FB !important; }
+  .abc-tag {
+    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 600;
+    background: var(--ink2); color: #8FC8F0;
+    border-radius: 4px; padding: 2px 7px; display: inline-block;
+  }
+  .abc-add-btn {
+    background: var(--accent2); color: #fff; border: none;
+    border-radius: 4px; padding: 3px 10px; font-size: 11px;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    transition: background .12s;
+  }
+  .abc-add-btn:hover { background: #155d93; }
+  .abc-cat-pill {
+    font-size: 10px; padding: 2px 7px; border-radius: 10px;
+    background: var(--cream); color: var(--muted);
+    font-weight: 500; white-space: nowrap;
+  }
+  /* tag autocomplete hint */
+  .tag-hint {
+    position: absolute; z-index: 200;
+    background: var(--ink); color: var(--paper);
+    border-radius: 6px; padding: 8px 12px;
+    font-size: 12px; min-width: 220px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.3);
+    pointer-events: none;
+  }
+  .tag-hint .th-tag { font-family:'DM Mono',monospace; color:#8FC8F0; font-weight:600; }
+  .tag-hint .th-amt { color: #4CAF7D; font-weight:600; }
+  .cost-desc-wrap { position: relative; }
+  /* IC preview table */
+  .ic-prev-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .ic-prev-table td { padding:5px 8px; border-bottom:1px solid var(--border); }
+  .ic-prev-table tr:last-child td { border:none; }
+  .ic-prev-table .ic-tag { font-family:'DM Mono',monospace; font-size:11px; color:var(--accent2); font-weight:600; }
+  .ic-prev-table .ic-rate { font-family:'DM Mono',monospace; color:var(--green); }
+  code { background:var(--cream); border-radius:3px; padding:1px 5px; font-family:'DM Mono',monospace; font-size:12px; }
+
+  /* singleton badge on activity header rows */
+  .singleton-badge {
+    display: inline-block; font-size: 9px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    background: #FFF3CD; color: #856404;
+    border: 1px solid #FFD700; border-radius: 3px;
+    padding: 1px 5px; margin-left: 8px; vertical-align: middle;
+  }
+  .singleton-exists .singleton-badge {
+    background: #D4EDDA; color: #155724; border-color: #28A745;
+  }
+
+  /* ── P&L BREAKDOWN CARDS ── */
+  .pnl-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px; margin-bottom: 22px;
+  }
+  .pnl-card {
+    border-radius: 10px; padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    position: relative;
+  }
+  .pnl-label { font-size: 10px; font-weight: 600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .pnl-val   { font-family:'DM Serif Display',serif; font-size:19px; font-weight:400; line-height:1.1; margin-bottom:4px; }
+  .pnl-sub   { font-size:10px; color:var(--muted); line-height:1.4; }
+  .pnl-blue   { border-color:#BDD7EE; background:#EBF3FB; }
+  .pnl-blue   .pnl-val { color:var(--accent2); }
+  .pnl-red    { border-color:#F5C4B3; background:#FDF0EC; }
+  .pnl-red    .pnl-val { color:var(--accent); }
+  .pnl-amber  { border-color:#F0D890; background:#FFFBEE; }
+  .pnl-amber  .pnl-val { color:#7D5A00; }
+  .pnl-green  { border-color:#B6D9C6; background:#EAF6F0; }
+  .pnl-green  .pnl-val { color:var(--green); }
+  .pnl-suggest{ border-color:var(--accent2); background:#EBF3FB; border-style:dashed; }
+  .pnl-suggest .pnl-val { color:var(--accent2); }
+  .pnl-apply-btn {
+    margin-top:8px; background:var(--accent2); color:#fff;
+    border:none; border-radius:5px; padding:5px 12px;
+    font-size:11px; font-weight:600; cursor:pointer;
+    font-family:'Outfit',sans-serif; transition:background .12s;
+  }
+  .pnl-apply-btn:hover { background:#155d93; }
+  .pnl-warning { color:var(--accent) !important; }
+  @media (max-width:900px) { .pnl-grid { grid-template-columns:1fr 1fr; } }
+  @media (max-width:500px)  { .pnl-grid { grid-template-columns:1fr; } }
+
+  /* ── PROPOSAL SUMMARY ── */
+  .proposal-wrap { max-width: 820px; }
+  .proposal-header {
+    background: var(--ink); color: var(--paper);
+    border-radius: 10px 10px 0 0; padding: 20px 24px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .proposal-header .ph-brand { font-family: 'DM Serif Display', serif; font-size: 20px; }
+  .proposal-header .ph-brand span { color: var(--accent); }
+  .proposal-header .ph-meta { font-size: 11px; color: #8FA8C0; text-align: right; line-height: 1.8; }
+  .proposal-header .ph-meta strong { color: var(--paper); }
+  .proposal-note {
+    background: #FFF8E6; border: 1px solid #F0D890;
+    border-radius: 6px; padding: 9px 14px;
+    font-size: 12px; color: #7D5A00; margin-bottom: 14px; font-weight: 500;
+  }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .proposal-table thead tr { background: var(--ink2); color: var(--paper); }
+  .proposal-table thead th {
+    padding: 10px 14px; text-align: left;
+    font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+  }
+  .proposal-table thead th.num { text-align: right; }
+  .proposal-table tbody .act-row {
+    background: #EBF3FB; font-weight: 600; color: var(--ink);
+  }
+  .proposal-table tbody .act-row td {
+    padding: 9px 14px; border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .proposal-table tbody .act-row .act-num {
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    text-align: right; color: var(--accent2);
+  }
+  .proposal-table tbody .item-row td {
+    padding: 7px 14px 7px 28px; border-bottom: 1px solid var(--border);
+    color: var(--muted); font-size: 12px;
+  }
+  .proposal-table tbody .item-row .item-num {
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    text-align: right; color: var(--ink);
+  }
+  .proposal-table tfoot tr { background: var(--ink); color: var(--paper); }
+  .proposal-table tfoot td {
+    padding: 12px 14px; font-weight: 600; font-size: 14px;
+  }
+  .proposal-table tfoot .tot-num {
+    text-align: right; font-family: 'DM Serif Display', serif;
+    font-size: 16px; color: #4CAF7D;
+  }
+  .proposal-match-ok  { color: #4CAF7D; font-size: 11px; font-weight: 500; margin-top: 6px; }
+  .proposal-match-err { color: var(--accent); font-size: 11px; font-weight: 500; margin-top: 6px; }
+  .proposal-actions {
+    display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center;
+  }
+  .btn-refresh-proposal {
+    background: var(--cream); border: 1.5px solid var(--border);
+    color: var(--accent2); border-radius: 6px; padding: 7px 16px;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    font-family: 'Outfit', sans-serif; transition: background .12s;
+  }
+  .btn-refresh-proposal:hover { background: #dce8f2; }
+  .proposal-disclaimer {
+    font-size: 10px; color: var(--muted); margin-top: 12px;
+    border-top: 1px solid var(--border); padding-top: 10px;
+    line-height: 1.6;
+  }
+  @media print {
+    .proposal-actions, .gantt-subtabs, .save-bar, .print-btn { display: none !important; }
+    .gantt-view { display: block !important; }
+    .proposal-wrap { max-width: 100%; }
+  }
+
+  /* ── TOR UPLOAD & AI GENERATE ── */
+  .tor-upload-box {
+    border: 2px dashed var(--border); border-radius: 10px;
+    padding: 20px 22px; margin-bottom: 18px;
+    background: var(--white); transition: border-color .2s, background .2s;
+  }
+  .tor-upload-box.drag-over {
+    border-color: var(--accent2); background: #EBF3FB;
+  }
+  .tor-upload-header {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .tor-upload-icon {
+    width: 42px; height: 42px; border-radius: 8px;
+    background: var(--ink2); display: flex; align-items: center;
+    justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+  .tor-upload-label { flex: 1; }
+  .tor-upload-label h4 {
+    font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px;
+  }
+  .tor-upload-label p { font-size: 12px; color: var(--muted); }
+  .tor-file-btn {
+    background: var(--ink2); color: var(--paper);
+    border: none; border-radius: 6px; padding: 9px 18px;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    font-family: 'Outfit', sans-serif; transition: background .15s;
+    white-space: nowrap;
+  }
+  .tor-file-btn:hover { background: var(--ink); }
+  .tor-file-selected {
+    margin-top: 12px; padding: 10px 14px;
+    background: var(--cream); border-radius: 6px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; display: none;
+  }
+  .tor-file-selected.show { display: flex; }
+  .tor-file-name { font-weight: 500; color: var(--ink); flex: 1; }
+  .tor-file-size { color: var(--muted); }
+  .tor-file-clear {
+    background: none; border: none; color: var(--accent);
+    cursor: pointer; font-size: 16px; padding: 0 4px; line-height: 1;
+  }
+  .tor-generate-btn {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 6px; padding: 10px 22px; font-size: 13px;
+    font-weight: 600; font-family: 'Outfit', sans-serif;
+    cursor: pointer; margin-top: 12px; width: 100%;
+    display: none; align-items: center; justify-content: center;
+    gap: 8px; transition: background .15s;
+  }
+  .tor-generate-btn.show { display: flex; }
+  .tor-generate-btn:hover:not(:disabled) { background: #a33a20; }
+  .tor-generate-btn:disabled { opacity: .6; cursor: not-allowed; }
+  .tor-status {
+    margin-top: 10px; font-size: 12px; font-weight: 500;
+    display: none; align-items: center; gap: 8px;
+  }
+  .tor-status.show { display: flex; }
+  .tor-status .ts-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent2); flex-shrink: 0;
+    animation: tsBlink .8s infinite;
+  }
+  @keyframes tsBlink { 0%,100%{opacity:1} 50%{opacity:.2} }
+  .tor-status.done .ts-dot { background: #4CAF7D; animation: none; }
+  .tor-status.error .ts-dot { background: var(--accent); animation: none; }
+  .tor-extract-preview {
+    margin-top: 14px; background: var(--cream); border-radius: 8px;
+    padding: 14px 16px; font-size: 12px; display: none; border: 1px solid var(--border);
+  }
+  .tor-extract-preview.show { display: block; }
+  .tor-extract-preview h5 {
+    font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+  }
+  .tor-scope-list { display: flex; flex-direction: column; gap: 6px; }
+  .tor-scope-item {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--white); border-radius: 5px; padding: 7px 10px;
+    border: 1px solid var(--border);
+  }
+  .tor-scope-item input[type=checkbox] {
+    accent-color: var(--accent2); width: 14px; height: 14px; flex-shrink: 0;
+  }
+  .tor-scope-item .tsi-label { flex: 1; font-weight: 500; color: var(--ink); }
+  .tor-scope-item .tsi-meta  { font-size: 11px; color: var(--muted); }
+  .tor-scope-item .tsi-acts  { font-size: 10px; color: var(--accent2); margin-top: 2px; }
+  .tor-apply-btn {
+    background: var(--accent2); color: #fff; border: none;
+    border-radius: 6px; padding: 9px 20px; font-size: 12px; font-weight: 600;
+    font-family: 'Outfit', sans-serif; cursor: pointer; margin-top: 12px;
+    transition: background .15s;
+  }
+  .tor-apply-btn:hover { background: #155d93; }
+  #tor-file-input { display: none; }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">⎙ Print / PDF</button>
+
+<!-- SAVE BAR -->
+<div class="save-bar">
+  <div class="save-bar-info">
+    <div class="save-dot" id="saveDot"></div>
+    <div>
+      <div class="save-label" id="saveLabel">No saved data yet</div>
+      <div class="save-meta"  id="saveMeta">Press Save to store your work in this file</div>
+    </div>
+  </div>
+  <div class="save-btns">
+    <button class="btn-print2" onclick="window.print()">⎙ Print</button>
+    <button class="btn-save" id="btnSave" onclick="saveData()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M2 2h8l2 2v8a1 1 0 01-1 1H3a1 1 0 01-1-1V2z" stroke="currentColor" stroke-width="1.3"/>
+        <rect x="4" y="8" width="6" height="4" rx=".5" stroke="currentColor" stroke-width="1.2"/>
+        <rect x="4.5" y="2" width="4" height="2.5" rx=".3" stroke="currentColor" stroke-width="1.2"/>
+      </svg>
+      Save
+    </button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-left">
+    <div class="brand">Phil<span>Surv</span></div>
+    <div class="doc-title">Project Kickoff Meeting Template · v4.2</div>
+  </div>
+  <div class="masthead-meta">
+    <div>Project No.:</div><div><span id="hdr-pno">—</span></div>
+    <div>Client:</div><div><span id="hdr-client">—</span></div>
+    <div>Start Date:</div><div><span id="hdr-start">—</span></div>
+    <div>PM:</div><div><span id="hdr-pm">—</span></div>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs" id="navTabs">
+  <button class="tab-btn active" data-tab="cover">Cover Sheet</button>
+  <button class="tab-btn" data-tab="inputs">Inputs Checklist</button>
+  <button class="tab-btn" data-tab="outputs">Outputs Checklist</button>
+  <button class="tab-btn" data-tab="gantt">Gantt Chart</button>
+  <button class="tab-btn" data-tab="siteReq">Site Requirements</button>
+  <button class="tab-btn" data-tab="insurance">Insurance</button>
+  <button class="tab-btn" data-tab="accred">Accreditation</button>
+  <button class="tab-btn" data-tab="costs">Activity Costing</button>
+  <button class="tab-btn" data-tab="post">Post Project</button>
+</nav>
+
+<div class="main">
+
+<!-- ══════════════ COVER SHEET ══════════════ -->
+<div class="panel active" id="panel-cover">
+  <div class="sec-head">
+    <h2>Cover Sheet</h2>
+    <span class="sec-tag">Required</span>
+  </div>
+  <div class="sec-note">⚠ Fill all red-marked fields before the kickoff meeting.</div>
+
+  <!-- Progress ring -->
+  <div class="progress-wrap">
+    <svg class="ring-svg" width="60" height="60" viewBox="0 0 60 60">
+      <circle class="ring-bg" cx="30" cy="30" r="22"/>
+      <circle class="ring-fg" id="coverRing" cx="30" cy="30" r="22"
+        stroke-dasharray="138.23" stroke-dashoffset="138.23"/>
+    </svg>
+    <div>
+      <div class="ring-label"><span id="coverPct">0</span>% Complete</div>
+      <div class="ring-sub">Cover sheet fields filled</div>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="field span2">
+      <label>Main Purpose / Objective / End Goal <span class="req">*</span></label>
+      <textarea id="f-objective" placeholder="Describe the project objective…" oninput="updateCoverProgress()"></textarea>
+    </div>
+    <div class="field">
+      <label>Client Name <span class="req">*</span></label>
+      <input type="text" id="f-client" placeholder="Client organization name" oninput="updateCoverProgress(); syncHeader()">
+    </div>
+    <div class="field">
+      <label>Survey Type <span class="req">*</span></label>
+      <select id="f-survtype" onchange="updateCoverProgress()">
+        <option value="">— Select —</option>
+        <option>Topographic Survey</option>
+        <option>Relocation Survey</option>
+        <option>Bathymetric Survey</option>
+        <option>Aerial / LiDAR Survey</option>
+        <option>As-Built Survey</option>
+        <option>Property Research</option>
+        <option>Construction Layout</option>
+        <option>Site Condition Survey</option>
+        <option>Tree Survey</option>
+        <option>Matterport</option>
+        <option>Feasibility Research</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Location <span class="req">*</span></label>
+      <input type="text" id="f-location" placeholder="Province / City / Municipality" oninput="updateCoverProgress()">
+    </div>
+    <div class="field">
+      <label>GPS Coordinates</label>
+      <input type="text" id="f-coords" placeholder="e.g. 14.5995° N, 120.9842° E">
+    </div>
+    <div class="field">
+      <label>Project Size</label>
+      <input type="text" id="f-size" placeholder="e.g. 500 ha or 2,500 sqm">
+    </div>
+    <div class="field">
+      <label>Contract Price (VAT Inc.) <span class="req">*</span></label>
+      <input type="text" id="f-price" placeholder="₱ 0.00" oninput="updateCoverProgress()">
+    </div>
+    <div class="field">
+      <label>Project Number / Code</label>
+      <input type="text" id="f-projno" placeholder="e.g. PGS-2025-001" oninput="syncHeader()">
+    </div>
+    <div class="field">
+      <label>Receipt Under</label>
+      <input type="text" id="f-receipt" placeholder="Entity name for invoice">
+    </div>
+  </div>
+
+  <div class="sub-head">External Kickoff Meeting</div>
+  <div class="form-grid three">
+    <div class="field">
+      <label>External Kickoff Date <span class="req">*</span></label>
+      <input type="date" id="f-extdate" oninput="updateCoverProgress()">
+    </div>
+    <div class="field">
+      <label>Meeting Time</label>
+      <input type="text" id="f-meettime" placeholder="e.g. 10:00 AM">
+    </div>
+    <div class="field">
+      <label>Venue</label>
+      <input type="text" id="f-venue" placeholder="Venue or online platform">
+    </div>
+  </div>
+
+  <div class="sub-head">Project Timeline</div>
+  <div class="form-grid three">
+    <div class="field">
+      <label>Project Start Date <span class="req">*</span></label>
+      <input type="date" id="f-start" oninput="updateCoverProgress(); calcEndDate(); syncHeader()">
+    </div>
+    <div class="field">
+      <label>Project Duration (calendar days) <span class="req">*</span></label>
+      <input type="number" id="f-dur" placeholder="30" oninput="calcEndDate()">
+    </div>
+    <div class="field">
+      <label>Projected End Date</label>
+      <input type="date" id="f-end" readonly style="background:#f5f5f0">
+    </div>
+    <div class="field">
+      <label>Projected Field Days</label>
+      <input type="number" id="f-fielddays" placeholder="e.g. 20">
+    </div>
+    <div class="field">
+      <label>Number of Teams</label>
+      <input type="number" id="f-teams" placeholder="e.g. 2">
+    </div>
+    <div class="field">
+      <label>Acceptance Date</label>
+      <input type="date" id="f-accept">
+    </div>
+  </div>
+
+  <div class="sub-head">Payment Terms</div>
+  <div class="form-grid three">
+    <div class="field">
+      <label>Terms of Payment</label>
+      <input type="text" id="f-payment" placeholder="e.g. 50% DP / 50% on completion">
+    </div>
+    <div class="field">
+      <label>Payment Date</label>
+      <input type="date" id="f-paydate">
+    </div>
+    <div class="field">
+      <label>QAR Acceptance Updated?</label>
+      <select id="f-qar">
+        <option value="">— Select —</option>
+        <option>Yes</option>
+        <option>No — Pending</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="sub-head">Internal Kickoff Meeting</div>
+  <div class="form-grid">
+    <div class="field">
+      <label>Internal Kickoff Date</label>
+      <input type="date" id="f-intdate">
+    </div>
+    <div class="field">
+      <label>Project Manager <span class="req">*</span></label>
+      <input type="text" id="f-pm" placeholder="Full name" oninput="syncHeader()">
+    </div>
+  </div>
+
+  <div class="sub-head">Client Invitees</div>
+  <div class="attendee-list" id="clientList">
+    <div class="attendee-row">
+      <input type="text" placeholder="Full Name">
+      <input type="text" placeholder="Designation">
+      <button class="del-btn" onclick="delRow(this)">×</button>
+    </div>
+  </div>
+  <button class="add-row-btn" onclick="addAttendee('clientList', ['Full Name','Designation'])">+ Add Client Invitee</button>
+
+  <div class="sub-head">PhilSurv Attendees</div>
+  <div class="attendee-list" id="philsurvList">
+    <div class="attendee-row">
+      <input type="text" placeholder="Full Name">
+      <input type="text" placeholder="Designation">
+      <button class="del-btn" onclick="delRow(this)">×</button>
+    </div>
+  </div>
+  <button class="add-row-btn" onclick="addAttendee('philsurvList', ['Full Name','Designation'])">+ Add PhilSurv Attendee</button>
+
+  <div class="sub-head">Additional Information Needed</div>
+  <div class="form-grid full">
+    <div class="field">
+      <label>Output Plans Format</label>
+      <select>
+        <option>A3 white paper (inclusive of quote)</option>
+        <option>A2 tracing/mylar + 2 blueprint copies (+₱450/set)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>CAD Soft Copy Required?</label>
+      <select><option>No</option><option>Yes</option></select>
+    </div>
+    <div class="field">
+      <label>Report Entity Name (for lot plans & reports)</label>
+      <input type="text" placeholder="Company / individual name to appear on reports">
+    </div>
+    <div class="field">
+      <label>Project Head / Contact on Site</label>
+      <input type="text" placeholder="Name and contact number">
+    </div>
+    <div class="field span2">
+      <label>Special Instructions / Client Requests</label>
+      <textarea placeholder="Enter any special instructions, warnings, or client preferences…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ INPUTS CHECKLIST ══════════════ -->
+<div class="panel" id="panel-inputs">
+  <div class="sec-head">
+    <h2>Inputs Checklist</h2>
+    <span class="sec-tag blue">Pre-Survey</span>
+  </div>
+  <div class="sec-note">✓ Check off items as they are completed or received.</div>
+
+  <div id="inputProgress" style="margin-bottom:16px;font-size:13px;color:var(--muted)"></div>
+
+  <table class="check-table" id="inputsTable">
+    <thead>
+      <tr>
+        <th style="width:32px">✓</th>
+        <th style="width:32px">#</th>
+        <th>Description</th>
+        <th>PIC</th>
+        <th>Due Date</th>
+        <th>Client Coordinator</th>
+        <th>Contact Details</th>
+        <th style="width:36px"></th>
+      </tr>
+    </thead>
+    <tbody id="inputsTbody">
+    </tbody>
+  </table>
+  <button class="add-row-btn" onclick="addCheckRow('inputsTbody', inputsData)">+ Add Item</button>
+
+  <div class="sub-head" style="margin-top:28px">Special Instructions / Requests from Client</div>
+  <div style="display:flex;flex-direction:column;gap:8px" id="specialList">
+    <input type="text" placeholder="1. Enter instruction…" style="border:1.5px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;font-family:'Outfit',sans-serif">
+    <input type="text" placeholder="2." style="border:1.5px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;font-family:'Outfit',sans-serif">
+    <input type="text" placeholder="3." style="border:1.5px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;font-family:'Outfit',sans-serif">
+  </div>
+</div>
+
+<!-- ══════════════ OUTPUTS CHECKLIST ══════════════ -->
+<div class="panel" id="panel-outputs">
+  <div class="sec-head">
+    <h2>Outputs Checklist</h2>
+    <span class="sec-tag green">Deliverables</span>
+  </div>
+  <div class="sec-note">✓ Track each deliverable and mark when submitted to client.</div>
+
+  <table class="check-table" id="outputsTable">
+    <thead>
+      <tr>
+        <th style="width:32px">✓</th>
+        <th style="width:32px">#</th>
+        <th>Deliverable / Description</th>
+        <th>PIC</th>
+        <th>Target Date</th>
+        <th>Client Coordinator</th>
+        <th>Contact</th>
+        <th style="width:36px"></th>
+      </tr>
+    </thead>
+    <tbody id="outputsTbody"></tbody>
+  </table>
+  <button class="add-row-btn" onclick="addCheckRow('outputsTbody', outputsData)">+ Add Deliverable</button>
+
+  <div class="sub-head" style="margin-top:28px">Change / Additional Scope of Work</div>
+  <table class="check-table">
+    <thead><tr><th>#</th><th>Description</th><th>Approved?</th><th>Variation Order #</th></tr></thead>
+    <tbody id="scopeTbody">
+      <tr><td class="row-num">1</td><td><input type="text" placeholder="Scope change description…"></td><td><select class="status-sel"><option>Pending</option><option>Approved</option><option>Rejected</option></select></td><td><input type="text" placeholder="VO-001"></td></tr>
+    </tbody>
+  </table>
+  <button class="add-row-btn" onclick="addScopeRow()">+ Add Scope Change</button>
+</div>
+
+<!-- ══════════════ GANTT CHART ══════════════ -->
+<div class="panel" id="panel-gantt">
+  <div class="sec-head">
+    <h2>Gantt Chart</h2>
+    <span class="sec-tag blue">Schedule</span>
+  </div>
+
+  <!-- SUB-TABS -->
+  <div class="gantt-subtabs">
+    <button class="gantt-stab active" onclick="switchGanttView('internal', this)">🔒 Internal (Team Monitoring)</button>
+    <button class="gantt-stab" onclick="switchGanttView('external', this)">📋 External (Client Presentation)</button>
+  </div>
+
+  <!-- ── INTERNAL VIEW ── -->
+  <div class="gantt-view active" id="gantt-internal">
+    <div class="form-grid three" style="margin-bottom:18px">
+      <div class="field">
+        <label>Start Date</label>
+        <input type="date" id="g-start" oninput="buildGantt(); buildExternalGantt()">
+      </div>
+      <div class="field">
+        <label>Duration (days)</label>
+        <input type="number" id="g-dur" value="30" oninput="buildGantt(); buildExternalGantt()">
+      </div>
+      <div class="field">
+        <label>% Overall Completion</label>
+        <input type="number" id="g-pct" value="0" min="0" max="100" oninput="buildGantt()">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:18px;font-size:12px;margin-bottom:12px;flex-wrap:wrap">
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;background:#1B6CA8;border-radius:2px;display:inline-block"></span>Planned</span>
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;background:#2A7A4A;border-radius:2px;display:inline-block"></span>On Time</span>
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;background:#B8892A;border-radius:2px;display:inline-block"></span>Delayed</span>
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;background:#C84B2F;border-radius:2px;display:inline-block"></span>Major Delay</span>
+    </div>
+
+    <div class="gantt-wrap">
+      <table class="gantt-table" id="ganttTable">
+        <thead>
+          <tr>
+            <th style="min-width:200px">Activity</th>
+            <th style="min-width:110px">Start</th>
+            <th style="min-width:110px">Finish</th>
+            <th style="min-width:60px">Days</th>
+            <th style="min-width:70px">Progress</th>
+            <th style="min-width:130px">Status</th>
+            <th style="min-width:60px">PIC</th>
+            <th style="min-width:90px">Remarks</th>
+            <th style="min-width:180px">Progress Bar</th>
+            <th style="width:36px"></th>
+          </tr>
+        </thead>
+        <tbody id="ganttTbody"></tbody>
+      </table>
+    </div>
+    <button class="add-row-btn gantt-add" onclick="addGanttRow()">+ Add Activity</button>
+  </div>
+
+  <!-- ── EXTERNAL VIEW ── -->
+  <div class="gantt-view" id="gantt-external">
+    <div class="sec-note" style="margin-bottom:16px">
+      📋 This view is for <strong>client presentation</strong> — shows only activity names, timeline bars, and % complete. Internal details (PIC, remarks, status) are hidden.
+    </div>
+
+    <!-- Header info pulled from cover sheet -->
+    <div class="ext-gantt-header" id="extGanttHeader">
+      <div class="gh-item"><div class="gh-label">Project</div><div class="gh-val" id="ext-projno">—</div></div>
+      <div class="gh-item"><div class="gh-label">Client</div><div class="gh-val" id="ext-client">—</div></div>
+      <div class="gh-item"><div class="gh-label">Project Manager</div><div class="gh-val" id="ext-pm">—</div></div>
+      <div class="gh-item"><div class="gh-label">Start Date</div><div class="gh-val" id="ext-start">—</div></div>
+      <div class="gh-item"><div class="gh-label">End Date</div><div class="gh-val" id="ext-end">—</div></div>
+      <div class="gh-item"><div class="gh-label">Overall Progress</div><div class="gh-val" id="ext-pct">0%</div></div>
+    </div>
+
+    <div class="ext-gantt-legend">
+      <span><span class="swatch" style="background:var(--accent2)"></span>Planned Duration</span>
+      <span><span class="swatch" style="background:var(--green)"></span>Completed</span>
+      <span><span class="swatch" style="background:var(--accent); opacity:.7"></span>Today</span>
+    </div>
+
+    <button class="btn-refresh-gantt" onclick="buildExternalGantt()">↻ Refresh from Internal</button>
+
+    <div class="ext-gantt-wrap">
+      <table class="ext-gantt-table" id="extGanttTable">
+        <thead id="extGanttHead"></thead>
+        <tbody id="extGanttTbody"></tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:18px; font-size:11px; color:var(--muted); text-align:right">
+      PhilSurv · Generated: <span id="ext-generated"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SITE REQUIREMENTS ══════════════ -->
+<div class="panel" id="panel-siteReq">
+  <div class="sec-head">
+    <h2>Site Requirements & Additional Action Items</h2>
+    <span class="sec-tag gold">Field Prep</span>
+  </div>
+
+  <div class="sub-head">Site Requirements</div>
+  <table class="check-table">
+    <thead><tr><th>✓</th><th>#</th><th>Document / Requirement</th><th>For</th><th>Source</th><th>Notes</th><th>Required By</th><th>Status</th><th>Target Date</th><th>PIC</th></tr></thead>
+    <tbody id="siteTbody"></tbody>
+  </table>
+  <button class="add-row-btn" onclick="addSiteRow('siteTbody')">+ Add Requirement</button>
+
+  <div class="sub-head" style="margin-top:24px">Flying Permits</div>
+  <table class="check-table">
+    <thead><tr><th>✓</th><th>#</th><th>Document / Requirement</th><th>Type</th><th>For</th><th>Source</th><th>Notes</th><th>Status</th><th>Target Date</th><th>PIC</th></tr></thead>
+    <tbody id="flyTbody"></tbody>
+  </table>
+  <button class="add-row-btn" onclick="addSiteRow('flyTbody')">+ Add Permit</button>
+
+  <div class="sub-head" style="margin-top:24px">Additional Action Items</div>
+  <table class="check-table">
+    <thead><tr><th>✓</th><th>#</th><th>Action Item</th><th>Type</th><th>For</th><th>Notes</th><th>Status</th><th>Target Date</th><th>PIC</th></tr></thead>
+    <tbody id="actionTbody"></tbody>
+  </table>
+  <button class="add-row-btn" onclick="addActionRow()">+ Add Action Item</button>
+</div>
+
+<!-- ══════════════ INSURANCE ══════════════ -->
+<div class="panel" id="panel-insurance">
+  <div class="sec-head">
+    <h2>Insurance Requirements</h2>
+    <span class="sec-tag red" style="background:var(--accent)">Compliance</span>
+  </div>
+
+  <table class="check-table">
+    <thead>
+      <tr>
+        <th style="width:32px">✓</th>
+        <th>#</th>
+        <th>Insurance Type</th>
+        <th>Status</th>
+        <th>Update / Notes</th>
+        <th>Target Date</th>
+        <th>PIC</th>
+        <th style="width:36px"></th>
+      </tr>
+    </thead>
+    <tbody id="insTbody">
+    </tbody>
+  </table>
+  <button class="add-row-btn" onclick="addInsRow()">+ Add Insurance Item</button>
+</div>
+
+<!-- ══════════════ ACCREDITATION ══════════════ -->
+<div class="panel" id="panel-accred">
+  <div class="sec-head">
+    <h2>Accreditation Documents</h2>
+    <span class="sec-tag gold">Compliance</span>
+  </div>
+
+  <table class="check-table">
+    <thead>
+      <tr>
+        <th style="width:32px">✓</th>
+        <th>#</th>
+        <th>Document</th>
+        <th>Status</th>
+        <th>Update / Notes</th>
+        <th>Target Date</th>
+        <th>PIC</th>
+        <th style="width:36px"></th>
+      </tr>
+    </thead>
+    <tbody id="accTbody">
+    </tbody>
+  </table>
+  <button class="add-row-btn" onclick="addAccRow()">+ Add Document</button>
+</div>
+
+<!-- ══════════════ ACTIVITY COSTING ══════════════ -->
+<div class="panel" id="panel-costs">
+  <div class="sec-head">
+    <h2>Activity-Based Costing</h2>
+    <span class="sec-tag blue">Budget</span>
+  </div>
+
+  <!-- ── P&L INPUT ROW ── -->
+  <div style="display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap;align-items:flex-end">
+    <div class="field" style="min-width:220px">
+      <label>Contract Price (VAT Inc.) <span style="color:var(--accent2);font-size:10px">✎ editable</span></label>
+      <input type="number" id="co-price" placeholder="e.g. 680000" oninput="updateCostCards()" style="font-weight:600;font-size:15px">
+    </div>
+    <div class="field" style="min-width:130px">
+      <label>VAT Rate (%)</label>
+      <input type="number" id="co-vat" value="12" oninput="updateCostCards()">
+    </div>
+    <div class="field" style="min-width:130px">
+      <label>Sales Tax (%)</label>
+      <input type="number" id="co-tax" value="24" oninput="updateCostCards()">
+    </div>
+    <div class="field" style="min-width:160px">
+      <label>Admin Cost % <span style="color:var(--muted);font-size:10px">(of direct cost)</span></label>
+      <input type="number" id="co-admin-pct" value="20" min="0" max="100" oninput="updateCostCards()" placeholder="20">
+    </div>
+    <div class="field" style="min-width:180px">
+      <label>Target GOP % <span style="color:var(--muted);font-size:10px">(for suggested price)</span></label>
+      <input type="number" id="co-target-gp" value="30" min="0" max="100" oninput="updateCostCards()" placeholder="30">
+    </div>
+  </div>
+
+  <!-- ── P&L BREAKDOWN CARDS ── -->
+  <div class="pnl-grid" id="costCards">
+    <div class="pnl-card pnl-blue">
+      <div class="pnl-label">Contract Price (VAT Inc.)</div>
+      <div class="pnl-val" id="cc-contract">₱ 0.00</div>
+      <div class="pnl-sub" id="cc-contract-exvat">ex-VAT: ₱ 0.00</div>
+    </div>
+    <div class="pnl-card pnl-red">
+      <div class="pnl-label">Total Estimated Cost (VAT Inc.)</div>
+      <div class="pnl-val" id="cc-cost">₱ 0.00</div>
+      <div class="pnl-sub" id="cc-cost-exvat">ex-VAT: ₱ 0.00</div>
+    </div>
+    <div class="pnl-card pnl-red">
+      <div class="pnl-label">Admin Cost (<span id="cc-admin-pct-label">20</span>%)</div>
+      <div class="pnl-val" id="cc-admin-cost">₱ 0.00</div>
+      <div class="pnl-sub" id="cc-admin-sub">20% of direct cost</div>
+    </div>
+    <div class="pnl-card pnl-red">
+      <div class="pnl-label">Total Cost incl. Admin (VAT Inc.)</div>
+      <div class="pnl-val" id="cc-total-with-admin">₱ 0.00</div>
+      <div class="pnl-sub" id="cc-total-admin-exvat">ex-VAT: ₱ 0.00</div>
+    </div>
+    <div class="pnl-card pnl-amber">
+      <div class="pnl-label">VAT Payable</div>
+      <div class="pnl-val" id="cc-vat-payable">₱ 0.00</div>
+      <div class="pnl-sub">Output VAT − Input VAT</div>
+    </div>
+    <div class="pnl-card pnl-amber">
+      <div class="pnl-label">Net Income Before Tax</div>
+      <div class="pnl-val" id="cc-net-before">₱ 0.00</div>
+      <div class="pnl-sub">Price − Cost − VAT Payable</div>
+    </div>
+    <div class="pnl-card pnl-amber">
+      <div class="pnl-label">Sales Tax (24%)</div>
+      <div class="pnl-val" id="cc-sales-tax">₱ 0.00</div>
+      <div class="pnl-sub">(GP base − Cost ex-VAT) × 24%</div>
+    </div>
+    <div class="pnl-card pnl-green">
+      <div class="pnl-label">Net Income After Tax</div>
+      <div class="pnl-val" id="cc-net">₱ 0.00</div>
+      <div class="pnl-sub" id="cc-net-pct"></div>
+    </div>
+    <div class="pnl-card pnl-green">
+      <div class="pnl-label">Gross Profit % (GOP)</div>
+      <div class="pnl-val" id="cc-gp">0.00%</div>
+      <div class="pnl-sub">Net After Tax ÷ Price ex-VAT</div>
+    </div>
+    <div class="pnl-card pnl-suggest">
+      <div class="pnl-label">Suggested Contract Price</div>
+      <div class="pnl-val" id="cc-suggest">₱ 0.00</div>
+      <div class="pnl-sub" id="cc-suggest-sub">Based on target GP%</div>
+      <button class="pnl-apply-btn" onclick="applySuggestedPrice()" title="Apply to contract price field">↑ Apply</button>
+    </div>
+  </div>
+
+  <!-- ── COSTING SUB-TABS ── -->
+  <div class="gantt-subtabs" style="margin-bottom:18px">
+    <button class="gantt-stab active" onclick="switchCostView('manual',this)">✏️ Manual Entry</button>
+    <button class="gantt-stab" onclick="switchCostView('ic',this)">📋 Internal Controls Template</button>
+    <button class="gantt-stab" onclick="switchCostView('abc',this)">🔖 ABC Price List</button>
+    <button class="gantt-stab" onclick="switchCostView('proposal',this); buildProposalSummary()">📄 Proposal Summary</button>
+  </div>
+
+  <!-- ── MANUAL ENTRY ── -->
+  <div class="gantt-view active" id="cost-manual">
+
+    <!-- TOR UPLOAD BOX -->
+    <div class="tor-upload-box" id="torUploadBox">
+      <div class="tor-upload-header">
+        <div class="tor-upload-icon">📄</div>
+        <div class="tor-upload-label">
+          <h4>Auto-Generate from TOR</h4>
+          <p>Upload a Terms of Reference (PDF or Word) — Claude will read it and pre-fill the cost table with matching activities and rates.</p>
+        </div>
+        <button class="tor-file-btn" onclick="document.getElementById('tor-file-input').click()">Upload TOR</button>
+      </div>
+      <input type="file" id="tor-file-input" accept=".pdf,.doc,.docx" onchange="torFileSelected(event)">
+      <div class="tor-file-selected" id="torFileSelected">
+        <span style="font-size:18px">📎</span>
+        <span class="tor-file-name" id="torFileName">—</span>
+        <span class="tor-file-size" id="torFileSize"></span>
+        <button class="tor-file-clear" onclick="torClearFile()" title="Remove file">×</button>
+      </div>
+      <button class="tor-generate-btn" id="torGenerateBtn" onclick="torGenerate()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M5 7l2 2 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Generate Cost Estimate from TOR
+      </button>
+      <div class="tor-status" id="torStatus">
+        <span class="ts-dot"></span>
+        <span id="torStatusText">Reading TOR…</span>
+      </div>
+      <div class="tor-extract-preview" id="torExtractPreview">
+        <h5>Identified Scopes — select which to include</h5>
+        <div class="tor-scope-list" id="torScopeList"></div>
+        <button class="tor-apply-btn" id="torApplyBtn" onclick="torApplyToTable()">
+          ✓ Add Selected Activities to Cost Table
+        </button>
+      </div>
+    </div>
+
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">
+      💡 Type a <strong>tag code</strong> (e.g. <code>RM</code>, <code>GPS</code>, <code>VR</code>) in the Description field to auto-fill the rate from the ABC price list.
+    </div>
+    <table class="cost-table" id="costTable">
+      <thead>
+        <tr>
+          <th style="width:28px"></th>
+          <th>Activity / Cost Item</th>
+          <th>Description / Tag</th>
+          <th style="width:90px" class="num">Unit Cost (₱)</th>
+          <th style="width:70px" class="num">Qty</th>
+          <th style="width:80px" class="num">Days</th>
+          <th style="width:110px" class="num">Budget (₱)</th>
+          <th style="width:36px"></th>
+        </tr>
+      </thead>
+      <tbody id="costTbody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6">Total Estimated Cost incl. Admin (VAT Inc.)</td>
+          <td class="num" id="costTotal">₱ 0.00</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <button class="add-row-btn" onclick="addCostRow()">+ Add Cost Item</button>
+    <button class="add-row-btn" style="margin-left:8px" onclick="addCostActivitySafe()">+ Add Activity Header</button>
+  </div>
+
+  <!-- ── IC TEMPLATE VIEW ── -->
+  <div class="gantt-view" id="cost-ic">
+    <div class="sec-note" style="margin-bottom:16px">
+      📋 Select an activity from the <strong>PhilSurv Internal Controls</strong> template to auto-populate cost line items. Tag codes from the ABC price list will be auto-matched where available.
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:flex-end">
+      <div class="field" style="min-width:300px">
+        <label>Select IC Activity</label>
+        <select id="ic-activity-sel" style="font-size:13px">
+          <option value="">— Choose an activity —</option>
+        </select>
+      </div>
+      <button class="add-row-btn" style="margin-top:0;height:38px" onclick="addICActivitySafe()">+ Add to Cost Table</button>
+    </div>
+
+    <div id="ic-preview" style="display:none;background:var(--cream);border:1.5px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px">Preview</div>
+      <div id="ic-preview-content"></div>
+    </div>
+
+    <div style="font-size:12px;color:var(--muted);margin-top:8px">
+      Items added here will appear in the <strong>Manual Entry</strong> tab where you can set quantities and days.
+    </div>
+  </div>
+
+  <!-- ── ABC PRICE LIST ── -->
+  <div class="gantt-view" id="cost-abc">
+    <div class="sec-note" style="margin-bottom:16px">
+      🔖 Full ABC price list — <strong>189 items</strong> across 10 categories. Click any row to add it to the cost table, or copy the tag code and type it in Manual Entry.
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <input type="text" id="abc-search" placeholder="Search tag or description…"
+        oninput="renderABCList()" style="max-width:280px;height:34px;padding:0 12px;font-size:13px">
+      <select id="abc-cat-filter" onchange="renderABCList()" style="height:34px;padding:0 10px;font-size:13px;border-radius:6px;border:1.5px solid var(--border)">
+        <option value="">All Categories</option>
+      </select>
+    </div>
+    <table class="cost-table" id="abcTable" style="font-size:12px">
+      <thead>
+        <tr style="background:var(--ink2);color:var(--paper)">
+          <th style="width:80px">Tag Code</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th style="width:120px" class="num">Unit Rate (₱)</th>
+          <th>Note</th>
+          <th style="width:70px"></th>
+        </tr>
+      </thead>
+      <tbody id="abcTbody"></tbody>
+    </table>
+  </div>
+
+  <!-- ── PROPOSAL SUMMARY ── -->
+  <div class="gantt-view" id="cost-proposal">
+    <div class="proposal-note">
+      📄 This summary is for <strong>client proposals</strong>. Each activity shows its total cost (VAT inclusive).
+      The grand total matches the contract price exactly. Refresh after any changes to the cost table.
+    </div>
+    <div class="proposal-actions">
+      <button class="btn-refresh-proposal" onclick="buildProposalSummary()">↻ Refresh from Cost Table</button>
+      <button class="btn-refresh-proposal" onclick="window.print()" style="border-color:var(--accent);color:var(--accent)">⎙ Print / PDF</button>
+      <span id="proposal-match-msg"></span>
+    </div>
+    <div class="proposal-wrap">
+      <div class="proposal-header">
+        <div>
+          <div class="ph-brand">Phil<span>Surv</span></div>
+          <div style="font-size:11px;color:#8FA8C0;margin-top:4px">Cost Breakdown Summary</div>
+        </div>
+        <div class="ph-meta">
+          <div>Project: <strong id="ps-projno">—</strong></div>
+          <div>Client: <strong id="ps-client">—</strong></div>
+          <div>Date: <strong id="ps-date">—</strong></div>
+        </div>
+      </div>
+      <table class="proposal-table" id="proposalTable">
+        <thead>
+          <tr>
+            <th style="width:36px">#</th>
+            <th>Scope of Work / Activity</th>
+            <th class="num" style="width:180px">Amount (VAT Inc.)</th>
+          </tr>
+        </thead>
+        <tbody id="proposalTbody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" style="text-align:right;letter-spacing:.05em;font-size:12px">TOTAL CONTRACT PRICE (VAT INCLUSIVE)</td>
+            <td class="tot-num" id="proposalTotal">₱ 0.00</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="proposal-disclaimer">
+        All amounts are in Philippine Peso (₱) and inclusive of 12% Value Added Tax (VAT).<br>
+        This cost breakdown is prepared by PhilSurv and is subject to change based on final scope confirmation.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ POST PROJECT ══════════════ -->
+<div class="panel" id="panel-post">
+  <div class="sec-head">
+    <h2>Post-Project Review</h2>
+    <span class="sec-tag green">Lessons Learned</span>
+  </div>
+
+  <div class="form-grid" style="margin-bottom:22px">
+    <div class="field">
+      <label>Was the project profitable?</label>
+      <select><option>— Select —</option><option>Yes — Profitable</option><option>Break-even</option><option>No — Loss</option></select>
+    </div>
+    <div class="field">
+      <label>Overall Project Rating</label>
+      <select><option>— Select —</option><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option></select>
+    </div>
+  </div>
+
+  <div class="post-grid">
+    <div class="post-card">
+      <h4>✅ Top 3 Positives</h4>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input type="text" placeholder="1. What went well?">
+        <input type="text" placeholder="2.">
+        <input type="text" placeholder="3.">
+      </div>
+    </div>
+    <div class="post-card">
+      <h4>⚠ Top 3 Negatives / Issues</h4>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input type="text" placeholder="1. What could be improved?">
+        <input type="text" placeholder="2.">
+        <input type="text" placeholder="3.">
+      </div>
+    </div>
+    <div class="post-card">
+      <h4>💡 Recommendations</h4>
+      <textarea placeholder="Key recommendations for future similar projects…" style="min-height:110px"></textarea>
+    </div>
+  </div>
+
+  <div class="sub-head" style="margin-top:24px">LiDAR Processing Tracker</div>
+  <table class="check-table">
+    <thead>
+      <tr>
+        <th>Trajectory</th>
+        <th>Point Cloud</th>
+        <th>Cleaning</th>
+        <th>Calibration / Classification</th>
+        <th>CAD File</th>
+        <th>DSM & DTM</th>
+        <th>Report</th>
+        <th>Orthophoto — Initial</th>
+        <th>Orthophoto — GCP</th>
+        <th>Orthophoto — Final</th>
+        <th>Working Days</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="checkbox" style="accent-color:var(--green)"></td>
+        <td><input type="checkbox" style="accent-color:var(--green)"></td>
+        <td><input type="checkbox" style="accent-color:var(--green)"></td>
+        <td><input type="checkbox" style="accent-color:var(--green)"></td>
+        <td><input type="checkbox" style="accent-color:var(--green)"></td>
+        <td><input type="checkbox" style="accent-color:var(--green)"></td>
+        <td><input type="checkbox" style="accent-color:var(--green)"></td>
+        <td><input type="checkbox" style="accent-color:var(--green)"></td>
+        <td><input type="checkbox" style="accent-color:var(--green)"></td>
+        <td><input type="checkbox" style="accent-color:var(--green)"></td>
+        <td><input type="number" placeholder="0" style="width:60px"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="page-foot">PhilSurv Kickoff Template v4.0 — Upgraded Web Version · Generated by Claude for PhilSurv</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// ABC PRICE LIST — extracted from PhilSurv ABC sheet (189 items)
+// ══════════════════════════════════════════════════════════════════════════════
+const ABC_LOOKUP = {"MT": {"desc": "Mapping Technician", "amount": 1250.0, "category": "Salary", "note": ""}, "RE": {"desc": "Researcher", "amount": 887.9, "category": "Salary", "note": ""}, "PC": {"desc": "Party Chief", "amount": 1250.0, "category": "Salary", "note": ""}, "IM": {"desc": "Instrument Man", "amount": 910.0, "category": "Salary", "note": ""}, "DV": {"desc": "Driver", "amount": 828.1, "category": "Salary", "note": ""}, "RM": {"desc": "Rodman", "amount": 698.1, "category": "Salary", "note": ""}, "KA": {"desc": "Key Account", "amount": null, "category": "Salary", "note": ""}, "SO": {"desc": "Safety Officer", "amount": 780.0, "category": "Salary", "note": ""}, "LH": {"desc": "Local Hire", "amount": 700.0, "category": "Salary", "note": ""}, "FS": {"desc": "Food Subsidy", "amount": 200.0, "category": "Salary", "note": ""}, "DO": {"desc": "Drone Operator", "amount": 2500.0, "category": "Salary", "note": ""}, "PM1": {"desc": "Project Manager 1", "amount": 1750.0, "category": "Salary", "note": ""}, "PM2": {"desc": "Project Manager 2", "amount": 2500.0, "category": "Salary", "note": ""}, "PM3": {"desc": "PM for LiDAR", "amount": 10000.0, "category": "Salary", "note": ""}, "PE1": {"desc": "Project Engineer 1", "amount": 1000.0, "category": "Salary", "note": ""}, "PE2": {"desc": "Project Engineer 2", "amount": 1250.0, "category": "Salary", "note": ""}, "PE3": {"desc": "Project Engineer 3", "amount": 1500.0, "category": "Salary", "note": ""}, "VR": {"desc": "Car Rental - Van", "amount": 6000.0, "category": "Rental", "note": ""}, "CR": {"desc": "Car Rental - Car", "amount": 3000.0, "category": "Rental", "note": ""}, "BBR": {"desc": "Boat Rental Big", "amount": 54000.0, "category": "Rental", "note": ""}, "SBR": {"desc": "Boat Rental Small", "amount": 1650.0, "category": "Rental", "note": ""}, "TSR": {"desc": "Total Station", "amount": 1500.0, "category": "Rental", "note": ""}, "ESR": {"desc": "Echo Sounder", "amount": 45000.0, "category": "Rental", "note": ""}, "GPSR": {"desc": "GPS", "amount": 20000.0, "category": "Rental", "note": ""}, "LR": {"desc": "LiDAR", "amount": null, "category": "Rental", "note": ""}, "MR": {"desc": "Matterport", "amount": null, "category": "Rental", "note": ""}, "LPR": {"desc": "Laser Plummet", "amount": null, "category": "Rental", "note": ""}, "CLLR": {"desc": "Cross-Line Level", "amount": null, "category": "Rental", "note": ""}, "ALR": {"desc": "Auto Level", "amount": null, "category": "Rental", "note": ""}, "PLAR": {"desc": "Precise Level - Automatic", "amount": null, "category": "Rental", "note": ""}, "PLDR": {"desc": "Precise Level - Digital", "amount": null, "category": "Rental", "note": ""}, "CUAVR": {"desc": "Commercial UAV", "amount": null, "category": "Rental", "note": ""}, "IUAVR": {"desc": "Industrial UAV", "amount": 12000.0, "category": "Rental", "note": ""}, "LUAVR": {"desc": "UAV for LIDAR", "amount": null, "category": "Rental", "note": ""}, "AR": {"desc": "Aircraft Rental", "amount": null, "category": "Rental", "note": ""}, "TS": {"desc": "Total Station", "amount": 320.0, "category": "Depreciation", "note": ""}, "COMMERCIAL DRONE": {"desc": "Drone - Commercial", "amount": 150.0, "category": "Depreciation", "note": ""}, "ECHOSOUNDER": {"desc": "Echo Sounder", "amount": 472.0, "category": "Depreciation", "note": ""}, "GPS": {"desc": "GPS", "amount": 209.0, "category": "Depreciation", "note": ""}, "LiDAR": {"desc": "Lidar", "amount": 20381.0, "category": "Depreciation", "note": ""}, "MTRPRT": {"desc": "Matterport", "amount": 734.0, "category": "Depreciation", "note": ""}, "LP": {"desc": "Laser Plummet", "amount": 1084.0, "category": "Depreciation", "note": ""}, "CLL": {"desc": "Cross-Line Level", "amount": 417.0, "category": "Depreciation", "note": ""}, "LFPRINTER": {"desc": "Large Format Printer", "amount": 110.0, "category": "Depreciation", "note": ""}, "SE": {"desc": "Site Equipments", "amount": null, "category": "Depreciation", "note": ""}, "CAR": {"desc": "Car Depreciation", "amount": 556.0, "category": "Depreciation", "note": ""}, "DEPTHSOUNDER": {"desc": "Depth Sounder", "amount": null, "category": "Depreciation", "note": ""}, "AUTOLEVEL": {"desc": "Auto level", "amount": 65.0, "category": "Depreciation", "note": ""}, "INDUSTRIALDRONE": {"desc": "Drone - Industrial", "amount": 3483.0, "category": "Depreciation", "note": ""}, "LIDAR3": {"desc": "Lidar Geosun", "amount": 2038.04, "category": "Depreciation", "note": ""}, "CAM": {"desc": "Camera", "amount": 1681.39, "category": "Depreciation", "note": ""}, "TLASER": {"desc": "Terrestrial Leica", "amount": 14800.0, "category": "Depreciation", "note": ""}, "CAB": {"desc": "MUTLICAB", "amount": 145.0, "category": "Depreciation", "note": ""}, "MOHON": {"desc": "Mohon", "amount": 55.0, "category": "Survey Supplies", "note": ""}, "REBAR": {"desc": "Rebar (7.5m)", "amount": 453.0, "category": "Survey Supplies", "note": ""}, "WOODENSTAKE": {"desc": "Bamboo Stake", "amount": 200.0, "category": "Survey Supplies", "note": ""}, "SPRAYPAINT": {"desc": "Spray Pant", "amount": 150.0, "category": "Survey Supplies", "note": ""}, "CONCRETENAIL": {"desc": "Concrete Nail (0.5 kg)", "amount": 100.0, "category": "Survey Supplies", "note": ""}, "PB": {"desc": "Plastic Bag", "amount": 40.0, "category": "Survey Supplies", "note": ""}, "CT": {"desc": "Caution Tape", "amount": 350.0, "category": "Survey Supplies", "note": ""}, "FLAG": {"desc": "Flag/Cloth", "amount": 100.0, "category": "Survey Supplies", "note": ""}, "UN": {"desc": "Umbrella Nail (0.5kg)", "amount": 75.0, "category": "Survey Supplies", "note": ""}, "GI SHEET": {"desc": "GI Sheet", "amount": 1000.0, "category": "Survey Supplies", "note": ""}, "PAINT": {"desc": "Paint", "amount": 190.0, "category": "Survey Supplies", "note": ""}, "BRUSH": {"desc": "Brush", "amount": 70.0, "category": "Survey Supplies", "note": ""}, "NYLONROPE": {"desc": "Nylon Rope", "amount": 1050.0, "category": "Survey Supplies", "note": ""}, "RBAND": {"desc": "Rubber Band", "amount": 72.0, "category": "Survey Supplies", "note": ""}, "CEMENT": {"desc": "Cement", "amount": 262.0, "category": "Survey Supplies", "note": ""}, "PLYWOOD": {"desc": "Plywood", "amount": 388.0, "category": "Survey Supplies", "note": ""}, "SAND": {"desc": "Sand", "amount": 418.0, "category": "Survey Supplies", "note": ""}, "PITIK": {"desc": "Pitik", "amount": 100.0, "category": "Survey Supplies", "note": ""}, "PORAC4P": {"desc": "Porac", "amount": 4500.0, "category": "Lodging", "note": "Monthly Rate"}, "PAMPANGA6P": {"desc": "Pampanga", "amount": 9600.0, "category": "Lodging", "note": "Monthly Rate"}, "PAMPANGA7P": {"desc": "Pampanga", "amount": 9500.0, "category": "Lodging", "note": "Monthly Rate"}, "PAMPANGA8P": {"desc": "Pampanga", "amount": 12800.0, "category": "Lodging", "note": "Monthly Rate"}, "PAMPANGA10P": {"desc": "Pampanga", "amount": 16000.0, "category": "Lodging", "note": "Monthly Rate"}, "NCRHotel": {"desc": "NCR", "amount": 1500.0, "category": "Lodging", "note": "per day"}, "DAVAO": {"desc": "Davao", "amount": null, "category": "Lodging", "note": "Monthly Rate"}, "WATER": {"desc": "Water", "amount": 2000.0, "category": "Lodging", "note": "Monthly Rate"}, "ELECTRICITY": {"desc": "Electricity", "amount": 2000.0, "category": "Lodging", "note": "Monthly Rate"}, "CALOOCAN": {"desc": "Camarin, Caloocan", "amount": 5500.0, "category": "Lodging", "note": "Monthly Rate"}, "VALENZUELA": {"desc": "Valenzuela City", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "QC": {"desc": "Quezon City", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "TAGUIG": {"desc": "Taguig", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "PRÑQ": {"desc": "Parañaque", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "ALABANG": {"desc": "Alabang", "amount": 8500.0, "category": "Lodging", "note": "Monthly Rate"}, "R1HOTEL": {"desc": "Region 1 - Hotel @ Calle Crisologo Vigan", "amount": 1700.0, "category": "Lodging", "note": "per day"}, "R1": {"desc": "Region 1", "amount": 15000.0, "category": "Lodging", "note": "Monthly Rate"}, "R2HOTEL": {"desc": "Region 2 - Hotel @ Red Doorz", "amount": 1700.0, "category": "Lodging", "note": "per day"}, "R2": {"desc": "Region 2", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "R3HOTEL": {"desc": "Region 3 - Hotel @ Red Doorz", "amount": 1600.0, "category": "Lodging", "note": "per day"}, "R3": {"desc": "Region 3 San Joaguin, Mabalacat", "amount": 10000.0, "category": "Lodging", "note": "Monthly Rate"}, "R4AHOTEL": {"desc": "Region 4A - Hotel @ Red Doorz", "amount": 3000.0, "category": "Lodging", "note": "per day"}, "R4A": {"desc": "Region 4A", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "R4HOTEL": {"desc": "Region 4B - Hotel @ Red Doorz", "amount": 1600.0, "category": "Lodging", "note": "per day"}, "R4B": {"desc": "Region 4B", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "R5HOTEL": {"desc": "Region 5 - Hotel @ Red Doorz", "amount": 1600.0, "category": "Lodging", "note": "per day"}, "R5": {"desc": "Region 5", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "R6HOTEL": {"desc": "Region 6 - Hotel @ Red Doorz", "amount": 1400.0, "category": "Lodging", "note": "per day"}, "R6": {"desc": "Region 6", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "R7HOTEL": {"desc": "Region 7 - Hotel @ Red Doorz", "amount": 1900.0, "category": "Lodging", "note": "per day"}, "R7": {"desc": "Region 7", "amount": 10000.0, "category": "Lodging", "note": "Monthly Rate"}, "R8HOTEL": {"desc": "Region 8 - Hotel @ Red Doorz", "amount": 1800.0, "category": "Lodging", "note": "per day"}, "R8": {"desc": "Region 8", "amount": 10000.0, "category": "Lodging", "note": "Monthly Rate"}, "R9HOTEL": {"desc": "Region 9 - Hotel @ Red Doorz", "amount": 2000.0, "category": "Lodging", "note": "per day"}, "R9": {"desc": "Region 9", "amount": 10000.0, "category": "Lodging", "note": "Monthly Rate"}, "R10HOTEL": {"desc": "Region 10 - Hotel @ Red Doorz", "amount": 2900.0, "category": "Lodging", "note": "per day"}, "R10": {"desc": "Region 10", "amount": 8000.0, "category": "Lodging", "note": "Monthly Rate"}, "R11HOTEL": {"desc": "Region 11 - Hotel @ Red Doorz", "amount": 1300.0, "category": "Lodging", "note": "per day"}, "R11": {"desc": "Region 11", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "R12HOTEL": {"desc": "Region 12 - Hotel @ Red Doorz", "amount": 1000.0, "category": "Lodging", "note": "per day"}, "R12": {"desc": "Region 12", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "R13HOTEL": {"desc": "Region 13 - Hotel @ My dream", "amount": 1800.0, "category": "Lodging", "note": "per day"}, "R13": {"desc": "Region 13", "amount": 6000.0, "category": "Lodging", "note": "Monthly Rate"}, "BARMMHOTEL": {"desc": "BARMM - Tacurong City", "amount": 1600.0, "category": "Lodging", "note": "per day"}, "BARMM": {"desc": "BARMM", "amount": 9000.0, "category": "Lodging", "note": "Monthly Rate"}, "CAREGIONHOTEL": {"desc": "CAR - Hotel @ Salt N Pepper", "amount": 2100.0, "category": "Lodging", "note": "per day"}, "CAREGION": {"desc": "CAR", "amount": 9000.0, "category": "Lodging", "note": "Monthly Rate"}, "GAS": {"desc": "Gas", "amount": 40.0, "category": "Mobilization", "note": "=160/4"}, "TRIKE": {"desc": "Trike", "amount": 50.0, "category": "Mobilization", "note": ""}, "JEEP": {"desc": "Jeep", "amount": 12.0, "category": "Mobilization", "note": ""}, "HORSE": {"desc": "Horse", "amount": 1200.0, "category": "Mobilization", "note": ""}, "CARABAO": {"desc": "Carabao", "amount": 1500.0, "category": "Mobilization", "note": ""}, "PRKNG": {"desc": "Parking", "amount": 70.0, "category": "Mobilization", "note": ""}, "NLEX": {"desc": "NLEX - Toll Fee", "amount": 1000.0, "category": "Mobilization", "note": ""}, "SCTEXT": {"desc": "SCTEX - Toll Fee", "amount": 1000.0, "category": "Mobilization", "note": ""}, "SLEX": {"desc": "Slex- Toll Fee", "amount": 260.0, "category": "Mobilization", "note": ""}, "CAVITEX": {"desc": "Cavitex", "amount": 194.0, "category": "Mobilization", "note": ""}, "STARTOLLWAY": {"desc": "Star Tollway", "amount": 104.0, "category": "Mobilization", "note": ""}, "FERRYR7": {"desc": "Region 7 Ferry", "amount": 10000.0, "category": "Mobilization", "note": ""}, "AIRFARER7": {"desc": "Region 7 Airfare", "amount": 20000.0, "category": "Mobilization", "note": ""}, "CALAX": {"desc": "CALAX - Toll Fee", "amount": 162.0, "category": "Mobilization", "note": ""}, "CONSULTANCY": {"desc": "Consultancy", "amount": 0.0, "category": "Project Expense (KA/PM)", "note": ""}, "SB": {"desc": "Surety Bonds", "amount": null, "category": "Project Expense (KA/PM)", "note": ""}, "PI": {"desc": "Professional Indemnity", "amount": null, "category": "Project Expense (KA/PM)", "note": ""}, "CE": {"desc": "Client Engagement", "amount": null, "category": "Project Expense (KA/PM)", "note": "Minimum of 300"}, "MILEAGE": {"desc": "Mileage", "amount": 7.46, "category": "Project Expense (KA/PM)", "note": ""}, "SSHOES": {"desc": "Safety Shoes", "amount": 900.0, "category": "Safety & Security", "note": ""}, "HARDHAT": {"desc": "Hard Hat", "amount": 120.0, "category": "Safety & Security", "note": ""}, "VEST": {"desc": "Vest", "amount": 110.0, "category": "Safety & Security", "note": ""}, "MSHOES": {"desc": "Mountain Shoes", "amount": 2550.0, "category": "Safety & Security", "note": ""}, "HARNESS": {"desc": "Harness", "amount": 1650.0, "category": "Safety & Security", "note": ""}, "LIFEVST": {"desc": "Life Vest", "amount": 400.0, "category": "Safety & Security", "note": ""}, "RAINBOOTS": {"desc": "Rain Boots", "amount": 300.0, "category": "Safety & Security", "note": ""}, "RAINBOOTSWSTEEL": {"desc": "Rain Boots w/ Steel Toe", "amount": 550.0, "category": "Safety & Security", "note": ""}, "EARPLUGS": {"desc": "Ear Plugs", "amount": 200.0, "category": "Safety & Security", "note": ""}, "UMBRELLA": {"desc": "Umbrella", "amount": 150.0, "category": "Safety & Security", "note": ""}, "RAINCOATS": {"desc": "Rain Coats", "amount": 350.0, "category": "Safety & Security", "note": ""}, "GOGGLES": {"desc": "Goggles", "amount": 180.0, "category": "Safety & Security", "note": ""}, "NBI": {"desc": "NBI Clearance", "amount": 200.0, "category": "Safety & Security", "note": ""}, "POLICEC": {"desc": "Police Clearance", "amount": 160.0, "category": "Safety & Security", "note": ""}, "RGLOVES": {"desc": "Rubber Gloves", "amount": 150.0, "category": "Safety & Security", "note": ""}, "LONGSLEEVE": {"desc": "Longsleeve", "amount": 250.0, "category": "Safety & Security", "note": ""}, "TACTICALPANTS": {"desc": "Tactical Pants", "amount": 1200.0, "category": "Safety & Security", "note": ""}, "M.SHIRT": {"desc": "Mountain Shirt", "amount": 350.0, "category": "Safety & Security", "note": ""}, "W.SHOES": {"desc": "Water Shoes", "amount": 600.0, "category": "Safety & Security", "note": ""}, "W.BREAKER": {"desc": "Wind breaker", "amount": 3500.0, "category": "Safety & Security", "note": ""}, "SWAB": {"desc": "Swab Test", "amount": 2500.0, "category": "Medical", "note": ""}, "ANTIGEN": {"desc": "Antigen Test", "amount": 1000.0, "category": "Medical", "note": ""}, "MEDICAL": {"desc": "Medical Examination", "amount": 950.0, "category": "Medical", "note": ""}, "DRUG": {"desc": "Drug Test", "amount": 600.0, "category": "Medical", "note": ""}, "SET": {"desc": "1 set outputs", "amount": 600.0, "category": "Research & Printing", "note": ""}, "COMM": {"desc": "Communication", "amount": 50.0, "category": "Research & Printing", "note": "per travel"}, "RFS": {"desc": "Food Subsidy", "amount": 200.0, "category": "Research & Printing", "note": ""}, "RGT": {"desc": "Ground Transportation", "amount": 1.46, "category": "Research & Printing", "note": "Mileage"}, "TITLE": {"desc": "Titles", "amount": 720.0, "category": "Research & Printing", "note": ""}, "PLAN": {"desc": "Plan", "amount": 300.0, "category": "Research & Printing", "note": ""}, "LDC": {"desc": "Lot Data Computation", "amount": 25.0, "category": "Research & Printing", "note": ""}, "TAXMAP": {"desc": "Tax Map", "amount": 200.0, "category": "Research & Printing", "note": ""}, "TAXDEC": {"desc": "Tax Declaration", "amount": 50.0, "category": "Research & Printing", "note": ""}, "NAMRIA": {"desc": "NAMRIA", "amount": null, "category": "Research & Printing", "note": ""}, "GCP": {"desc": "GCP", "amount": 720.0, "category": "Research & Printing", "note": ""}, "GCPB": {"desc": "GCP-Benchmark", "amount": 360.0, "category": "Research & Printing", "note": ""}, "MYLAR": {"desc": "Mylar", "amount": 150.0, "category": "Research & Printing", "note": ""}, "A1TRACING": {"desc": "Tracing Paper A1", "amount": 37.0, "category": "Research & Printing", "note": ""}, "A1BLUEPRINT": {"desc": "Blueprint -A1", "amount": 150.0, "category": "Research & Printing", "note": ""}, "A2TRACING": {"desc": "Tracing Paper A2", "amount": 20.0, "category": "Research & Printing", "note": ""}, "A2BLUEPRINT": {"desc": "Blueprint -A2", "amount": 90.0, "category": "Research & Printing", "note": ""}, "EFT": {"desc": "Expedite Fee - Title", "amount": 150.0, "category": "Research & Printing", "note": ""}, "EFP": {"desc": "Expedite Fee - Survey Plan", "amount": 150.0, "category": "Research & Printing", "note": ""}, "EFLDC": {"desc": "Expedite Fee - LDC", "amount": 50.0, "category": "Research & Printing", "note": ""}, "EFCM": {"desc": "Expedite Fee - CM", "amount": 100.0, "category": "Research & Printing", "note": ""}, "EFTM": {"desc": "Expedite Fee - TM", "amount": 100.0, "category": "Research & Printing", "note": ""}, "EFTD": {"desc": "Expedite Fee - TD", "amount": 50.0, "category": "Research & Printing", "note": ""}, "EFSP": {"desc": "Expedite Fee - Sepia Plans", "amount": 100.0, "category": "Research & Printing", "note": ""}, "EFNTD": {"desc": "Expedite Fee - NTD", "amount": 50.0, "category": "Research & Printing", "note": ""}, "PF": {"desc": "Processing Fee", "amount": 200.0, "category": "Research & Printing", "note": ""}, "CTC": {"desc": "Certified True Copyof Title", "amount": 720.0, "category": "Research & Printing", "note": ""}, "MCOST": {"desc": "Maintennace cost", "amount": 20.54, "category": "Research & Printing", "note": ""}};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INTERNAL CONTROLS ACTIVITIES — 46 activity templates
+// ══════════════════════════════════════════════════════════════════════════════
+const IC_ACTIVITIES = [{"name": "Mobilization", "items": ["Airfare/Ferry", "Car/Boat Rental", "Transportation", "Gasoline", "Food Subsidy", "Driver Salary", "PM Salary", "IM Salary", "Rodman Salary", "Drone Operator Salary", "Aircraft Rental", "Vehicle Minor Repairs & Exp", "Travel and Processing Fees", "Lodging", "Field Utilities", "Vehicular Depreciation", "Toll Fees"]}, {"name": "Demobilization", "items": ["Airfare/Ferry", "Car/Boat Rental", "Transportation", "Gasoline", "Food Subsidy", "Driver Salary", "PM Salary", "IM Salary", "Rodman Salary", "Drone Operator Salary", "Aircraft Rental", "Vehicle Minor Repairs & Exp", "Travel and Processing Fees", "Lodging", "Field Utilities", "Vehicular Depreciation", "Toll Fees"]}, {"name": "Ocular Inspection", "items": ["Airfare/Ferry", "Car/Boat Rental", "Transportation", "Gasoline", "Food Subsidy", "Driver Salary", "PM Salary", "IM Salary", "Rodman Salary", "Drone Operator Salary", "Aircraft Rental", "Vehicle Minor Repairs & Exp", "Travel and Processing Fees", "Lodging", "Field Utilities", "Vehicular Depreciation", "Toll Fees"]}, {"name": "Survey Data Acquisition - Establishment of Controls - Traverse of every 30-50 meters", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Establishment of Controls - Static Network of 10km-30km", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Establishment of Controls - Static Network of 2km-5km baselines", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Establishment of Controls - Level network of every 30-50 m", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Establishment of Controls - Tidal Obeservation", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition -Relocation Survey", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Topographic Survey", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Utility Survey", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Asbuilt Survey", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Bathymetric Survey", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Matterport", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Aerial Mapping - RGB -Photo", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Aerial Mapping - RGB - Video", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Aerial Mapping - LiDAR", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Site Condition Survey", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Tree Survey - position and species", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Tree Survey - Tag", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Survey Data Acquisition - Tree Survey - Caliper", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Property Layout", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Horizontal Construction Layout", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Vertical Construction Layout", "items": ["Car/Boat Rental", "Gasoline", "Transportation", "Communications and Internet", "Survey Supplies", "Equipment Depreciation", "Vehicular Depreciation", "Survey Eqpt Minor Repairs & Exp", "Survey Equipment Rental", "Other Allowance", "Food Subsidy", "Driver Salary", "IM Salary", "Rodman Salary", "Local Hire"]}, {"name": "Research - Property Research", "items": ["Airfare/Ferry", "Transporatation", "Research Salary", "Food Subsidy", "Research Docs", "Expedite Fee"]}, {"name": "Research - Feasibility Research", "items": ["Airfare/Ferry", "Transporatation", "Researcher Salary", "Food Subsidy", "Research Docs", "Expedite Fee"]}, {"name": "Reports and Drafting - Survey Planning Activities", "items": ["PM Salary"]}, {"name": "Reports and Drafting - Plotting of Technical Description", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - Relo", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - Topo/Bathy", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - LiDAR", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - RGB Photo", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - RGB Video", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - Sections and Profiles", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - Feature Line Extraction; 2D/3D; Level of Detail", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - VSR", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - CAAP", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - Tree Survey", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - Site Condition", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - Static Survey", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - Traverse Adjustment", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - Levelling Adjustment", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Data Processing - BOMA Computations", "items": ["PM Salary", "Maptech/Drafter Salary"]}, {"name": "Reports and Drafting - Survey Reports", "items": ["PM Salary", "Maptech/Drafter Salary", "Printing", "Postage", "Mileage"]}, {"name": "Reports and Drafting - Site Investigation/TDD", "items": ["PM Salary", "Maptech/Drafter Salary", "Printing", "Postage", "Mileage"]}, {"name": "Reports and Drafting - Matter Subscription", "items": ["PM Salary", "Maptech/Drafter Salary", "Printing", "Postage", "Mileage", "Client Engagement", "Transportation", "Consultancy", "Project Insurance", "Processing Fees", "Bank Charges", "Safety tools and equipment", "Medical Expense"]}];
+
+// Map IC line item descriptions to ABC tag codes (best-effort)
+const IC_TO_ABC = {
+  'Airfare/Ferry':                'FERRYR7',
+  'Car/Boat Rental':              'CR',
+  'Transportation':               'RGT',
+  'Gasoline':                     'GAS',
+  'Food Subsidy':                 'RFS',
+  'Driver Salary':                'DV',
+  'PM Salary':                    'PM1',
+  'IM Salary':                    'IM',
+  'Rodman Salary':                'RM',
+  'Drone Operator Salary':        'DO',
+  'Aircraft Rental':              'AR',
+  'Travel and Processing Fees':   'PF',
+  'Lodging':                      'NCRHotel',
+  'Field Utilities':              'ELECTRICITY',
+  'Vehicular Depreciation':       'CAR',
+  'Toll Fees':                    'NLEX',
+  'Vehicle Minor Repairs & Exp':  'MCOST',
+  'Communications and Internet':  'COMM',
+  'Survey Supplies':              'MOHON',
+  'Equipment Depreciation':       'GPS',
+  'Survey Eqpt Minor Repairs & Exp': 'MCOST',
+  'Survey Equipment Rental':      'GPSR',
+  'Other Allowance':              'CONSULTANCY',
+  'Local Hire':                   'LH',
+  'Research Salary':              'RE',
+  'Researcher Salary':            'RE',
+  'Maptech/Drafter Salary':       'MT',
+  'Printing':                     'SET',
+  'Postage':                      'COMM',
+  'Mileage':                      'RGT',
+  'Client Engagement':            'CE',
+  'Consultancy':                  'CONSULTANCY',
+  'Medical Expense':              'MEDICAL',
+  'Research Docs':                'TITLE',
+  'Expedite Fee':                 'EFT',
+  'Transporatation':              'RGT',
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SINGLETON ACTIVITY GUARD
+// Mobilization, Demobilization, Ocular Inspection, and Establishment of
+// Controls are ONE-ENTRY-ONLY activities. If any of these already exist in
+// the cost table, they are automatically skipped when adding a new scope —
+// no duplicate is ever created. The TOR override checkbox lets the estimator
+// force a separate entry when the project specifically requires it.
+// ══════════════════════════════════════════════════════════════════════════════
+
+const SINGLETON_KEYWORDS = [
+  'demobilization',
+  'mobilization',
+  'establishment of controls',
+  'ocular inspection',
+];
+
+const SINGLETON_LABELS = {
+  'demobilization':            'Demobilization',
+  'mobilization':              'Mobilization',
+  'establishment of controls': 'Establishment of Controls',
+  'ocular inspection':         'Ocular Inspection',
+};
+
+function isSingleton(activityName) {
+  const lower = activityName.toLowerCase();
+  return SINGLETON_KEYWORDS.find(k => lower.includes(k)) || null;
+}
+
+function getSingletonLabel(keyword) {
+  return SINGLETON_LABELS[keyword] || keyword;
+}
+
+// Returns true if a singleton type already exists in the cost table
+function singletonAlreadyExists(keyword) {
+  for (const row of document.querySelectorAll('#costTbody tr.activity-head')) {
+    const inp = row.querySelector('input[type=text]');
+    if (inp && inp.value.toLowerCase().includes(keyword)) return true;
+  }
+  return false;
+}
+
+// Returns existing singleton activity names for the summary note
+function getExistingSingletons() {
+  const found = [];
+  document.querySelectorAll('#costTbody tr.activity-head').forEach(row => {
+    const inp = row.querySelector('input[type=text]');
+    const name = inp ? inp.value : '';
+    const kw = isSingleton(name);
+    if (kw) found.push({ name, keyword: kw });
+  });
+  return found;
+}
+
+// Mark singleton activity headers with a visual "1× ONLY" badge
+function markSingletonRows() {
+  const seen = {};
+  document.querySelectorAll('#costTbody tr.activity-head').forEach(row => {
+    const inp = row.querySelector('input[type=text]');
+    if (!inp) return;
+    const kw = isSingleton(inp.value);
+    if (!kw) return;
+    row.querySelector('.singleton-badge')?.remove();
+    const badge = document.createElement('span');
+    badge.className = 'singleton-badge';
+    badge.textContent = '1× ONLY';
+    inp.parentNode.appendChild(badge);
+    seen[kw] = true;
+  });
+}
+
+// ── addICActivitySafe — silently skips singleton activities if already present
+function addICActivitySafe() {
+  const sel = document.getElementById('ic-activity-sel');
+  const idx = parseInt(sel.value);
+  if (isNaN(idx)) { showToast('Please select an activity first', 'err'); return; }
+  const act = IC_ACTIVITIES[idx];
+  if (!act) return;
+
+  // Check if this whole activity is a singleton that already exists
+  const keyword = isSingleton(act.name);
+  if (keyword && singletonAlreadyExists(keyword)) {
+    showToast(
+      '⚠ ' + getSingletonLabel(keyword) + ' already in table — skipped to avoid double-counting',
+      'err'
+    );
+
+    // Show a small info note under the selector
+    let note = document.getElementById('ic-singleton-note');
+    if (!note) {
+      note = document.createElement('div');
+      note.id = 'ic-singleton-note';
+      note.style.cssText = 'font-size:12px;color:var(--gold);background:#FFF8E6;border:1px solid #F0D080;border-radius:6px;padding:8px 14px;margin-top:10px;font-weight:500';
+      document.getElementById('ic-preview').parentNode.insertBefore(note, document.getElementById('ic-preview'));
+    }
+
+    const existingName = getExistingSingletons().find(s => s.keyword === keyword)?.name || getSingletonLabel(keyword);
+    note.innerHTML =
+      '⚠️ <strong>' + getSingletonLabel(keyword) + '</strong> was skipped — ' +
+      'it already exists in the cost table as: <em>' + existingName + '</em>. ' +
+      'If the TOR requires a separate entry, check the box below and add again.';
+
+    // Show TOR override option
+    let torRow = document.getElementById('ic-tor-row');
+    if (!torRow) {
+      torRow = document.createElement('div');
+      torRow.id = 'ic-tor-row';
+      torRow.style.cssText = 'display:flex;align-items:center;gap:10px;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:10px 14px;margin-top:8px;font-size:13px';
+      torRow.innerHTML =
+        '<input type="checkbox" id="ic-tor-check" style="width:16px;height:16px;accent-color:var(--accent2);flex-shrink:0;cursor:pointer">' +
+        '<label for="ic-tor-check" style="cursor:pointer"><strong>TOR exception</strong> — add separately per scope as stated in the Terms of Reference</label>';
+      note.after(torRow);
+    }
+    torRow.style.display = 'flex';
+    return;
+  }
+
+  // Check TOR override checkbox
+  const torOverride = document.getElementById('ic-tor-check')?.checked || false;
+
+  _doAddICActivity(act, torOverride);
+
+  const skippedCount = 0;
+  showToast('✓ Added ' + act.items.length + ' items: ' + act.name.substring(0, 38), 'ok');
+
+  // Hide TOR row if visible
+  const torRow = document.getElementById('ic-tor-row');
+  if (torRow) torRow.style.display = 'none';
+  const note = document.getElementById('ic-singleton-note');
+  if (note) note.remove();
+}
+
+function _doAddICActivity(act, torOverride) {
+  const tb = document.getElementById('costTbody');
+
+  // How many of this activity's line items are singletons that already exist?
+  // For a full activity that IS a singleton — just add (TOR override path)
+  // For scope activities that CONTAIN singleton sub-activities — skip those sub-items
+  let skipped = [];
+  let added   = 0;
+
+  // Add activity header
+  let headerName = act.name;
+  if (torOverride) headerName += ' — TOR: Separate';
+  tb.appendChild(makeCostActivityRow(headerName));
+
+  act.items.forEach(item => {
+    const tag  = IC_TO_ABC[item] || '';
+    const abc  = tag ? ABC_LOOKUP[tag] : null;
+    const rate = abc?.amount || 0;
+    const desc = tag ? tag + ' — ' + item : item;
+    tb.appendChild(makeCostItemRow(desc, rate, 1, 1));
+    added++;
+  });
+
+  updateCostCards();
+  attachAllTagLookups();
+  markSingletonRows();
+
+  // Switch to manual view
+  const manBtn = document.querySelector('#panel-costs .gantt-stab');
+  if (manBtn) switchCostView('manual', manBtn);
+}
+
+// ── addCostActivitySafe — block duplicate singletons from manual header entry
+function addCostActivitySafe() {
+  addCostActivity();
+  const tb = document.getElementById('costTbody');
+  const lastHead = [...tb.querySelectorAll('tr.activity-head')].pop();
+  const inp = lastHead?.querySelector('input[type=text]');
+  if (!inp) return;
+
+  inp.addEventListener('blur', function() {
+    const kw = isSingleton(this.value);
+    if (!kw) return;
+
+    // Count how many rows have this keyword (including this one)
+    const matches = [...document.querySelectorAll('#costTbody tr.activity-head')]
+      .filter(r => {
+        const i = r.querySelector('input[type=text]');
+        return i && i.value.toLowerCase().includes(kw);
+      });
+
+    if (matches.length > 1) {
+      // This is a duplicate — remove the row just added and show toast
+      lastHead.remove();
+      updateCostCards();
+      markSingletonRows();
+      showToast(
+        '⚠ ' + getSingletonLabel(kw) + ' already exists — removed to prevent double-counting',
+        'err'
+      );
+    } else {
+      markSingletonRows();
+    }
+  });
+}
+
+// Stub — modal no longer used but kept to avoid reference errors
+let _singletonCallback = null;
+function singletonDecide() {}
+function showSingletonWarning() {}
+
+// ── Switch cost sub-view ──────────────────────────────────────────────────────
+function switchCostView(view, btn) {
+  document.querySelectorAll('#panel-costs .gantt-stab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#panel-costs .gantt-view').forEach(v => v.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cost-' + view).classList.add('active');
+  if (view === 'abc')  renderABCList();
+  if (view === 'ic')   renderICSelector();
+}
+
+// ── ABC LIST rendering ────────────────────────────────────────────────────────
+function renderABCList() {
+  const search   = (document.getElementById('abc-search')?.value || '').toLowerCase();
+  const catFilter = document.getElementById('abc-cat-filter')?.value || '';
+
+  // Populate category filter on first call
+  const catSel = document.getElementById('abc-cat-filter');
+  if (catSel && catSel.options.length === 1) {
+    const cats = [...new Set(Object.values(ABC_LOOKUP).map(v => v.category))];
+    cats.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c; opt.textContent = c;
+      catSel.appendChild(opt);
+    });
+  }
+
+  const tb = document.getElementById('abcTbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+
+  let count = 0;
+  Object.entries(ABC_LOOKUP).forEach(([tag, data]) => {
+    if (catFilter && data.category !== catFilter) return;
+    if (search && !tag.toLowerCase().includes(search) && !data.desc.toLowerCase().includes(search)) return;
+    const amt = data.amount != null ? '₱ ' + data.amount.toLocaleString('en-PH', {minimumFractionDigits:2}) : '—';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="abc-tag">${tag}</span></td>
+      <td style="font-weight:500">${data.desc}</td>
+      <td><span class="abc-cat-pill">${data.category}</span></td>
+      <td class="num" style="font-family:'DM Mono',monospace;color:var(--green)">${amt}</td>
+      <td style="font-size:11px;color:var(--muted)">${data.note || ''}</td>
+      <td><button class="abc-add-btn" onclick="addABCItemToTable('${tag}')">+ Add</button></td>
+    `;
+    tb.appendChild(tr);
+    count++;
+  });
+
+  if (count === 0) {
+    tb.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#999">No items match your search</td></tr>';
+  }
+}
+
+// ── Add ABC item directly to cost table ──────────────────────────────────────
+function addABCItemToTable(tag) {
+  const data = ABC_LOOKUP[tag];
+  if (!data) return;
+  const tb = document.getElementById('costTbody');
+  const tr = makeCostItemRow(tag + ' — ' + data.desc, data.amount || 0, 1, 1);
+  tb.appendChild(tr);
+  updateCostCards();
+  // Switch to manual view to show it was added
+  const manBtn = document.querySelector('#panel-costs .gantt-stab');
+  if (manBtn) { switchCostView('manual', manBtn); }
+  showToast('✓ Added: ' + data.desc, 'ok');
+}
+
+// ── IC SELECTOR ───────────────────────────────────────────────────────────────
+function renderICSelector() {
+  const sel = document.getElementById('ic-activity-sel');
+  if (!sel || sel.options.length > 1) return;
+  IC_ACTIVITIES.forEach((act, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = act.name;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', previewICActivity);
+}
+
+function previewICActivity() {
+  const sel   = document.getElementById('ic-activity-sel');
+  const idx   = parseInt(sel.value);
+  const prev  = document.getElementById('ic-preview');
+  const cont  = document.getElementById('ic-preview-content');
+  if (isNaN(idx)) { prev.style.display='none'; return; }
+  const act = IC_ACTIVITIES[idx];
+  if (!act) return;
+
+  let rows = act.items.map(item => {
+    const tag  = IC_TO_ABC[item] || '';
+    const abc  = tag ? ABC_LOOKUP[tag] : null;
+    const rate = abc?.amount != null ? '₱ ' + abc.amount.toLocaleString('en-PH',{minimumFractionDigits:2}) : '—';
+    return `<tr>
+      <td style="padding:5px 8px;border-bottom:1px solid var(--border)">${item}</td>
+      <td style="padding:5px 8px;border-bottom:1px solid var(--border)"><span class="ic-tag">${tag || '—'}</span></td>
+      <td style="padding:5px 8px;border-bottom:1px solid var(--border)" class="ic-rate">${rate}</td>
+    </tr>`;
+  }).join('');
+
+  cont.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:12px">
+    <thead><tr style="background:var(--ink);color:#fff">
+      <th style="padding:6px 8px;text-align:left">Line Item</th>
+      <th style="padding:6px 8px;text-align:left">ABC Tag</th>
+      <th style="padding:6px 8px;text-align:left">Rate</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+  prev.style.display = 'block';
+}
+
+function addICActivity() {
+  const sel = document.getElementById('ic-activity-sel');
+  const idx = parseInt(sel.value);
+  if (isNaN(idx)) { showToast('Please select an activity first', 'err'); return; }
+  const act = IC_ACTIVITIES[idx];
+  if (!act) return;
+
+  const tb = document.getElementById('costTbody');
+  // Add activity header
+  tb.appendChild(makeCostActivityRow(act.name));
+
+  // Add each line item with ABC lookup
+  act.items.forEach(item => {
+    const tag  = IC_TO_ABC[item] || '';
+    const abc  = tag ? ABC_LOOKUP[tag] : null;
+    const rate = abc?.amount || 0;
+    const desc = tag ? tag + ' — ' + item : item;
+    tb.appendChild(makeCostItemRow(desc, rate, 1, 1));
+  });
+
+  updateCostCards();
+
+  // Switch to manual view
+  const manBtn = document.querySelector('#panel-costs .gantt-stab');
+  if (manBtn) switchCostView('manual', manBtn);
+  showToast('✓ Added ' + act.items.length + ' items from: ' + act.name.substring(0,40), 'ok');
+}
+
+// ── TAG AUTOCOMPLETE on description inputs ────────────────────────────────────
+function attachTagLookup(input) {
+  if (!input || input._tagBound) return;
+  input._tagBound = true;
+  let hint = null;
+
+  input.addEventListener('input', function() {
+    const val = this.value.trim().toUpperCase();
+    if (hint) { hint.remove(); hint = null; }
+    if (!val || val.length < 1) return;
+
+    const match = ABC_LOOKUP[val];
+    if (match) {
+      // Show inline hint
+      hint = document.createElement('div');
+      hint.className = 'tag-hint';
+      const amt = match.amount != null ? '₱ ' + match.amount.toLocaleString('en-PH',{minimumFractionDigits:2}) : 'N/A';
+      hint.innerHTML = `<span class="th-tag">${val}</span> → ${match.desc}<br><span class="th-amt">${amt}</span> / day &nbsp;·&nbsp; <em style="opacity:.7">${match.category}</em>`;
+      this.parentNode.style.position = 'relative';
+      this.parentNode.appendChild(hint);
+      // Position below input
+      hint.style.top  = (this.offsetHeight + 4) + 'px';
+      hint.style.left = '0';
+    }
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab' || e.key === 'Enter') {
+      const val = this.value.trim().toUpperCase();
+      const match = ABC_LOOKUP[val];
+      if (match) {
+        e.preventDefault();
+        this.value = val + ' — ' + match.desc;
+        // Auto-fill unit cost in the same row
+        const tr = this.closest('tr');
+        const unitInp = tr?.querySelector('.cost-unit');
+        if (unitInp && match.amount != null) {
+          unitInp.value = match.amount;
+          recalcRow(unitInp);
+        }
+        if (hint) { hint.remove(); hint = null; }
+      }
+    }
+  });
+
+  input.addEventListener('blur', () => {
+    setTimeout(() => { if (hint) { hint.remove(); hint = null; } }, 200);
+  });
+}
+
+// Override makeCostItemRow to attach tag lookup
+</script>
+<script>
+// ── TAB SWITCHING ────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ── GANTT SUB-VIEW SWITCH ─────────────────────────────────────────────────────
+function switchGanttView(view, btn) {
+  document.querySelectorAll('.gantt-stab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.gantt-view').forEach(v => v.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('gantt-' + view).classList.add('active');
+  if (view === 'external') buildExternalGantt();
+}
+
+// ── HEADER SYNC ──────────────────────────────────────────────────────────────
+function syncHeader() {
+  document.getElementById('hdr-client').textContent = document.getElementById('f-client').value || '—';
+  document.getElementById('hdr-pno').textContent    = document.getElementById('f-projno').value || '—';
+  const sd = document.getElementById('f-start').value;
+  document.getElementById('hdr-start').textContent  = sd ? new Date(sd).toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'}) : '—';
+  document.getElementById('hdr-pm').textContent     = document.getElementById('f-pm').value || '—';
+}
+
+// ── END DATE CALC ─────────────────────────────────────────────────────────────
+function calcEndDate() {
+  const s = document.getElementById('f-start').value;
+  const d = parseInt(document.getElementById('f-dur').value);
+  if (s && d) {
+    const end = new Date(s); end.setDate(end.getDate() + d);
+    document.getElementById('f-end').value = end.toISOString().split('T')[0];
+    const gs = document.getElementById('g-start');
+    const gd = document.getElementById('g-dur');
+    if (!gs.value) gs.value = s;
+    if (!gd.value) gd.value = d;
+    buildGantt(); buildExternalGantt();
+  }
+}
+
+// ── COVER PROGRESS ────────────────────────────────────────────────────────────
+const coverFields = ['f-objective','f-client','f-survtype','f-location','f-price','f-extdate','f-start','f-dur'];
+function updateCoverProgress() {
+  const filled = coverFields.filter(id => document.getElementById(id)?.value.trim()).length;
+  const pct = Math.round((filled / coverFields.length) * 100);
+  document.getElementById('coverPct').textContent = pct;
+  const circ = 2 * Math.PI * 22;
+  document.getElementById('coverRing').style.strokeDashoffset = circ - (circ * pct / 100);
+}
+
+// ── ATTENDEES ─────────────────────────────────────────────────────────────────
+function addAttendee(listId, placeholders) {
+  const list = document.getElementById(listId);
+  const row  = document.createElement('div');
+  row.className = 'attendee-row';
+  row.innerHTML = `<input type="text" placeholder="${placeholders[0]}"><input type="text" placeholder="${placeholders[1]}"><button class="del-btn" onclick="delRow(this)">×</button>`;
+  list.appendChild(row);
+}
+function delRow(btn) { btn.closest('.attendee-row, tr')?.remove(); markDirty && markDirty(); }
+function makeDelCell() {
+  return `<td style="text-align:center"><button class="del-btn" style="margin:auto" onclick="delRow(this)" title="Delete row">×</button></td>`;
+}
+
+// ── CHECKLIST DATA ────────────────────────────────────────────────────────────
+const inputsData = [
+  'If ISO company, strictly follow ISO Standards','Conforme',
+  'Formal Signed Contract checked by PM','Formal Signed Contract checked by Key Account',
+  'For any change in scope, signed variation order','Downpayment received',
+  'Site access / entry authorization','Survey permit from LGU',
+  'Client technical contact confirmed','Project brief / scope document received',
+  'QAR acceptance steps updated',
+];
+const outputsData = [
+  'Final Survey Report','Lot Data Computation (LDC)','Technical Description',
+  'Survey Plan / Lot Plan','Tax Map','CAD File (DWG)',
+  'Digital Elevation Model (DEM/DTM)','Orthophoto','LiDAR Point Cloud',
+  'Traverse Adjustment Sheet','Levelling Adjustment Sheet','As-Built Drawings',
+  'Site Condition Report','Tree Survey Report','Field Photos / Documentation',
+  'Delivery Receipt','Billing Invoice','QAR Signed Copy',
+];
+
+function buildCheckRows(tbodyId, data) {
+  const tb = document.getElementById(tbodyId);
+  data.forEach((desc, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="checkbox" onchange="toggleDone(this)"></td>
+      <td class="row-num">${i+1}</td>
+      <td><input type="text" value="${desc}" style="width:100%;min-width:180px"></td>
+      <td><input type="text" placeholder="PIC" style="width:90px"></td>
+      <td><input type="date" style="width:130px"></td>
+      <td><input type="text" placeholder="Contact" style="width:110px"></td>
+      <td><input type="text" placeholder="Details" style="width:110px"></td>
+      ${makeDelCell()}`;
+    tb.appendChild(tr);
+  });
+}
+function addCheckRow(tbodyId) {
+  const tb = document.getElementById(tbodyId);
+  const n  = tb.querySelectorAll('tr').length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="checkbox" onchange="toggleDone(this)"></td>
+    <td class="row-num">${n}</td>
+    <td><input type="text" placeholder="Enter description…" style="width:100%;min-width:180px"></td>
+    <td><input type="text" placeholder="PIC" style="width:90px"></td>
+    <td><input type="date" style="width:130px"></td>
+    <td><input type="text" placeholder="Coordinator" style="width:110px"></td>
+    <td><input type="text" placeholder="Contact" style="width:110px"></td>
+    ${makeDelCell()}`;
+  tb.appendChild(tr);
+}
+function toggleDone(cb) { cb.closest('tr').classList.toggle('done-row', cb.checked); }
+
+function addScopeRow() {
+  const tb = document.getElementById('scopeTbody');
+  const n  = tb.querySelectorAll('tr').length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td class="row-num">${n}</td><td><input type="text" placeholder="Scope change…"></td><td><select class="status-sel"><option>Pending</option><option>Approved</option><option>Rejected</option></select></td><td><input type="text" placeholder="VO-00${n}"></td><td style="text-align:center"><button class="del-btn" style="margin:auto" onclick="delRow(this)">×</button></td>`;
+  tb.appendChild(tr);
+}
+
+// ── GANTT ─────────────────────────────────────────────────────────────────────
+const statusColors = {
+  'Planned':'#1B6CA8','On Time':'#2A7A4A','Delayed':'#B8892A','Major Delay':'#C84B2F'
+};
+const ganttActivities = [
+  {name:'Mobilization',              days:2,  start:0},
+  {name:'Ocular Inspection',         days:5,  start:2},
+  {name:'Establishment of Controls', days:5,  start:5},
+  {name:'Survey Data Acquisition',   days:10, start:8},
+  {name:'Data Processing',           days:7,  start:18},
+  {name:'Draft Reports & Plans',     days:5,  start:20},
+  {name:'QA Review',                 days:3,  start:24},
+  {name:'Final Output Delivery',     days:2,  start:27},
+  {name:'Demobilization',            days:1,  start:29},
+];
+
+function applyGanttStatusColor(sel) {
+  const color = statusColors[sel.value] || '#1B6CA8';
+  sel.style.background   = color + '22';
+  sel.style.color        = color;
+  sel.style.borderColor  = color + '66';
+  const bar = sel.closest('tr')?.querySelector('.gantt-bar');
+  if (bar) bar.style.background = color + '44';
+}
+function updateGanttBar(inp) {
+  const tr  = inp.closest('tr');
+  const bar = tr.querySelector('.gantt-progress');
+  const sel = tr.querySelector('.gantt-status-sel');
+  const color = statusColors[sel?.value] || '#2A7A4A';
+  if (bar) { bar.style.width = inp.value + '%'; bar.style.background = color; }
+}
+function recalcGanttDays(inp) {
+  const tr = inp.closest('tr');
+  const sI = tr.querySelector('input[type=date]:nth-of-type(1)');
+  const eI = tr.querySelector('input[type=date]:nth-of-type(2)');
+  const ds = tr.querySelector('.gantt-days-val');
+  if (sI?.value && eI?.value && ds)
+    ds.textContent = Math.max(0, Math.round((new Date(eI.value)-new Date(sI.value))/86400000));
+}
+
+function makeGanttRow(name, sISO, eISO, days, barW, barOff) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" value="${name}" style="min-width:160px"></td>
+    <td><input type="date" value="${sISO}" style="width:128px" oninput="recalcGanttDays(this);buildExternalGantt()"></td>
+    <td><input type="date" value="${eISO}" style="width:128px" oninput="recalcGanttDays(this);buildExternalGantt()"></td>
+    <td class="num" style="min-width:44px"><span class="gantt-days-val">${days}</span></td>
+    <td><input type="number" value="0" min="0" max="100" style="width:50px" oninput="updateGanttBar(this);buildExternalGantt()">%</td>
+    <td>
+      <select class="gantt-status-sel"
+        onchange="applyGanttStatusColor(this);updateGanttBar(this.closest('tr').querySelector('input[type=number]'));buildExternalGantt()"
+        style="min-width:110px;padding:4px 8px;border-radius:4px;font-size:12px;border:1.5px solid #ccc;font-family:'Outfit',sans-serif;cursor:pointer;background:#1B6CA822;color:#1B6CA8;border-color:#1B6CA866">
+        <option>Planned</option><option>On Time</option><option>Delayed</option><option>Major Delay</option>
+      </select>
+    </td>
+    <td><input type="text" placeholder="PIC" style="width:70px"></td>
+    <td><input type="text" placeholder="Remarks" style="width:110px"></td>
+    <td><div class="gantt-bar" style="width:${barW+40}px;margin-left:${barOff}px;background:#1B6CA844"><div class="gantt-progress" style="width:0%;background:#1B6CA8"></div></div></td>
+    <td style="text-align:center"><button class="del-btn" style="margin:auto" onclick="delRow(this)" title="Delete">×</button></td>`;
+  return tr;
+}
+
+function buildGantt() {
+  const tb       = document.getElementById('ganttTbody');
+  const startVal = document.getElementById('g-start').value || new Date().toISOString().split('T')[0];
+  const base     = new Date(startVal);
+  const dur      = parseInt(document.getElementById('g-dur').value) || 30;
+  tb.innerHTML   = '';
+  ganttActivities.forEach(act => {
+    const s    = new Date(base); s.setDate(s.getDate() + act.start);
+    const e    = new Date(s);    e.setDate(e.getDate() + act.days);
+    const sISO = s.toISOString().split('T')[0];
+    const eISO = e.toISOString().split('T')[0];
+    const barW = Math.max(20, Math.round((act.days/dur)*160));
+    const barOff = Math.min(80, Math.round((act.start/dur)*160));
+    tb.appendChild(makeGanttRow(act.name, sISO, eISO, act.days, barW, barOff));
+  });
+}
+
+function addGanttRow() {
+  const tb   = document.getElementById('ganttTbody');
+  const today = new Date().toISOString().split('T')[0];
+  tb.appendChild(makeGanttRow('New Activity', today, today, 0, 40, 0));
+}
+
+// ── EXTERNAL GANTT (client-facing) ────────────────────────────────────────────
+function buildExternalGantt() {
+  // Pull project meta from cover sheet
+  const projNo  = document.getElementById('f-projno')?.value  || '—';
+  const client  = document.getElementById('f-client')?.value  || '—';
+  const pm      = document.getElementById('f-pm')?.value      || '—';
+  const startV  = document.getElementById('g-start')?.value   || '';
+  const durV    = parseInt(document.getElementById('g-dur')?.value) || 30;
+  const pctV    = parseInt(document.getElementById('g-pct')?.value) || 0;
+
+  document.getElementById('ext-projno').textContent = projNo;
+  document.getElementById('ext-client').textContent = client;
+  document.getElementById('ext-pm').textContent     = pm;
+  document.getElementById('ext-pct').textContent    = pctV + '%';
+  document.getElementById('ext-generated').textContent = new Date().toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'});
+
+  if (!startV) { document.getElementById('ext-start').textContent = '—'; return; }
+
+  const baseDate = new Date(startV);
+  const endDate  = new Date(baseDate); endDate.setDate(endDate.getDate() + durV);
+  document.getElementById('ext-start').textContent = baseDate.toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('ext-end').textContent   = endDate.toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});
+
+  // Collect activities from internal gantt
+  const rows = document.querySelectorAll('#ganttTbody tr');
+  const activities = [];
+  rows.forEach(tr => {
+    const inputs = tr.querySelectorAll('input');
+    const name   = inputs[0]?.value || '';
+    const start  = inputs[1]?.value || '';
+    const finish = inputs[2]?.value || '';
+    const pctInp = tr.querySelector('input[type=number]');
+    const pct    = parseInt(pctInp?.value) || 0;
+    if (name && start && finish) activities.push({name, start, finish, pct});
+  });
+
+  if (!activities.length) {
+    document.getElementById('extGanttHead').innerHTML = '';
+    document.getElementById('extGanttTbody').innerHTML = '<tr><td colspan="3" style="text-align:center;padding:20px;color:#999">No activities yet — add rows in the Internal tab</td></tr>';
+    return;
+  }
+
+  // Build week/day column headers
+  // Use Mon-based weeks spanning the project
+  const allDates = activities.flatMap(a => [new Date(a.start), new Date(a.finish)]);
+  const minDate  = new Date(Math.min(...allDates));
+  const maxDate  = new Date(Math.max(...allDates));
+  // round to monday start
+  const gridStart = new Date(minDate);
+  gridStart.setDate(gridStart.getDate() - ((gridStart.getDay()+6)%7));
+  const gridEnd   = new Date(maxDate);
+  gridEnd.setDate(gridEnd.getDate() + (7 - gridEnd.getDay()));
+
+  // Build array of weeks
+  const weeks = [];
+  let cur = new Date(gridStart);
+  while (cur < gridEnd) {
+    const wStart = new Date(cur);
+    const wEnd   = new Date(cur); wEnd.setDate(wEnd.getDate()+6);
+    weeks.push({start: new Date(wStart), end: new Date(wEnd)});
+    cur.setDate(cur.getDate()+7);
+  }
+
+  const totalDays = Math.ceil((gridEnd - gridStart) / 86400000);
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Build thead
+  const thead = document.getElementById('extGanttHead');
+  // Row 1: month labels
+  let monthRow = '<tr><th class="act-col" rowspan="2">Activity</th>';
+  let lastMonth = -1, monthSpan = 0, monthCells = [];
+  weeks.forEach((w,i) => {
+    const m = w.start.getMonth();
+    if (m !== lastMonth) {
+      if (lastMonth >= -1 && monthSpan > 0) monthCells.push({month: lastMonth, span: monthSpan});
+      lastMonth = m; monthSpan = 1;
+    } else { monthSpan++; }
+    if (i === weeks.length-1) monthCells.push({month: lastMonth, span: monthSpan});
+  });
+  monthCells.forEach(mc => {
+    const mName = new Date(2000, mc.month).toLocaleString('en-PH',{month:'long'});
+    monthRow += `<th colspan="${mc.span}" style="text-align:center;border:1px solid #2A3F55">${mName}</th>`;
+  });
+  monthRow += '</tr>';
+
+  // Row 2: week labels
+  let weekRow = '<tr>';
+  weeks.forEach(w => {
+    const label = w.start.toLocaleDateString('en-PH',{month:'short',day:'numeric'});
+    weekRow += `<th style="min-width:60px;text-align:center;font-size:9px;border:1px solid #2A3F55">${label}</th>`;
+  });
+  weekRow += '</tr>';
+  thead.innerHTML = monthRow + weekRow;
+
+  // Build tbody
+  const tbody = document.getElementById('extGanttTbody');
+  tbody.innerHTML = '';
+  activities.forEach(act => {
+    const aStart = new Date(act.start); aStart.setHours(0,0,0,0);
+    const aEnd   = new Date(act.finish); aEnd.setHours(0,0,0,0);
+
+    let row = `<tr><td style="font-weight:500;white-space:nowrap;padding:6px 10px;min-width:180px">${act.name}</td>`;
+    weeks.forEach(w => {
+      const wS = new Date(w.start); wS.setHours(0,0,0,0);
+      const wE = new Date(w.end);   wE.setHours(0,0,0,0);
+
+      // Does activity overlap this week?
+      const overlapStart = new Date(Math.max(aStart, wS));
+      const overlapEnd   = new Date(Math.min(aEnd, wE));
+      const weekLen      = 7 * 86400000;
+
+      // Is today in this week?
+      const todayInWeek  = today >= wS && today <= wE;
+
+      if (overlapStart <= overlapEnd) {
+        const leftPct  = Math.max(0, Math.min(100, (overlapStart - wS) / weekLen * 100));
+        const widthPct = Math.max(5,  Math.min(100 - leftPct, (overlapEnd - overlapStart + 86400000) / weekLen * 100));
+        const progW    = widthPct * (act.pct/100);
+        const todayStyle = todayInWeek ? 'border-left:2px dashed #C84B2F;' : '';
+        row += `<td style="position:relative;padding:4px 2px;${todayStyle}">
+          <div style="position:relative;height:20px;">
+            <div class="ext-cell-bar" style="position:absolute;left:${leftPct}%;width:${widthPct}%;height:100%">
+              <div class="ext-cell-prog" style="width:${progW/widthPct*100}%;height:100%"></div>
+            </div>
+          </div>
+          <div style="font-size:9px;text-align:center;color:#888;margin-top:1px">${act.pct}%</div>
+        </td>`;
+      } else {
+        const todayStyle = todayInWeek ? 'border-left:2px dashed #C84B2F;' : '';
+        row += `<td style="${todayStyle}"></td>`;
+      }
+    });
+    row += '</tr>';
+    tbody.innerHTML += row;
+  });
+}
+
+// ── SITE REQUIREMENTS ─────────────────────────────────────────────────────────
+const siteReqs = ['Authority to Enter / Entry Pass','Barangay Clearance','Locator Map / Sketch','Title Copy (certified)','Tax Declaration','LGU Permit for Survey','Safety Waiver','CAAP Clearance (for drone ops)','NBI Clearance of Field Staff','Medical Certificate'];
+const flyPerms = ["CAAP Flight Authorization","LGU Mayor's Permit for UAV","PDEA Clearance (if required)","Air Traffic Notification"];
+
+function buildSiteRows(tbodyId, data) {
+  const tb = document.getElementById(tbodyId);
+  data.forEach((d, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="checkbox" onchange="toggleDone(this)"></td>
+      <td class="row-num">${i+1}</td>
+      <td><input type="text" value="${d}" style="min-width:140px"></td>
+      <td><input type="text" placeholder="Individual/Team" style="width:90px"></td>
+      <td><input type="text" placeholder="Source" style="width:80px"></td>
+      <td><input type="text" placeholder="Notes" style="width:100px"></td>
+      <td><input type="text" placeholder="Required by" style="width:90px"></td>
+      <td><select class="status-sel"><option>Pending</option><option>Obtained</option><option>Not Required</option></select></td>
+      <td><input type="date" style="width:130px"></td>
+      <td><input type="text" placeholder="PIC" style="width:70px"></td>
+      ${makeDelCell()}`;
+    tb.appendChild(tr);
+  });
+}
+function addSiteRow(tbodyId) {
+  const tb = document.getElementById(tbodyId);
+  const n  = tb.querySelectorAll('tr').length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="checkbox" onchange="toggleDone(this)"></td>
+    <td class="row-num">${n}</td>
+    <td><input type="text" placeholder="Requirement…" style="min-width:140px"></td>
+    <td><input type="text" placeholder="For" style="width:90px"></td>
+    <td><input type="text" placeholder="Source" style="width:80px"></td>
+    <td><input type="text" placeholder="Notes" style="width:100px"></td>
+    <td><input type="text" placeholder="Required by" style="width:90px"></td>
+    <td><select class="status-sel"><option>Pending</option><option>Obtained</option><option>Not Required</option></select></td>
+    <td><input type="date" style="width:130px"></td>
+    <td><input type="text" placeholder="PIC" style="width:70px"></td>
+    ${makeDelCell()}`;
+  tb.appendChild(tr);
+}
+function addActionRow() {
+  const tb = document.getElementById('actionTbody');
+  const n  = tb.querySelectorAll('tr').length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="checkbox" onchange="toggleDone(this)"></td>
+    <td class="row-num">${n}</td>
+    <td><input type="text" placeholder="Action item…" style="min-width:140px"></td>
+    <td><input type="text" placeholder="Type" style="width:80px"></td>
+    <td><input type="text" placeholder="For" style="width:80px"></td>
+    <td><input type="text" placeholder="Notes" style="width:100px"></td>
+    <td><select class="status-sel"><option>Pending</option><option>Done</option><option>Cancelled</option></select></td>
+    <td><input type="date" style="width:130px"></td>
+    <td><input type="text" placeholder="PIC" style="width:70px"></td>
+    ${makeDelCell()}`;
+  tb.appendChild(tr);
+}
+
+// ── INSURANCE ─────────────────────────────────────────────────────────────────
+const insData = [
+  {name:'1. Property Floater Insurance',      status:'Obtained', note:'OR/CR of LiDAR, GPS'},
+  {name:'2. Professional Indemnity Insurance',status:'Pending',  note:'Waiting for quotation'},
+  {name:'3. Third Party Liability Insurance', status:'Pending',  note:'Waiting for quotation'},
+  {name:'4. Aviation Policy Insurance',       status:'Pending',  note:'Waiting for quotation'},
+  {name:'5. Performance Security',            status:'Pending',  note:'For sending of forms'},
+  {name:'6. Warranty Security',              status:'Pending',  note:'Upon completion of project'},
+];
+function buildInsRows() {
+  const tb = document.getElementById('insTbody');
+  insData.forEach((d, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="checkbox" onchange="toggleDone(this)" ${d.status==='Obtained'?'checked':''}></td>
+      <td class="row-num">${i+1}</td>
+      <td><input type="text" value="${d.name}" style="min-width:220px"></td>
+      <td><select class="status-sel ${d.status==='Obtained'?'status-ok':'status-pending'}">
+        <option ${d.status==='Obtained'?'selected':''}>Obtained</option>
+        <option ${d.status!=='Obtained'?'selected':''}>Pending</option>
+        <option>Not Required</option></select></td>
+      <td><input type="text" value="${d.note}" style="min-width:150px"></td>
+      <td><input type="date" style="width:130px"></td>
+      <td><input type="text" placeholder="PIC" style="width:70px"></td>
+      ${makeDelCell()}`;
+    tb.appendChild(tr);
+  });
+}
+function addInsRow() {
+  const tb = document.getElementById('insTbody');
+  const n  = tb.querySelectorAll('tr').length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="checkbox" onchange="toggleDone(this)"></td>
+    <td class="row-num">${n}</td>
+    <td><input type="text" placeholder="Insurance type…" style="min-width:220px"></td>
+    <td><select class="status-sel status-pending"><option>Pending</option><option>Obtained</option><option>Not Required</option></select></td>
+    <td><input type="text" placeholder="Notes" style="min-width:150px"></td>
+    <td><input type="date" style="width:130px"></td>
+    <td><input type="text" placeholder="PIC" style="width:70px"></td>
+    ${makeDelCell()}`;
+  tb.appendChild(tr);
+}
+
+// ── ACCREDITATION ─────────────────────────────────────────────────────────────
+const accData = [
+  {name:"1. Mayor's Permit",         status:'On-hand'},
+  {name:'2. BIR Certificate',        status:'On-hand'},
+  {name:'3. TIN',                    status:'On-hand'},
+  {name:'4. Organizational Chart',   status:'On-hand'},
+  {name:'5. CV of PMs / PEs',        status:'Pending'},
+  {name:'6. DTI Certificate',        status:'Pending'},
+  {name:'7. Calibration Certificate',status:'Pending'},
+  {name:'8. List of On-going Projects',status:'On-hand'},
+  {name:'9. Tax Clearance',          status:'On-hand'},
+];
+function buildAccRows() {
+  const tb = document.getElementById('accTbody');
+  accData.forEach((d, i) => {
+    const ok = d.status==='On-hand';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="checkbox" onchange="toggleDone(this)" ${ok?'checked':''}></td>
+      <td class="row-num">${i+1}</td>
+      <td><input type="text" value="${d.name}" style="min-width:220px"></td>
+      <td><select class="status-sel ${ok?'status-ok':'status-pending'}">
+        <option ${ok?'selected':''}>On-hand</option>
+        <option ${!ok?'selected':''}>For Request</option>
+        <option>Expired — Renew</option>
+        <option>Not Required</option></select></td>
+      <td><input type="text" placeholder="Notes" style="min-width:130px"></td>
+      <td><input type="date" style="width:130px"></td>
+      <td><input type="text" placeholder="PIC" style="width:70px"></td>
+      ${makeDelCell()}`;
+    tb.appendChild(tr);
+  });
+}
+function addAccRow() {
+  const tb = document.getElementById('accTbody');
+  const n  = tb.querySelectorAll('tr').length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="checkbox" onchange="toggleDone(this)"></td>
+    <td class="row-num">${n}</td>
+    <td><input type="text" placeholder="Document name…" style="min-width:220px"></td>
+    <td><select class="status-sel status-pending"><option>For Request</option><option>On-hand</option><option>Expired — Renew</option><option>Not Required</option></select></td>
+    <td><input type="text" placeholder="Notes" style="min-width:130px"></td>
+    <td><input type="date" style="width:130px"></td>
+    <td><input type="text" placeholder="PIC" style="width:70px"></td>
+    ${makeDelCell()}`;
+  tb.appendChild(tr);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ── ACTIVITY COSTING with DRAG-SORT ──────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+const costItems = [
+  {activity:'Mobilization', items:[
+    {desc:'PM Salary',    unit:1750, qty:1, days:1},
+    {desc:'Car Rental',   unit:3000, qty:1, days:1},
+    {desc:'Gasoline',     unit:40,   qty:1, days:1},
+  ]},
+  {activity:'Survey Data Acquisition', items:[
+    {desc:'Instrument Man Salary', unit:910,  qty:1, days:5},
+    {desc:'Rodman Salary',         unit:698,  qty:2, days:5},
+    {desc:'GPS Equipment Rental',  unit:5600, qty:1, days:5},
+    {desc:'Food Subsidy',          unit:200,  qty:3, days:5},
+  ]},
+  {activity:'Reports & Drafting', items:[
+    {desc:'PM Salary',      unit:1750, qty:1, days:3},
+    {desc:'Drafter Salary', unit:1000, qty:1, days:3},
+    {desc:'Printing',       unit:600,  qty:1, days:1},
+  ]},
+];
+
+function makeCostItemRow(desc, unit, qty, days) {
+  const budget = unit * qty * days;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td></td>
+    <td class="cost-desc-wrap"><input type="text" value="${desc}" style="min-width:150px" class="cost-desc-input" placeholder="Type tag code (e.g. RM, GPS) or description…"></td>
+    <td><input type="number" class="cost-unit num" value="${unit}" style="width:86px;text-align:right" oninput="recalcRow(this)"></td>
+    <td><input type="number" class="cost-qty  num" value="${qty}"  style="width:60px;text-align:right" oninput="recalcRow(this)"></td>
+    <td><input type="number" class="cost-days num" value="${days}" style="width:60px;text-align:right" oninput="recalcRow(this)"></td>
+    <td class="num cost-budget">₱ ${budget.toLocaleString('en-PH',{minimumFractionDigits:2})}</td>
+    ${makeDelCell()}`;
+  return tr;
+}
+
+function makeCostActivityRow(name) {
+  const tr = document.createElement('tr');
+  tr.className = 'activity-head';
+  tr.innerHTML = `
+    <td colspan="6"><input type="text" value="${name}" style="background:transparent;border:none;font-weight:600;color:var(--accent2);width:100%;font-family:'Outfit',sans-serif;font-size:13px"></td>
+    ${makeDelCell()}`;
+  return tr;
+}
+
+function buildCostRows() {
+  const tb = document.getElementById('costTbody');
+  costItems.forEach(group => {
+    tb.appendChild(makeCostActivityRow(group.activity));
+    group.items.forEach(item => tb.appendChild(makeCostItemRow(item.desc, item.unit, item.qty, item.days)));
+  });
+  updateCostCards();
+  attachAllTagLookups();
+  markSingletonRows();
+}
+
+function addCostRow() {
+  const tb = document.getElementById('costTbody');
+  tb.appendChild(makeCostItemRow('', 0, 1, 1));
+  attachAllTagLookups();
+}
+
+function attachAllTagLookups() {
+  document.querySelectorAll('.cost-desc-input').forEach(attachTagLookup);
+}
+function addCostActivity() {
+  const tb = document.getElementById('costTbody');
+  tb.appendChild(makeCostActivityRow('New Activity'));
+}
+
+function recalcRow(inp) {
+  const tr   = inp.closest('tr');
+  const unit = parseFloat(tr.querySelector('.cost-unit')?.value) || 0;
+  const qty  = parseFloat(tr.querySelector('.cost-qty')?.value)  || 0;
+  const days = parseFloat(tr.querySelector('.cost-days')?.value) || 0;
+  const bud  = tr.querySelector('.cost-budget');
+  if (bud) bud.textContent = '₱ ' + (unit*qty*days).toLocaleString('en-PH',{minimumFractionDigits:2});
+  updateCostCards();
+}
+
+function peso(n) {
+  if (n == null || isNaN(n)) return '₱ 0.00';
+  const abs = Math.abs(n);
+  const fmt = abs.toLocaleString('en-PH', {minimumFractionDigits:2, maximumFractionDigits:2});
+  return (n < 0 ? '−₱ ' : '₱ ') + fmt;
+}
+
+function applySuggestedPrice() {
+  const raw = document.getElementById('cc-suggest')?.textContent.replace(/[₱,−\s]/g,'');
+  const val = parseFloat(raw);
+  if (!isNaN(val) && val > 0) {
+    document.getElementById('co-price').value = Math.round(val);
+    updateCostCards();
+    showToast('✓ Contract price updated to suggested price', 'ok');
+  }
+}
+
+function updateCostCards() {
+  // Collect direct cost from table
+  let totalCostVatInc = 0;
+  document.querySelectorAll('#costTbody .cost-budget').forEach(cell => {
+    totalCostVatInc += parseFloat(cell.textContent.replace(/[₱,\s]/g,'')) || 0;
+  });
+
+  const vatRate    = (parseFloat(document.getElementById('co-vat')?.value)       || 12) / 100;
+  const salesTaxR  = (parseFloat(document.getElementById('co-tax')?.value)       || 24) / 100;
+  const targetGP   = (parseFloat(document.getElementById('co-target-gp')?.value) || 30) / 100;
+  const adminPct   = (parseFloat(document.getElementById('co-admin-pct')?.value) ?? 20) / 100;
+  const price      =  parseFloat(document.getElementById('co-price')?.value)     || 0;
+
+  // Admin cost (VAT inc) = % of direct cost
+  const adminCost      = totalCostVatInc * adminPct;
+  const totalWithAdmin = totalCostVatInc + adminCost;
+
+  // P&L uses totalWithAdmin as the effective cost base
+  const totalCostExVat      = totalCostVatInc / (1 + vatRate);
+  const adminCostExVat      = adminCost / (1 + vatRate);
+  const totalWithAdminExVat = totalWithAdmin / (1 + vatRate);
+  const priceExVat          = price / (1 + vatRate);
+  const outputVAT           = price - priceExVat;
+  const inputVAT            = totalWithAdmin - totalWithAdminExVat;
+  const vatPayable          = outputVAT - inputVAT;
+  const netBeforeTax        = price - totalWithAdmin - vatPayable;
+  const gpBase              = priceExVat - totalWithAdminExVat;
+  const salesTax            = gpBase > 0 ? gpBase * salesTaxR : 0;
+  const netAfterTax         = netBeforeTax - salesTax;
+  const gop                 = priceExVat > 0 ? (netAfterTax / priceExVat) * 100 : 0;
+
+  // Suggested price back-calc using totalWithAdminExVat
+  let suggestedPrice = 0;
+  const d = 1 - (targetGP / (1 - salesTaxR));
+  if (d > 0 && totalWithAdminExVat > 0) suggestedPrice = (totalWithAdminExVat / d) * (1 + vatRate);
+
+  // Update DOM
+  const setVal = (id, val, warn) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = peso(val);
+    el.className = 'pnl-val' + (warn && val < 0 ? ' pnl-warning' : '');
+  };
+
+  setVal('cc-contract',         price,           false);
+  setVal('cc-cost',             totalCostVatInc, false);
+  setVal('cc-admin-cost',       adminCost,       false);
+  setVal('cc-total-with-admin', totalWithAdmin,  false);
+  setVal('cc-vat-payable',      vatPayable,      false);
+  setVal('cc-net-before',       netBeforeTax,    true);
+  setVal('cc-sales-tax',        salesTax,        false);
+  setVal('cc-net',              netAfterTax,     true);
+  setVal('cc-suggest',          suggestedPrice,  false);
+
+  const gopEl = document.getElementById('cc-gp');
+  if (gopEl) { gopEl.textContent = gop.toFixed(2) + '%'; gopEl.className = 'pnl-val' + (gop < 0 ? ' pnl-warning' : ''); }
+
+  const el = (id) => document.getElementById(id);
+  if (el('cc-contract-exvat'))    el('cc-contract-exvat').textContent    = 'ex-VAT: ' + peso(priceExVat);
+  if (el('cc-cost-exvat'))        el('cc-cost-exvat').textContent        = 'ex-VAT: ' + peso(totalCostExVat);
+  if (el('cc-total-admin-exvat')) el('cc-total-admin-exvat').textContent = 'ex-VAT: ' + peso(totalWithAdminExVat);
+  if (el('cc-admin-pct-label'))   el('cc-admin-pct-label').textContent   = (adminPct*100).toFixed(0);
+  if (el('cc-admin-sub'))         el('cc-admin-sub').textContent         = (adminPct*100).toFixed(0) + '% of direct cost (' + peso(totalCostVatInc) + ')';
+  if (el('cc-net-pct') && price > 0) el('cc-net-pct').textContent        = (netAfterTax/price*100).toFixed(1) + '% of contract price';
+  if (el('cc-suggest-sub'))       el('cc-suggest-sub').textContent       = 'For ' + (targetGP*100).toFixed(0) + '% GOP target';
+  if (el('costTotal'))            el('costTotal').textContent            = '\u20b1 ' + totalWithAdmin.toLocaleString('en-PH',{minimumFractionDigits:2});
+}
+
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PROPOSAL SUMMARY BUILDER
+// Reads activity headers + their item totals from the cost table.
+// Scales each activity proportionally so grand total = contract price.
+// ══════════════════════════════════════════════════════════════════════════════
+function buildProposalSummary() {
+  const tb       = document.getElementById('costTbody');
+  const contract = parseFloat(document.getElementById('co-price')?.value) || 0;
+  const rows     = tb ? [...tb.rows] : [];
+
+  // Walk the table: group items under their nearest activity header
+  const activities = [];
+  let current = null;
+
+  rows.forEach(tr => {
+    const isHead = tr.classList.contains('activity-head');
+    const budCell = tr.querySelector('.cost-budget');
+
+    if (isHead) {
+      const nameInp = tr.querySelector('input[type=text]');
+      const name    = nameInp ? nameInp.value.trim() : 'Activity';
+      current = { name, rawTotal: 0, items: [] };
+      activities.push(current);
+    } else if (current && budCell) {
+      const amt = parseFloat(budCell.textContent.replace(/[₱,\s]/g, '')) || 0;
+      const descInp = tr.querySelector('input[type=text]');
+      const desc    = descInp ? descInp.value.trim() : '';
+      current.rawTotal += amt;
+      if (desc) current.items.push({ desc, amt });
+    }
+  });
+
+  // Total of all activities before scaling (direct costs only)
+  const grandRaw  = activities.reduce((s, a) => s + a.rawTotal, 0);
+  // Add admin cost row
+  const adminPctP = (parseFloat(document.getElementById('co-admin-pct')?.value) ?? 20) / 100;
+  const adminAmtP = grandRaw * adminPctP;
+  if (adminPctP > 0 && adminAmtP > 0) {
+    activities.push({ name: 'Administrative & General Overhead (' + (adminPctP*100).toFixed(0) + '%)', rawTotal: adminAmtP, items: [] });
+  }
+  const grandWithAdmin = grandRaw + adminAmtP;
+  // Scale so grand total = contract price
+  const scaleFactor = (contract > 0 && grandWithAdmin > 0) ? contract / grandWithAdmin : 1;
+
+  activities.forEach(a => {
+    a.scaled = a.rawTotal * scaleFactor;
+    a.items.forEach(item => { item.scaled = item.amt * scaleFactor; });
+  });
+
+  const grandScaled = activities.reduce((s, a) => s + a.scaled, 0);
+
+  // ── Update header meta from cover sheet ──
+  const g = id => document.getElementById(id)?.value || '—';
+  const ps = id => { const el = document.getElementById(id); if (el) el.textContent = el.textContent; };
+  document.getElementById('ps-projno').textContent = g('f-projno') || g('hdr-pno') ||
+    document.getElementById('hdr-pno')?.textContent || '—';
+  document.getElementById('ps-client').textContent = g('f-client') ||
+    document.getElementById('hdr-client')?.textContent || '—';
+  document.getElementById('ps-date').textContent   =
+    new Date().toLocaleDateString('en-PH', {year:'numeric', month:'long', day:'numeric'});
+
+  // ── Build table ──
+  const tbody   = document.getElementById('proposalTbody');
+  const totEl   = document.getElementById('proposalTotal');
+  const matchEl = document.getElementById('proposal-match-msg');
+  tbody.innerHTML = '';
+
+  if (activities.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:24px;color:#999">No activities in the cost table yet. Add items in Manual Entry first.</td></tr>';
+    totEl.textContent = peso(0);
+    return;
+  }
+
+  let rowNum = 1;
+  activities.forEach(act => {
+    // Activity header row
+    const headTr = document.createElement('tr');
+    headTr.className = 'act-row';
+    headTr.innerHTML = `
+      <td style="color:var(--muted);font-size:11px;font-family:'DM Mono',monospace">${rowNum++}</td>
+      <td>${act.name.replace(' — TOR: Separate','')}</td>
+      <td class="act-num">${peso(act.scaled)}</td>`;
+    tbody.appendChild(headTr);
+  });
+
+  // Grand total
+  totEl.textContent = peso(grandScaled);
+
+  // Match indicator
+  const diff = Math.abs(grandScaled - contract);
+  if (contract <= 0) {
+    matchEl.className = 'proposal-match-err';
+    matchEl.textContent = '⚠ No contract price set — totals are raw cost estimates';
+  } else if (diff < 1) {
+    matchEl.className = 'proposal-match-ok';
+    matchEl.textContent = '✓ Grand total matches contract price exactly';
+  } else {
+    matchEl.className = 'proposal-match-err';
+    matchEl.textContent = '⚠ Difference of ' + peso(diff) + ' — check cost entries';
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TOR AUTO-GENERATE SYSTEM
+// Reads a PDF or DOCX TOR via the Anthropic API, extracts scopes/area/location,
+// maps them to IC activity templates + ABC rates, pre-fills the cost table.
+// ══════════════════════════════════════════════════════════════════════════════
+
+let _torFile     = null;   // the File object
+let _torScopes   = [];     // parsed scopes returned by Claude
+
+function torFileSelected(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  _torFile = file;
+  const mb = (file.size / 1024 / 1024).toFixed(2);
+  document.getElementById('torFileName').textContent = file.name;
+  document.getElementById('torFileSize').textContent = mb + ' MB';
+  document.getElementById('torFileSelected').classList.add('show');
+  document.getElementById('torGenerateBtn').classList.add('show');
+  document.getElementById('torExtractPreview').classList.remove('show');
+  document.getElementById('torStatus').classList.remove('show');
+  // Support drag-drop visual reset
+  document.getElementById('torUploadBox').classList.remove('drag-over');
+}
+
+function torClearFile() {
+  _torFile = null;
+  document.getElementById('tor-file-input').value = '';
+  document.getElementById('torFileSelected').classList.remove('show');
+  document.getElementById('torGenerateBtn').classList.remove('show');
+  document.getElementById('torExtractPreview').classList.remove('show');
+  document.getElementById('torStatus').classList.remove('show');
+}
+
+function torSetStatus(state, text) {
+  const el  = document.getElementById('torStatus');
+  const txt = document.getElementById('torStatusText');
+  el.className  = 'tor-status show ' + state;
+  txt.textContent = text;
+}
+
+// Drag-drop support on the upload box
+(function() {
+  const box = document.getElementById('torUploadBox');
+  if (!box) return;
+  box.addEventListener('dragover',  e => { e.preventDefault(); box.classList.add('drag-over'); });
+  box.addEventListener('dragleave', ()  => box.classList.remove('drag-over'));
+  box.addEventListener('drop',      e  => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && (file.name.endsWith('.pdf') || file.name.endsWith('.docx') || file.name.endsWith('.doc'))) {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById('tor-file-input').files = dt.files;
+      torFileSelected({ target: { files: [file] } });
+    }
+  });
+})();
+
+// ── Map survey keywords to IC activity names ──────────────────────────────────
+const SURVEY_TO_IC = {
+  'topographic':          ['Mobilization','Ocular Inspection','Survey Data Acquisition - Topographic Survey','Reports and Drafting - Data Processing - Topo/Bathy','Reports and Drafting - Survey Reports'],
+  'topo':                 ['Mobilization','Ocular Inspection','Survey Data Acquisition - Topographic Survey','Reports and Drafting - Data Processing - Topo/Bathy','Reports and Drafting - Survey Reports'],
+  'relocation':           ['Mobilization','Ocular Inspection','Survey Data Acquisition -Relocation Survey','Reports and Drafting - Plotting of Technical Description','Reports and Drafting - Survey Reports'],
+  'relo':                 ['Mobilization','Ocular Inspection','Survey Data Acquisition -Relocation Survey','Reports and Drafting - Plotting of Technical Description','Reports and Drafting - Survey Reports'],
+  'lidar':                ['Mobilization','Ocular Inspection','Survey Data Acquisition - Establishment of Controls - Static Network of 10km-30km','Survey Data Acquisition - Aerial Mapping - LiDAR','Reports and Drafting - Data Processing - LiDAR','Reports and Drafting - Survey Reports'],
+  'aerial':               ['Mobilization','Ocular Inspection','Survey Data Acquisition - Establishment of Controls - Traverse of every 30-50 meters','Survey Data Acquisition - Aerial Mapping - RGB -Photo','Reports and Drafting - Data Processing - RGB Photo','Reports and Drafting - Survey Reports'],
+  'bathymetric':          ['Mobilization','Ocular Inspection','Survey Data Acquisition - Bathymetric Survey','Reports and Drafting - Data Processing - Topo/Bathy','Reports and Drafting - Survey Reports'],
+  'bathy':                ['Mobilization','Ocular Inspection','Survey Data Acquisition - Bathymetric Survey','Reports and Drafting - Data Processing - Topo/Bathy','Reports and Drafting - Survey Reports'],
+  'as-built':             ['Mobilization','Ocular Inspection','Survey Data Acquisition - Asbuilt Survey','Reports and Drafting - Data Processing - Topo/Bathy','Reports and Drafting - Survey Reports'],
+  'asbuilt':              ['Mobilization','Ocular Inspection','Survey Data Acquisition - Asbuilt Survey','Reports and Drafting - Data Processing - Topo/Bathy','Reports and Drafting - Survey Reports'],
+  'matterport':           ['Mobilization','Ocular Inspection','Survey Data Acquisition - Matterport','Reports and Drafting - Data Processing - RGB Video','Reports and Drafting - Matter Subscription'],
+  'property research':    ['Mobilization','Research - Property Research'],
+  'property layout':      ['Mobilization','Ocular Inspection','Property Layout','Reports and Drafting - Survey Reports'],
+  'construction layout':  ['Mobilization','Ocular Inspection','Horizontal Construction Layout','Reports and Drafting - Survey Reports'],
+  'tree survey':          ['Mobilization','Ocular Inspection','Survey Data Acquisition - Tree Survey - position and species','Reports and Drafting - Data Processing - Tree Survey','Reports and Drafting - Survey Reports'],
+  'site condition':       ['Mobilization','Ocular Inspection','Survey Data Acquisition - Site Condition Survey','Reports and Drafting - Data Processing - Site Condition','Reports and Drafting - Survey Reports'],
+  'controls':             ['Survey Data Acquisition - Establishment of Controls - Traverse of every 30-50 meters'],
+  'static network':       ['Survey Data Acquisition - Establishment of Controls - Static Network of 10km-30km'],
+  'feasibility':          ['Mobilization','Research - Feasibility Research'],
+};
+
+// Estimate days based on area (ha) and survey type
+function estimateDays(surveyType, areaHa, lots) {
+  const lower = (surveyType || '').toLowerCase();
+  const area  = parseFloat(areaHa) || 0;
+  const n     = parseInt(lots)     || 1;
+  if (lower.includes('relo'))      return Math.max(2, Math.ceil(n / 10));
+  if (lower.includes('topo'))      return Math.max(3, Math.ceil(area / 10));
+  if (lower.includes('lidar'))     return Math.max(5, Math.ceil(area / 200));
+  if (lower.includes('aerial'))    return Math.max(3, Math.ceil(area / 100));
+  if (lower.includes('bathy'))     return Math.max(3, Math.ceil(area / 20));
+  if (lower.includes('tree'))      return Math.max(2, Math.ceil(area / 5));
+  if (lower.includes('matterport'))return Math.max(2, Math.ceil(n / 2));
+  if (lower.includes('layout'))    return Math.max(2, Math.ceil(area / 5));
+  if (lower.includes('asbuilt') || lower.includes('as-built')) return Math.max(3, Math.ceil(area / 8));
+  return 3; // default
+}
+
+// ── Main: send TOR to Claude API and parse response ──────────────────────────
+async function torGenerate() {
+  if (!_torFile) return;
+
+  const btn = document.getElementById('torGenerateBtn');
+  btn.disabled = true;
+  torSetStatus('', 'Reading TOR file…');
+
+  // Convert file to base64
+  const b64 = await new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload  = e => res(e.target.result.split(',')[1]);
+    reader.onerror = rej;
+    reader.readAsDataURL(_torFile);
+  });
+
+  const isPdf  = _torFile.name.toLowerCase().endsWith('.pdf');
+  const isDocx = _torFile.name.toLowerCase().endsWith('.docx') || _torFile.name.toLowerCase().endsWith('.doc');
+
+  torSetStatus('', 'Sending to Claude…');
+
+  // Build the API prompt
+  const systemPrompt = `You are a cost estimator assistant for PhilSurv, a surveying company in the Philippines.
+
+Read the uploaded Terms of Reference (TOR) document carefully — it may be structured or unstructured, formal or informal. Extract everything relevant and respond ONLY with a valid JSON object, no markdown, no preamble, no explanation.
+
+Return this exact structure:
+{
+  "project_name": "string or null",
+  "client": "string or null",
+  "location": "string or null",
+  "region": "string (Philippine region, e.g. NCR, Region 3, Region 4A, CAR) or null",
+  "scopes": [
+    {
+      "survey_type": "the most specific survey type name you can identify",
+      "area_ha": number or null,
+      "lots": number or null,
+      "notes": "any extra detail — number of structures, special instructions, terrain, deliverables, etc."
+    }
+  ],
+  "special_requirements": ["any special conditions, deliverables, timelines, or constraints mentioned"]
+}
+
+Instructions:
+- Read the FULL document. Scopes may appear anywhere — in headings, numbered lists, paragraphs, tables, or footnotes.
+- Each distinct survey activity is a separate scope item. If the TOR says "Topographic and Relocation Survey", list them as two separate scopes.
+- Survey types to watch for (but not limited to): Topographic Survey, Relocation Survey, LiDAR Survey, Aerial Mapping (RGB/Photo/Video), Bathymetric Survey, As-Built Survey, Matterport, Property Research, Feasibility Research, Construction Layout, Property Layout, Tree Survey, Site Condition Survey, Establishment of Controls, Static Network, Tidal Observation.
+- If area is stated in sqm, convert to hectares (divide by 10000). If stated in sq km, multiply by 100.
+- Extract lot count, parcel count, or number of titles if mentioned.
+- If the document is unclear or a scope cannot be identified, still return an entry with survey_type set to "Unidentified scope" and put the raw text in notes.
+- Never return an empty scopes array — if nothing is clear, return one entry with your best guess and notes explaining.`;
+
+  let content;
+  if (isPdf) {
+    content = [
+      { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: b64 } },
+      { type: 'text', text: 'Extract the project scope and requirements from this TOR. Respond with the JSON only.' }
+    ];
+  } else {
+    // For DOCX: Claude cannot read binary DOCX natively via API in this context.
+    // We inform the user and fall back gracefully.
+    torSetStatus('error', 'Word (.docx) files cannot be read directly. Please save the TOR as PDF and upload again.');
+    btn.disabled = false;
+    return;
+  }
+
+  try {
+    torSetStatus('', 'Claude is reading the document…');
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content }]
+      })
+    });
+
+    const data = await response.json();
+    const raw  = (data.content || []).map(c => c.text || '').join('').trim();
+
+    // Strip any accidental markdown fences
+    const clean = raw.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/```\s*$/,'').trim();
+    const parsed = JSON.parse(clean);
+
+    if (parsed.error) {
+      torSetStatus('error', parsed.error);
+      btn.disabled = false;
+      return;
+    }
+
+    // Auto-fill cover sheet fields if empty
+    if (parsed.project_name && !document.getElementById('f-objective')?.value)
+      document.getElementById('f-objective').value = parsed.project_name;
+    if (parsed.client && !document.getElementById('f-client')?.value) {
+      document.getElementById('f-client').value = parsed.client;
+      syncHeader();
+    }
+    if (parsed.location && !document.getElementById('f-location')?.value)
+      document.getElementById('f-location').value = parsed.location;
+
+    // Build scope preview items
+    _torScopes = parsed.scopes || [];
+    renderTorScopes(_torScopes, parsed);
+
+    torSetStatus('done', 'TOR read successfully — ' + _torScopes.length + ' scope(s) found');
+    document.getElementById('torExtractPreview').classList.add('show');
+
+  } catch(err) {
+    torSetStatus('error', 'Error: ' + err.message);
+    console.error(err);
+  }
+
+  btn.disabled = false;
+}
+
+function renderTorScopes(scopes, meta) {
+  const list = document.getElementById('torScopeList');
+  list.innerHTML = '';
+
+  if (!scopes.length) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:8px">No specific scopes detected. Check the document and add activities manually.</div>';
+    return;
+  }
+
+  scopes.forEach((scope, i) => {
+    const lower = scope.survey_type.toLowerCase();
+    // Find matching IC activities
+    const matchKey = Object.keys(SURVEY_TO_IC).find(k => lower.includes(k));
+    const acts     = matchKey ? SURVEY_TO_IC[matchKey] : [];
+    const days     = estimateDays(scope.survey_type, scope.area_ha, scope.lots);
+
+    const item = document.createElement('div');
+    item.className = 'tor-scope-item';
+    item.innerHTML = `
+      <input type="checkbox" id="tscope_${i}" checked>
+      <div style="flex:1">
+        <div class="tsi-label">${scope.survey_type}</div>
+        <div class="tsi-meta">
+          ${scope.area_ha ? '📐 ' + scope.area_ha + ' ha' : ''}
+          ${scope.lots    ? '  📋 ' + scope.lots + ' lots' : ''}
+          ${scope.notes   ? '  · ' + scope.notes : ''}
+          &nbsp;· Est. <strong>${days} field days</strong>
+        </div>
+        <div class="tsi-acts">${acts.length ? '→ ' + acts.length + ' activities: ' + acts.slice(0,3).join(', ') + (acts.length > 3 ? '…' : '') : '⚠ No matching template found — will add as custom'}</div>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+function torApplyToTable() {
+  const scopes = _torScopes;
+  if (!scopes.length) return;
+
+  let added = 0, skipped = 0;
+  const singletonsSeen = {};
+
+  scopes.forEach((scope, i) => {
+    const cb = document.getElementById('tscope_' + i);
+    if (!cb?.checked) return;
+
+    const lower    = scope.survey_type.toLowerCase();
+    const matchKey = Object.keys(SURVEY_TO_IC).find(k => lower.includes(k));
+    const actNames = matchKey ? SURVEY_TO_IC[matchKey] : [];
+    const days     = estimateDays(scope.survey_type, scope.area_ha, scope.lots);
+
+    if (!actNames.length) {
+      // No template — add as a blank activity header
+      document.getElementById('costTbody').appendChild(makeCostActivityRow(scope.survey_type + ' (custom)'));
+      added++;
+      return;
+    }
+
+    actNames.forEach(actName => {
+      // Find the IC activity object
+      const icAct = IC_ACTIVITIES.find(a => a.name === actName);
+
+      // Singleton check
+      const kw = isSingleton(actName);
+      if (kw) {
+        if (singletonsSeen[kw] || singletonAlreadyExists(kw)) {
+          skipped++;
+          return; // skip silently
+        }
+        singletonsSeen[kw] = true;
+      }
+
+      const tb = document.getElementById('costTbody');
+      tb.appendChild(makeCostActivityRow(actName));
+
+      if (icAct) {
+        icAct.items.forEach(item => {
+          const tag  = IC_TO_ABC[item] || '';
+          const abc  = tag ? ABC_LOOKUP[tag] : null;
+          const rate = abc?.amount || 0;
+          const desc = tag ? tag + ' — ' + item : item;
+          // Use estimated days for labour/rental items
+          const isDaily = ['Salary','Rental','Lodging','Mobilization'].includes(abc?.category || '');
+          tb.appendChild(makeCostItemRow(desc, rate, 1, isDaily ? days : 1));
+        });
+      }
+      added++;
+    });
+  });
+
+  attachAllTagLookups();
+  updateCostCards();
+  markSingletonRows();
+
+  showToast('✓ Added ' + added + ' activities' + (skipped > 0 ? ' (' + skipped + ' singleton duplicates skipped)' : ''), 'ok');
+
+  // Hide the preview and collapse
+  document.getElementById('torExtractPreview').classList.remove('show');
+  document.getElementById('torStatus').classList.remove('show');
+  torClearFile();
+
+  // Scroll to the cost table
+  document.getElementById('costTable')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+// ══════════════════════════════════════════════════════════════════════════════
+// SAVE SYSTEM — Self-contained, single-file
+// How it works:
+//   • collectData()  → reads every input/select/checkbox/textarea in the page
+//   • saveData()     → serialises to JSON, encodes as base64, writes into the
+//                      <script id="savedDataStore"> tag, then triggers a
+//                      download of THIS same HTML file with data embedded.
+//                      The user replaces the file on disk with the download.
+//   • On load        → if savedDataStore has content, restoreData() is called
+//                      to re-populate every field exactly as it was.
+//
+// To use for a new project: just copy (duplicate) the blank template file and
+// give it a new name. Each copy is completely independent.
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── UI helpers ───────────────────────────────────────────────────────────────
+function setDot(state) {
+  const d = document.getElementById('saveDot');
+  d.className = 'save-dot ' + state;
+}
+function setLabel(txt)  { document.getElementById('saveLabel').innerHTML = txt; }
+function setMeta(txt)   { document.getElementById('saveMeta').textContent = txt; }
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type||'');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ── Mark dirty on any change ──────────────────────────────────────────────────
+let _dirty = false;
+document.addEventListener('input',  markDirty);
+document.addEventListener('change', markDirty);
+function markDirty() {
+  if (_dirty) return;
+  _dirty = true;
+  setDot('dirty');
+  setLabel('Unsaved changes');
+}
+
+// ── COLLECT all form values ───────────────────────────────────────────────────
+function collectData() {
+  const out = { v: '4.1', ts: new Date().toISOString(), fields: {}, tables: {} };
+
+  // Named form controls
+  document.querySelectorAll('[id]').forEach(el => {
+    const tag = el.tagName;
+    if (!['INPUT','SELECT','TEXTAREA'].includes(tag)) return;
+    if (['btnSave'].includes(el.id)) return;
+    out.fields[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+
+  // Table bodies — capture each row as array of {t,v,c} objects
+  ['inputsTbody','outputsTbody','ganttTbody','siteTbody','flyTbody',
+   'actionTbody','insTbody','accTbody','costTbody','scopeTbody'].forEach(id => {
+    const tb = document.getElementById(id);
+    if (!tb) return;
+    out.tables[id] = [...tb.rows].map(tr => ({
+      ah:  tr.classList.contains('activity-head'),
+      don: tr.classList.contains('done-row'),
+      els: [...tr.querySelectorAll('input,select,textarea')].map(e => ({
+        t: e.tagName[0] + (e.type||''),  // I=input, S=select, T=textarea + type
+        v: e.type === 'checkbox' ? e.checked : e.value,
+        c: e.className || ''
+      }))
+    }));
+  });
+
+  // Attendee free-rows
+  ['clientList','philsurvList'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    out.tables[id] = [...el.querySelectorAll('.attendee-row')].map(r => ({
+      vs: [...r.querySelectorAll('input')].map(i => i.value)
+    }));
+  });
+
+  return out;
+}
+
+// ── RESTORE all form values ───────────────────────────────────────────────────
+function restoreData(data) {
+  if (!data) return;
+
+  // Named fields
+  Object.entries(data.fields || {}).forEach(([id, v]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.type === 'checkbox' ? (el.checked = v) : (el.value = v);
+  });
+  syncHeader(); updateCoverProgress(); updateCostCards();
+
+  // Tables
+  const tids = ['inputsTbody','outputsTbody','ganttTbody','siteTbody','flyTbody',
+                 'actionTbody','insTbody','accTbody','costTbody','scopeTbody'];
+  tids.forEach(id => {
+    const saved = (data.tables || {})[id];
+    if (!saved) return;
+    const tb = document.getElementById(id);
+    if (!tb) return;
+    tb.innerHTML = '';
+
+    saved.forEach(rowData => {
+      const tr = tb.insertRow();
+      if (rowData.ah)  tr.className = 'activity-head';
+      if (rowData.don) tr.className += ' done-row';
+
+      (rowData.els || []).forEach(eData => {
+        const td = tr.insertCell();
+        const tag = eData.t[0];
+        let el;
+        if (tag === 'S') {
+          el = document.createElement('select');
+        } else if (tag === 'T') {
+          el = document.createElement('textarea');
+        } else {
+          el = document.createElement('input');
+          el.type = eData.t.slice(1) || 'text';
+        }
+        el.className = eData.c || '';
+        if (el.type === 'checkbox') el.checked = eData.v;
+        else el.value = eData.v || '';
+
+        // Re-wire event handlers based on class hints
+        if (el.className.includes('gantt-status-sel')) {
+          el.onchange = function() {
+            applyGanttStatusColor(this);
+            const ni = this.closest('tr')?.querySelector('input[type=number]');
+            if (ni) updateGanttBar(ni);
+          };
+          applyGanttStatusColor(el);
+        }
+        if (el.className.includes('cost-unit') || el.className.includes('cost-qty') || el.className.includes('cost-days')) {
+          el.oninput = function() { recalcRow(this); };
+        }
+        if (el.type === 'checkbox') {
+          el.onchange = function() { toggleDone(this); };
+          if (el.checked) tr.classList.add('done-row');
+        }
+        // del buttons are not stored — re-add them to last cell
+        td.appendChild(el);
+      });
+
+      // Re-append del button to last cell if row has cells
+      if (tr.cells.length > 0) {
+        const lastTd = tr.insertCell();
+        lastTd.style.textAlign = 'center';
+        const db = document.createElement('button');
+        db.className = 'del-btn';
+        db.style.margin = 'auto';
+        db.title = 'Delete row';
+        db.textContent = '×';
+        db.onclick = function() { delRow(this); };
+        lastTd.appendChild(db);
+      }
+    });
+  });
+
+  // Attendee lists
+  ['clientList','philsurvList'].forEach(id => {
+    const saved = (data.tables || {})[id];
+    if (!saved) return;
+    const list = document.getElementById(id);
+    if (!list) return;
+    list.innerHTML = '';
+    saved.forEach(r => {
+      const row = document.createElement('div');
+      row.className = 'attendee-row';
+      (r.vs || []).forEach((v, i) => {
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.value = v;
+        inp.placeholder = i === 0 ? 'Full Name' : 'Designation';
+        row.appendChild(inp);
+      });
+      const btn = document.createElement('button');
+      btn.className = 'del-btn';
+      btn.textContent = '×';
+      btn.onclick = function() { delRow(this); };
+      row.appendChild(btn);
+      list.appendChild(row);
+    });
+  });
+
+  updateCostCards();
+}
+
+// ── SAVE — embed data into THIS file and download it ─────────────────────────
+function saveData() {
+  const btn = document.getElementById('btnSave');
+  btn.disabled = true;
+  setDot('saving');
+  setLabel('Saving…');
+
+  try {
+    const data   = collectData();
+    const json   = JSON.stringify(data);
+    const b64    = btoa(unescape(encodeURIComponent(json)));  // UTF-8 safe base64
+
+    // Get the current HTML source
+    let src = document.documentElement.outerHTML;
+
+    // Write data into the savedDataStore script tag
+    src = src.replace(
+      /<script id="savedDataStore" type="application\/json">[\s\S]*?<\/script>/,
+      `<script id="savedDataStore" type="application/json">${b64}<\/script>`
+    );
+
+    // Trigger download of the updated HTML file
+    const blob = new Blob([src], { type: 'text/html;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    // Suggest same filename if possible
+    a.download = (document.title || 'philsurv_kickoff').replace(/[^\w\s\-]/g,'_') + '.html';
+    a.href = url;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    // Update UI
+    _dirty = false;
+    const ts = new Date().toLocaleString('en-PH', {
+      month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'
+    });
+    setDot('saved');
+    setLabel('<strong>Saved</strong> — replace the file on your computer with the download');
+    setMeta('Last saved: ' + ts);
+    showToast('✓ File downloaded — replace the old file with this one', 'ok');
+
+  } catch(e) {
+    setDot('dirty');
+    setLabel('Save failed — see console');
+    showToast('Save failed: ' + e.message, 'err');
+    console.error(e);
+  }
+
+  btn.disabled = false;
+}
+
+// ── Ctrl+S shortcut ───────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveData(); }
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+buildCheckRows('inputsTbody', inputsData);
+buildCheckRows('outputsTbody', outputsData);
+buildGantt();
+buildSiteRows('siteTbody', siteReqs);
+buildSiteRows('flyTbody', flyPerms);
+buildInsRows();
+buildAccRows();
+buildCostRows();
+updateCoverProgress();
+
+// ── RESTORE saved data if present ────────────────────────────────────────────
+(function() {
+  const store = document.getElementById('savedDataStore');
+  if (!store || !store.textContent.trim()) {
+    setDot('');
+    setLabel('New project — no saved data');
+    setMeta('Fill in the form and press Save when ready');
+    return;
+  }
+  try {
+    const json = decodeURIComponent(escape(atob(store.textContent.trim())));
+    const data = JSON.parse(json);
+    restoreData(data);
+    const ts = data.ts ? new Date(data.ts).toLocaleString('en-PH',{
+      month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'
+    }) : '';
+    setDot('saved');
+    setLabel('<strong>Data loaded</strong>');
+    setMeta(ts ? 'Last saved: ' + ts : '');
+    _dirty = false;
+  } catch(e) {
+    setLabel('Could not load saved data');
+    console.error('Restore error:', e);
+  }
+})();
+
+</script>
+
+<!-- ═══ PHILSURV SAVED DATA — DO NOT EDIT MANUALLY ═══ -->
+<script id="savedDataStore" type="application/json"></script>
+
+
+
+</body>
+</html>
