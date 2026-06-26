@@ -4453,16 +4453,23 @@ renderAll();
 
 var pgpProjectId = null;
 
+// Gantt activities — sourced from "Template" sheet of Project Monitor (4).xlsx
+// Project Requirements (pre-mobilization checklist) + Project Activities (execution flow)
 var GANTT_DEFAULT_ACTIVITIES = [
-  {name:'Mobilization',              days:2,  offset:0},
-  {name:'Ocular Inspection',         days:5,  offset:2},
-  {name:'Establishment of Controls', days:5,  offset:5},
-  {name:'Survey Data Acquisition',   days:10, offset:8},
-  {name:'Data Processing',           days:7,  offset:18},
-  {name:'Draft Reports & Plans',     days:5,  offset:20},
-  {name:'QA Review',                 days:3,  offset:24},
-  {name:'Final Output Delivery',     days:2,  offset:27},
-  {name:'Demobilization',            days:1,  offset:29},
+  // ── Project Requirements (Need for Mobilization) ──
+  {name:'Signed Conforme / NTP / PO', days:3,  offset:0,  category:'Requirements'},
+  {name:'Internal Meeting',           days:1,  offset:3,  category:'Requirements'},
+  {name:'Gantt Chart',                days:2,  offset:4,  category:'Requirements'},
+  {name:'External Meeting',           days:1,  offset:6,  category:'Requirements'},
+  {name:'Downpayment',                days:5,  offset:7,  category:'Requirements'},
+  // ── Project Activities (Execution) ──
+  {name:'Pre Draft',                  days:3,  offset:12, category:'Execution'},
+  {name:'DF — Field',                 days:5,  offset:15, category:'Execution'},
+  {name:'DF — Research',              days:3,  offset:15, category:'Execution'},
+  {name:'Fieldwork',                  days:10, offset:20, category:'Execution'},
+  {name:'Drafting',                   days:7,  offset:30, category:'Execution'},
+  {name:'Presentation',               days:2,  offset:37, category:'Execution'},
+  {name:'COC (Certificate of Completion)', days:5, offset:39, category:'Execution'},
 ];
 
 var GANTT_STATUS_COLORS = {
@@ -4481,6 +4488,7 @@ function initGanttItems(project) {
     var e = new Date(s);    e.setDate(e.getDate() + act.days);
     return {
       name:     act.name,
+      category: act.category || 'Execution',
       startDate:s.toISOString().split('T')[0],
       endDate:  e.toISOString().split('T')[0],
       days:     act.days,
