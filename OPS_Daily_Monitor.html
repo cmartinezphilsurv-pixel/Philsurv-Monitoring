@@ -4454,7 +4454,9 @@ renderAll();
 var pgpProjectId = null;
 
 // Gantt activities — sourced from "Template" sheet of Project Monitor (4).xlsx
-// Project Requirements (pre-mobilization checklist) + Project Activities (execution flow)
+// Bump GANTT_VERSION when the template changes — on load, projects whose stored gantt
+// has an older version get auto-rebuilt from their startDate/deadline.
+var GANTT_VERSION = 'template-v3-scaled';
 var GANTT_DEFAULT_ACTIVITIES = [
   // ── Project Requirements (Need for Mobilization) ──
   {name:'Signed Conforme / NTP / PO', days:3,  offset:0,  category:'Requirements'},
@@ -4479,9 +4481,9 @@ var GANTT_STATUS_COLORS = {
   'Major Delay': '#ef4444'
 };
 
-function initGanttItems(project) {
+function initGanttItems(project, force) {
   if(!DB.projectGantt) DB.projectGantt = {};
-  if(DB.projectGantt[project.id] && DB.projectGantt[project.id].length) return;
+  if(!force && DB.projectGantt[project.id] && DB.projectGantt[project.id].length) return;
   // Project start: from project.startDate (sourced from Database V3 sheet)
   var base = new Date(project.startDate || new Date().toISOString().split('T')[0]);
   // Compute scale factor: if project has both startDate and deadline, stretch activities to fit
@@ -4494,7 +4496,7 @@ function initGanttItems(project) {
     if(sp > 0) actualSpan = sp;
   }
   var scale = actualSpan / templateSpan;
-  DB.projectGantt[project.id] = GANTT_DEFAULT_ACTIVITIES.map(function(act){
+  var items = GANTT_DEFAULT_ACTIVITIES.map(function(act){
     var scaledOffset = Math.round(act.offset * scale);
     var scaledDays   = Math.max(1, Math.round(act.days * scale));
     var s = new Date(base); s.setDate(s.getDate() + scaledOffset);
@@ -4511,6 +4513,25 @@ function initGanttItems(project) {
       remarks:  ''
     };
   });
+  items._version = GANTT_VERSION;
+  DB.projectGantt[project.id] = items;
+}
+
+// Rebuild all project gantts when the template version changes
+function rebuildAllGanttsIfStale(){
+  if(!DB.projectGantt) DB.projectGantt = {};
+  var rebuilt = 0;
+  (DB.projects||[]).forEach(function(p){
+    var g = DB.projectGantt[p.id];
+    if(!g || g._version !== GANTT_VERSION){
+      initGanttItems(p, true);
+      rebuilt++;
+    }
+  });
+  if(rebuilt > 0){
+    saveDB();
+    console.log('[gantt] Rebuilt '+rebuilt+' project gantts to '+GANTT_VERSION);
+  }
 }
 
 function openGanttPanel(projectId) {
@@ -4735,6 +4756,9 @@ function buildExternalGanttView() {
   });
   document.getElementById('pgp-ext-tbody').innerHTML = html;
 }
+
+// ── Auto-rebuild all gantts to current template version on every load ──
+rebuildAllGanttsIfStale();
 </script>
 
 <!-- PROJECT GANTT OVERLAY -->
