@@ -4482,16 +4482,29 @@ var GANTT_STATUS_COLORS = {
 function initGanttItems(project) {
   if(!DB.projectGantt) DB.projectGantt = {};
   if(DB.projectGantt[project.id] && DB.projectGantt[project.id].length) return;
+  // Project start: from project.startDate (sourced from Database V3 sheet)
   var base = new Date(project.startDate || new Date().toISOString().split('T')[0]);
+  // Compute scale factor: if project has both startDate and deadline, stretch activities to fit
+  // Template total span = max(offset+days) = ~44 days. Scale to actual project span.
+  var templateSpan = Math.max.apply(null, GANTT_DEFAULT_ACTIVITIES.map(function(a){return a.offset+a.days;}));
+  var actualSpan = templateSpan;
+  if(project.startDate && project.deadline){
+    var dl = new Date(project.deadline);
+    var sp = Math.round((dl - base) / 86400000);
+    if(sp > 0) actualSpan = sp;
+  }
+  var scale = actualSpan / templateSpan;
   DB.projectGantt[project.id] = GANTT_DEFAULT_ACTIVITIES.map(function(act){
-    var s = new Date(base); s.setDate(s.getDate() + act.offset);
-    var e = new Date(s);    e.setDate(e.getDate() + act.days);
+    var scaledOffset = Math.round(act.offset * scale);
+    var scaledDays   = Math.max(1, Math.round(act.days * scale));
+    var s = new Date(base); s.setDate(s.getDate() + scaledOffset);
+    var e = new Date(s);    e.setDate(e.getDate() + scaledDays);
     return {
       name:     act.name,
       category: act.category || 'Execution',
       startDate:s.toISOString().split('T')[0],
       endDate:  e.toISOString().split('T')[0],
-      days:     act.days,
+      days:     scaledDays,
       progress: 0,
       status:   'Planned',
       pic:      '',
