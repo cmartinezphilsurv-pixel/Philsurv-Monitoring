@@ -818,7 +818,7 @@ tr:hover .row-actions{opacity:1}
     <div id="overview-alerts-wrap"></div>
 
     <div class="overview-grid">
-      <div>
+      <div data-role-cat="projects">
         <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Projects</div>
         <div class="cards-row" style="grid-template-columns:repeat(3,1fr)">
           <div class="stat-card c-total" onclick="goTo('projects')"><div class="stat-num" id="ov-proj-total">0</div><div class="stat-lbl">Active</div></div>
@@ -826,7 +826,7 @@ tr:hover .row-actions{opacity:1}
           <div class="stat-card c-red" onclick="filterAndGo('projects','late')"><div class="stat-num" id="ov-proj-late">0</div><div class="stat-lbl">Late</div></div>
         </div>
       </div>
-      <div>
+      <div data-role-cat="equipment">
         <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Equipment</div>
         <div class="cards-row" style="grid-template-columns:repeat(3,1fr)">
           <div class="stat-card c-blue" onclick="goTo('equipment')"><div class="stat-num" id="ov-eq-total">0</div><div class="stat-lbl">Total</div></div>
@@ -834,7 +834,7 @@ tr:hover .row-actions{opacity:1}
           <div class="stat-card c-red" onclick="filterAndGo('equipment','cal-due')"><div class="stat-num" id="ov-eq-caldue">0</div><div class="stat-lbl">Cal Due</div></div>
         </div>
       </div>
-      <div>
+      <div data-role-cat="personnel">
         <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Personnel</div>
         <div class="cards-row" style="grid-template-columns:repeat(3,1fr)">
           <div class="stat-card c-total" onclick="goTo('personnel')"><div class="stat-num" id="ov-per-total">0</div><div class="stat-lbl">Total</div></div>
@@ -842,7 +842,7 @@ tr:hover .row-actions{opacity:1}
           <div class="stat-card c-red" onclick="filterAndGo('personnel','noncompliant')"><div class="stat-num" id="ov-per-ppe">0</div><div class="stat-lbl">PPE ⚠</div></div>
         </div>
       </div>
-      <div>
+      <div data-role-cat="commitments">
         <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Commitments</div>
         <div class="cards-row" style="grid-template-columns:repeat(3,1fr)">
           <div class="stat-card c-total" onclick="goTo('commitments')"><div class="stat-num" id="ov-com-total">0</div><div class="stat-lbl">Open</div></div>
@@ -862,7 +862,7 @@ tr:hover .row-actions{opacity:1}
     </div>
 
     <!-- Upcoming Deadlines -->
-    <div class="table-wrap">
+    <div class="table-wrap" data-role-cat="projects">
       <div class="table-toolbar">
         <div style="font-size:12px;font-weight:700;color:var(--navy)">⏰ Projects Deadline — Next 14 Days</div>
       </div>
@@ -2047,43 +2047,54 @@ function updateBadges(){
 }
 
 function countAlerts(){
-  let n=0;
-  DB.projects.forEach(p=>{if(p.status==='late')n++;});
-  DB.equipment.forEach(e=>{if(isCalDue(e.nextCal))n++;if(e.status==='disposal')n++;});
-  DB.personnel.forEach(p=>{if(p.ppe==='non-compliant')n++;});
-  DB.commitments.forEach(c=>{if(c.status==='At Risk'||c.status==='Missed')n++;});
-  DB.subcon.forEach(s=>{if(s.evalStatus==='pending')n++;});
-  return n;
+  return filterByRole(buildAlertItems()).length;
+}
+
+// Builds the full alert list, each tagged with the nav panel it relates to.
+// Role filtering (via isPanelAllowed) is applied by callers, not here.
+function buildAlertItems(){
+  const items=[];
+
+  DB.projects.filter(p=>p.status==='late').forEach(p=>{
+    const dl=daysLeft(p.deadline);
+    items.push({icon:'🔴',text:`<b>${p.name}</b> is <b>LATE</b> (${p.pm}) — ${dl!==null?Math.abs(dl)+' days overdue':'deadline unknown'}`,badge:billingBadge(p.billing),sev:'red',category:'projects'});
+  });
+  DB.projects.filter(p=>p.status==='risk').forEach(p=>{
+    items.push({icon:'🟡',text:`<b>${p.name}</b> is <b>AT RISK</b> (${p.pm}) — check Gantt and escalate`,badge:projStatusBadge(p.status),sev:'yellow',category:'projects'});
+  });
+  DB.projects.filter(p=>p.billing==='overdue'||p.billing==='unpaid').forEach(p=>{
+    items.push({icon:'💸',text:`<b>${p.name}</b> billing is <b>${p.billing==='overdue'?'OVERDUE':'UNPAID'}</b> (${p.pm}) — follow up with client`,badge:billingBadge(p.billing),sev:'red',category:'billing'});
+  });
+  DB.equipment.filter(e=>isCalDue(e.nextCal)).forEach(e=>{
+    const dl=daysLeft(e.nextCal);
+    items.push({icon:'⏰',text:`<b>${e.name}</b> calibration ${dl!==null&&dl<0?'OVERDUE by '+Math.abs(dl)+'d':'due in '+dl+'d'} — Schedule immediately`,badge:'',sev:'red',category:'equipment'});
+  });
+  DB.personnel.filter(p=>p.ppe==='non-compliant').forEach(p=>{
+    items.push({icon:'⚠️',text:`<b>${p.name}</b> PPE NON-COMPLIANT — ${p.remarks||'address before next deployment'}`,badge:'',sev:'yellow',category:'personnel'});
+  });
+  DB.commitments.filter(c=>c.status==='At Risk').forEach(c=>{
+    items.push({icon:'📋',text:`Commitment to GM at risk: <b>${c.title}</b> — due ${fmtDate(c.dueDate)}`,badge:'',sev:'yellow',category:'commitments'});
+  });
+  DB.commitments.filter(c=>c.status==='Missed').forEach(c=>{
+    items.push({icon:'❌',text:`Commitment MISSED: <b>${c.title}</b> — communicate to GM immediately`,badge:'',sev:'red',category:'commitments'});
+  });
+  DB.subcon.filter(s=>s.evalStatus==='pending').forEach(s=>{
+    items.push({icon:'📝',text:`Subcontractor <b>${s.name}</b> — evaluation form NOT on file for deployment ${fmtDate(s.deployDate)}`,badge:'',sev:'yellow',category:'subcon'});
+  });
+
+  return items;
+}
+
+// Filters an alert/category list down to what the current role is permitted to see.
+function filterByRole(items){
+  if(typeof isPanelAllowed!=='function') return items;
+  return items.filter(function(it){ return isPanelAllowed(it.category); });
 }
 
 function renderAlerts(){
   const el=document.getElementById('alerts-list');
   const ovEl=document.getElementById('overview-alerts-wrap');
-  const items=[];
-
-  DB.projects.filter(p=>p.status==='late').forEach(p=>{
-    const dl=daysLeft(p.deadline);
-    items.push({icon:'🔴',text:`<b>${p.name}</b> is <b>LATE</b> (${p.pm}) — ${dl!==null?Math.abs(dl)+' days overdue':'deadline unknown'}`,badge:billingBadge(p.billing),sev:'red'});
-  });
-  DB.projects.filter(p=>p.status==='risk').forEach(p=>{
-    items.push({icon:'🟡',text:`<b>${p.name}</b> is <b>AT RISK</b> (${p.pm}) — check Gantt and escalate`,badge:projStatusBadge(p.status),sev:'yellow'});
-  });
-  DB.equipment.filter(e=>isCalDue(e.nextCal)).forEach(e=>{
-    const dl=daysLeft(e.nextCal);
-    items.push({icon:'⏰',text:`<b>${e.name}</b> calibration ${dl!==null&&dl<0?'OVERDUE by '+Math.abs(dl)+'d':'due in '+dl+'d'} — Schedule immediately`,badge:'',sev:'red'});
-  });
-  DB.personnel.filter(p=>p.ppe==='non-compliant').forEach(p=>{
-    items.push({icon:'⚠️',text:`<b>${p.name}</b> PPE NON-COMPLIANT — ${p.remarks||'address before next deployment'}`,badge:'',sev:'yellow'});
-  });
-  DB.commitments.filter(c=>c.status==='At Risk').forEach(c=>{
-    items.push({icon:'📋',text:`Commitment to GM at risk: <b>${c.title}</b> — due ${fmtDate(c.dueDate)}`,badge:'',sev:'yellow'});
-  });
-  DB.commitments.filter(c=>c.status==='Missed').forEach(c=>{
-    items.push({icon:'❌',text:`Commitment MISSED: <b>${c.title}</b> — communicate to GM immediately`,badge:'',sev:'red'});
-  });
-  DB.subcon.filter(s=>s.evalStatus==='pending').forEach(s=>{
-    items.push({icon:'📝',text:`Subcontractor <b>${s.name}</b> — evaluation form NOT on file for deployment ${fmtDate(s.deployDate)}`,badge:'',sev:'yellow'});
-  });
+  const items=filterByRole(buildAlertItems());
 
   if(!items.length){
     const empty='<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-text">No active alerts — great work!</div></div>';
@@ -4600,10 +4611,21 @@ function applyRolePermissions(){
     label.style.display = hasVisible ? '' : 'none';
   });
 
+  // Scope Overview page blocks (card groups, deadlines table) to the current role
+  document.querySelectorAll('[data-role-cat]').forEach(function(el){
+    var cats = el.getAttribute('data-role-cat').split(',');
+    var allowed = def.panels==='all' || cats.some(function(c){ return def.panels.indexOf(c) >= 0; });
+    el.style.display = allowed ? '' : 'none';
+  });
+
+  var redirected = false;
   if(typeof activePanel!=='undefined' && !isPanelAllowed(activePanel)){
     var firstAllowed = def.panels==='all' ? 'overview' : def.panels[0];
     goTo(firstAllowed || 'overview');
+    redirected = true;
   }
+  // goTo() already re-renders; otherwise force a refresh so alerts/badges reflect the new role
+  if(!redirected && typeof renderAll==='function') renderAll();
 }
 
 loadRole();
