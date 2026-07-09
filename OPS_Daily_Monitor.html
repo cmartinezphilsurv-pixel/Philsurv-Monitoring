@@ -2326,6 +2326,7 @@ function renderProjects(){
         +'</div>'
         +'<div><span class="pm-status" style="background:'+st.bg+';color:'+st.col+'">'+p._bucket+'</span></div>'
         +'<div class="pm-actions">'
+          +(p.kickoffUrl?'<a class="pm-act-btn" title="Open Kickoff Sheet in Google Sheets" href="'+p.kickoffUrl+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="text-decoration:none">📄</a>':'')
           +'<button class="pm-act-btn" title="Gantt" onclick="openGanttPanel('+p.id+');event.stopPropagation()">📊</button>'
           +'<button class="pm-act-btn" title="Edit" onclick="editItem(\'project\','+p.id+',event)">✏️</button>'
           +'<button class="pm-act-btn" title="Delete" onclick="deleteItem(\'projects\','+p.id+',event)">🗑️</button>'
@@ -4585,7 +4586,8 @@ function renderGanttPanel() {
     '<span>PM: '+project.pm+'</span>' +
     '<span>Start: '+fmtDate(project.startDate)+'</span>' +
     '<span>Deadline: '+fmtDate(project.deadline)+'</span>' +
-    '<span style="color:#4ade80;font-weight:700">'+overall+'% complete</span>';
+    '<span style="color:#4ade80;font-weight:700">'+overall+'% complete</span>' +
+    (project.kickoffUrl?'<a href="'+project.kickoffUrl+'" target="_blank" rel="noopener" style="background:#22c55e;color:#fff;padding:4px 10px;border-radius:6px;text-decoration:none;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:4px">📄 Open Kickoff Sheet ↗</a>':'');
 
   // Summary cards
   var total = items.length;
