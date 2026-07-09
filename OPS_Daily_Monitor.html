@@ -326,6 +326,18 @@ tr:hover .row-actions{opacity:1}
 .alert-item-icon{font-size:13px;flex-shrink:0;margin-top:1px}
 .alert-item-text{color:var(--text);line-height:1.5;flex:1}
 .alert-item-badge{font-size:10px;flex-shrink:0;margin-top:1px}
+.alert-panel-hint{margin-left:auto;font-size:10px;font-weight:500;color:var(--red-dark);opacity:.75}
+.alert-clickable{cursor:pointer;transition:background .12s}
+.alert-clickable:hover{background:var(--red-light)}
+.alert-item-go{flex-shrink:0;margin-top:1px;font-size:11px;opacity:0;transition:opacity .12s}
+.alert-clickable:hover .alert-item-go{opacity:.9}
+.bulk-row{display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;border-bottom:1px solid var(--gray-border);cursor:pointer}
+.bulk-row:last-child{border-bottom:none}
+.bulk-row:hover{background:var(--gray-light)}
+.bulk-row input[type=checkbox]{flex:0 0 auto;width:15px;height:15px;cursor:pointer}
+.bulk-row-main{flex:1;min-width:0}
+.bulk-row-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bulk-row-sub{font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ── TODAY SCHEDULE ── */
 .today-sched-wrap{background:var(--white);border:1px solid var(--gray-border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:1.25rem}
@@ -905,8 +917,42 @@ tr:hover .row-actions{opacity:1}
   <div class="tab-panel" id="panel-alerts">
     <div class="section-header">
       <div><div class="section-title">⚠️ Active Alerts</div><div class="section-subtitle">Items requiring your attention today</div></div>
+      <button class="btn-add" id="alerts-bulk-btn" onclick="openBulkStatus()" style="display:none">🧹 Bulk Update Projects</button>
     </div>
     <div id="alerts-list"></div>
+  </div>
+
+  <!-- ══ BULK STATUS MODAL ══ -->
+  <div class="modal-overlay" id="bulk-overlay" onclick="bulkCloseOutside(event)">
+    <div class="modal-box" id="bulk-box" style="max-width:760px;width:100%">
+      <div class="modal-head">
+        <div class="modal-head-title">🧹 Bulk Update Project Status</div>
+        <button class="modal-close" onclick="closeBulkStatus()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:.75rem">
+          Tick the projects that are actually finished, choose the new status, then apply. Only the boxes you check will change — everything else stays as-is. Clearing a project's late status removes its alert automatically.
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.6rem">
+          <label style="display:flex;align-items:center;gap:.4rem;font-size:12px;font-weight:600;cursor:pointer">
+            <input type="checkbox" id="bulk-selectall" onclick="bulkToggleAll(this)"> Select all shown
+          </label>
+          <div class="search-box" style="flex:1;min-width:160px">🔍<input type="text" id="bulk-search" placeholder="Filter projects…" oninput="renderBulkList()"></div>
+          <label style="font-size:11px;color:var(--text2)">Set to:</label>
+          <select class="form-input form-select" id="bulk-target" style="width:auto;min-width:140px" onchange="updateBulkCount()">
+            <option value="completed">✅ Completed</option>
+            <option value="cancelled">🚫 Cancelled</option>
+            <option value="ongoing">🔵 Ongoing</option>
+          </select>
+        </div>
+        <div id="bulk-list" style="max-height:46vh;overflow:auto;border:1px solid var(--gray-border);border-radius:8px"></div>
+      </div>
+      <div class="modal-foot">
+        <span id="bulk-count" style="font-size:11px;color:var(--text2);margin-right:auto"></span>
+        <button class="btn-cancel" onclick="closeBulkStatus()">Cancel</button>
+        <button class="btn-save" id="bulk-apply-btn" onclick="applyBulkStatus()">Apply</button>
+      </div>
+    </div>
   </div>
 
   <!-- ══ PROJECTS ══ -->
@@ -2143,32 +2189,110 @@ function buildAlertItems(){
 
   DB.projects.filter(p=>p.status==='late').forEach(p=>{
     const dl=daysLeft(p.deadline);
-    items.push({icon:'🔴',text:`<b>${p.name}</b> is <b>LATE</b> (${p.pm}) — ${dl!==null?Math.abs(dl)+' days overdue':'deadline unknown'}`,badge:billingBadge(p.billing),sev:'red',category:'projects'});
+    items.push({icon:'🔴',text:`<b>${p.name}</b> is <b>LATE</b> (${p.pm}) — ${dl!==null?Math.abs(dl)+' days overdue':'deadline unknown'}`,badge:billingBadge(p.billing),sev:'red',category:'projects',linkType:'project',linkId:p.id});
   });
   DB.projects.filter(p=>p.status==='risk').forEach(p=>{
-    items.push({icon:'🟡',text:`<b>${p.name}</b> is <b>AT RISK</b> (${p.pm}) — check Gantt and escalate`,badge:projStatusBadge(p.status),sev:'yellow',category:'projects'});
+    items.push({icon:'🟡',text:`<b>${p.name}</b> is <b>AT RISK</b> (${p.pm}) — check Gantt and escalate`,badge:projStatusBadge(p.status),sev:'yellow',category:'projects',linkType:'project',linkId:p.id});
   });
   DB.projects.filter(p=>p.billing==='overdue'||p.billing==='unpaid').forEach(p=>{
-    items.push({icon:'💸',text:`<b>${p.name}</b> billing is <b>${p.billing==='overdue'?'OVERDUE':'UNPAID'}</b> (${p.pm}) — follow up with client`,badge:billingBadge(p.billing),sev:'red',category:'billing'});
+    items.push({icon:'💸',text:`<b>${p.name}</b> billing is <b>${p.billing==='overdue'?'OVERDUE':'UNPAID'}</b> (${p.pm}) — follow up with client`,badge:billingBadge(p.billing),sev:'red',category:'billing',linkType:'project',linkId:p.id});
   });
   DB.equipment.filter(e=>isCalDue(e.nextCal)).forEach(e=>{
     const dl=daysLeft(e.nextCal);
-    items.push({icon:'⏰',text:`<b>${e.name}</b> calibration ${dl!==null&&dl<0?'OVERDUE by '+Math.abs(dl)+'d':'due in '+dl+'d'} — Schedule immediately`,badge:'',sev:'red',category:'equipment'});
+    items.push({icon:'⏰',text:`<b>${e.name}</b> calibration ${dl!==null&&dl<0?'OVERDUE by '+Math.abs(dl)+'d':'due in '+dl+'d'} — Schedule immediately`,badge:'',sev:'red',category:'equipment',linkType:'equipment',linkId:e.id});
   });
   DB.personnel.filter(p=>p.ppe==='non-compliant').forEach(p=>{
-    items.push({icon:'⚠️',text:`<b>${p.name}</b> PPE NON-COMPLIANT — ${p.remarks||'address before next deployment'}`,badge:'',sev:'yellow',category:'personnel'});
+    items.push({icon:'⚠️',text:`<b>${p.name}</b> PPE NON-COMPLIANT — ${p.remarks||'address before next deployment'}`,badge:'',sev:'yellow',category:'personnel',linkType:'personnel',linkId:p.id});
   });
   DB.commitments.filter(c=>c.status==='At Risk').forEach(c=>{
-    items.push({icon:'📋',text:`Commitment to GM at risk: <b>${c.title}</b> — due ${fmtDate(c.dueDate)}`,badge:'',sev:'yellow',category:'commitments'});
+    items.push({icon:'📋',text:`Commitment to GM at risk: <b>${c.title}</b> — due ${fmtDate(c.dueDate)}`,badge:'',sev:'yellow',category:'commitments',linkType:'commitment',linkId:c.id});
   });
   DB.commitments.filter(c=>c.status==='Missed').forEach(c=>{
-    items.push({icon:'❌',text:`Commitment MISSED: <b>${c.title}</b> — communicate to GM immediately`,badge:'',sev:'red',category:'commitments'});
+    items.push({icon:'❌',text:`Commitment MISSED: <b>${c.title}</b> — communicate to GM immediately`,badge:'',sev:'red',category:'commitments',linkType:'commitment',linkId:c.id});
   });
   DB.subcon.filter(s=>s.evalStatus==='pending').forEach(s=>{
-    items.push({icon:'📝',text:`Subcontractor <b>${s.name}</b> — evaluation form NOT on file for deployment ${fmtDate(s.deployDate)}`,badge:'',sev:'yellow',category:'subcon'});
+    items.push({icon:'📝',text:`Subcontractor <b>${s.name}</b> — evaluation form NOT on file for deployment ${fmtDate(s.deployDate)}`,badge:'',sev:'yellow',category:'subcon',linkType:'subcon',linkId:s.id});
   });
 
   return items;
+}
+
+// Opens the edit modal for the item behind an alert, so it can be resolved on the spot.
+function openAlertTarget(type, id){
+  const dbKey=type==='project'?'projects':type==='equipment'?'equipment':type==='personnel'?'personnel':type==='subcon'?'subcon':'commitments';
+  const item=(DB[dbKey]||[]).find(x=>String(x.id)===String(id));
+  if(!item){ alert('This record was not found — it may have been deleted.'); return; }
+  openModal(type, item);
+}
+
+// ── BULK PROJECT STATUS UPDATE ──
+var bulkSelected={};
+function bulkCandidates(){ return DB.projects.filter(function(p){return p.status==='late'||p.status==='risk';}); }
+function bulkVisible(){
+  var q=((document.getElementById('bulk-search')||{}).value||'').toLowerCase();
+  return bulkCandidates().filter(function(p){
+    if(!q)return true;
+    return (String(p.name||'')+' '+String(p.pm||'')+' '+String(p.pgs||'')).toLowerCase().indexOf(q)>-1;
+  });
+}
+function openBulkStatus(){
+  bulkSelected={};
+  var se=document.getElementById('bulk-search'); if(se)se.value='';
+  var sa=document.getElementById('bulk-selectall'); if(sa)sa.checked=false;
+  var tg=document.getElementById('bulk-target'); if(tg)tg.value='completed';
+  renderBulkList();
+  document.getElementById('bulk-overlay').classList.add('show');
+}
+function closeBulkStatus(){ document.getElementById('bulk-overlay').classList.remove('show'); }
+function bulkCloseOutside(e){ if(e.target&&e.target.id==='bulk-overlay')closeBulkStatus(); }
+function renderBulkList(){
+  var list=bulkVisible();
+  var wrap=document.getElementById('bulk-list');
+  if(!wrap)return;
+  if(!list.length){ wrap.innerHTML='<div class="empty-state" style="padding:1.4rem;text-align:center;color:var(--text2)">No late or at-risk projects to show.</div>'; syncSelectAll(); updateBulkCount(); return; }
+  wrap.innerHTML=list.map(function(p){
+    var checked=bulkSelected[p.id]?'checked':'';
+    var noteTxt=p.notes?(' · '+String(p.notes).replace(/\s+/g,' ').slice(0,55)):'';
+    return '<label class="bulk-row">'
+      +'<input type="checkbox" '+checked+' onclick="bulkToggleOne('+JSON.stringify(p.id)+',this.checked)">'
+      +'<div class="bulk-row-main">'
+        +'<div class="bulk-row-name">'+(p.name||'—')+'</div>'
+        +'<div class="bulk-row-sub">'+(p.pm?('PM: '+p.pm+' · '):'')+'due '+fmtDate(p.deadline)+noteTxt+'</div>'
+      +'</div>'
+      +'<span class="cr-badge '+(p.status==='late'?'uncoll':'followup')+'">'+p.status+'</span>'
+    +'</label>';
+  }).join('');
+  syncSelectAll(); updateBulkCount();
+}
+function bulkToggleOne(id,on){ if(on)bulkSelected[id]=true; else delete bulkSelected[id]; syncSelectAll(); updateBulkCount(); }
+function bulkToggleAll(cb){
+  bulkVisible().forEach(function(p){ if(cb.checked)bulkSelected[p.id]=true; else delete bulkSelected[p.id]; });
+  renderBulkList();
+}
+function syncSelectAll(){
+  var sa=document.getElementById('bulk-selectall'); if(!sa)return;
+  var vis=bulkVisible();
+  sa.checked = vis.length>0 && vis.every(function(p){return bulkSelected[p.id];});
+}
+function updateBulkCount(){
+  var n=Object.keys(bulkSelected).length;
+  var tgt=(document.getElementById('bulk-target')||{}).value||'completed';
+  var lbl={completed:'Completed',cancelled:'Cancelled',ongoing:'Ongoing'}[tgt]||tgt;
+  var cnt=document.getElementById('bulk-count'); if(cnt)cnt.textContent=n+' selected';
+  var btn=document.getElementById('bulk-apply-btn');
+  if(btn){ btn.textContent=n?('Mark '+n+' as '+lbl):'Apply'; btn.disabled=n===0; btn.style.opacity=n?'1':'.5'; }
+}
+function applyBulkStatus(){
+  var ids=Object.keys(bulkSelected);
+  if(!ids.length)return;
+  var tgt=(document.getElementById('bulk-target')||{}).value||'completed';
+  var lbl={completed:'Completed',cancelled:'Cancelled',ongoing:'Ongoing'}[tgt]||tgt;
+  if(!confirm('Mark '+ids.length+' project(s) as '+lbl+'?\n\nThis updates their status and clears their related alerts. You can still edit each project individually afterward.'))return;
+  var idset={}; ids.forEach(function(i){idset[String(i)]=true;});
+  var changed=0;
+  DB.projects.forEach(function(p){ if(idset[String(p.id)]){ p.status=tgt; changed++; } });
+  saveDB(); renderAll(); closeBulkStatus();
+  alert(changed+' project(s) marked as '+lbl+'.');
 }
 
 // Filters an alert/category list down to what the current role is permitted to see.
@@ -2182,12 +2306,24 @@ function renderAlerts(){
   const ovEl=document.getElementById('overview-alerts-wrap');
   const items=filterByRole(buildAlertItems());
 
+  // Show the "Bulk Update Projects" button only when the role can edit projects and there are late/at-risk ones.
+  const bulkBtn=document.getElementById('alerts-bulk-btn');
+  if(bulkBtn){
+    const canProj=(typeof isPanelAllowed!=='function')||isPanelAllowed('projects');
+    const hasCand=DB.projects.some(function(p){return p.status==='late'||p.status==='risk';});
+    bulkBtn.style.display=(canProj&&hasCand)?'':'none';
+  }
+
   if(!items.length){
     const empty='<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-text">No active alerts — great work!</div></div>';
     el.innerHTML=empty;ovEl.innerHTML='';return;
   }
-  const html=`<div class="alert-panel"><div class="alert-panel-header"><span class="alert-panel-title">⚠️ ${items.length} Alert${items.length>1?'s':''} — Action Required</span></div>${
-    items.map(a=>`<div class="alert-item"><div class="alert-item-icon">${a.icon}</div><div class="alert-item-text">${a.text}</div><div class="alert-item-badge">${a.badge}</div></div>`).join('')
+  const html=`<div class="alert-panel"><div class="alert-panel-header"><span class="alert-panel-title">⚠️ ${items.length} Alert${items.length>1?'s':''} — Action Required</span><span class="alert-panel-hint">Click any alert to open &amp; update it</span></div>${
+    items.map(a=>{
+      const clickable=a.linkType&&a.linkId!=null;
+      const attrs=clickable?` class="alert-item alert-clickable" onclick="openAlertTarget('${a.linkType}',${JSON.stringify(a.linkId)})" title="Click to open and update"`:' class="alert-item"';
+      return `<div${attrs}><div class="alert-item-icon">${a.icon}</div><div class="alert-item-text">${a.text}</div><div class="alert-item-badge">${a.badge}</div>${clickable?'<div class="alert-item-go">✏️</div>':''}</div>`;
+    }).join('')
   }</div>`;
   el.innerHTML=html; ovEl.innerHTML=html;
 }
