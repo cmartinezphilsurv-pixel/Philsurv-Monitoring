@@ -83,7 +83,35 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4f8;color:var(--text);min-h
 .stat-card.c-blue .stat-num{color:var(--blue)}
 .stat-card.c-purple .stat-num{color:var(--purple)}
 .stat-card.c-teal .stat-num{color:var(--teal)}
+.stat-card.c-orange::before{background:var(--orange)}
+.stat-card.c-orange .stat-num{color:var(--orange)}
 .stat-lbl{font-size:10px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+
+/* ── COLLECTION REPORT ── */
+.bill-sub-panel{display:none}.bill-sub-panel.active{display:block}
+.cr-aging-bar{display:flex;height:20px;border-radius:5px;overflow:hidden;background:var(--gray-border)}
+.cr-aging-bar>span{display:block;height:100%;transition:width .3s}
+.cr-aging-legend{display:flex;flex-wrap:wrap;gap:.4rem 1rem;margin-top:.55rem}
+.cr-aging-legend .cr-leg{display:flex;align-items:center;gap:.35rem;font-size:11px;color:var(--text2)}
+.cr-aging-legend .cr-dot{width:9px;height:9px;border-radius:2px;flex:0 0 auto}
+.cr-aging-legend .cr-leg b{color:var(--text);font-weight:600}
+.cr-table td.cr-details{max-width:280px;font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cr-table td.cr-details:hover{white-space:normal;overflow:visible}
+.cr-table td.cr-remarks{max-width:200px;font-size:10px;color:var(--text2)}
+.cr-table td.cr-bal{text-align:right;font-weight:700;font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap}
+.cr-table tr.cr-done{background:var(--green-light)}
+.cr-table tr.cr-done td.cr-bal{color:var(--green-dark)}
+.cr-badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.cr-badge.forcol{background:#dbeafe;color:#1e40af}
+.cr-badge.followup{background:var(--yellow-light);color:#854d0e}
+.cr-badge.ops{background:var(--orange-light);color:#7c2d12}
+.cr-badge.rebill{background:#f3e8ff;color:#6b21a8}
+.cr-badge.finance{background:#e0f2fe;color:#075985}
+.cr-badge.uncoll{background:#fee2e2;color:#991b1b}
+.cr-badge.other{background:var(--gray-border);color:var(--text2)}
+.cr-age{font-size:10px;font-weight:600;white-space:nowrap}
+.cr-age.a-over90{color:var(--red)}.cr-age.a-6190{color:var(--orange)}.cr-age.a-3160{color:var(--yellow)}.cr-age.a-cur{color:var(--green)}.cr-age.a-none{color:var(--text2)}
+.cr-check{font-size:14px}
 
 /* ── TABLES ── */
 .table-wrap{background:var(--white);border:1px solid var(--gray-border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:1.25rem}
@@ -953,23 +981,78 @@ tr:hover .row-actions{opacity:1}
   <!-- ══ BILLING ══ -->
   <div class="tab-panel" id="panel-billing">
     <div class="section-header">
-      <div><div class="section-title">💰 Billing Status</div><div class="section-subtitle">Invoice and payment status per project</div></div>
+      <div><div class="section-title">💰 Finance / Billing</div><div class="section-subtitle">Collection report · Receivables · Invoice and payment status</div></div>
     </div>
-    <div class="cards-row">
-      <div class="stat-card c-total"><div class="stat-num" id="bc-total">0</div><div class="stat-lbl">Projects</div></div>
-      <div class="stat-card c-green"><div class="stat-num" id="bc-paid">0</div><div class="stat-lbl">Paid</div></div>
-      <div class="stat-card c-blue"><div class="stat-num" id="bc-forbilling">0</div><div class="stat-lbl">For Billing</div></div>
-      <div class="stat-card c-yellow"><div class="stat-num" id="bc-partial">0</div><div class="stat-lbl">Partial</div></div>
-      <div class="stat-card c-red"><div class="stat-num" id="bc-overdue">0</div><div class="stat-lbl">Overdue</div></div>
+
+    <!-- Sub-tab navigation -->
+    <div class="fo-subtabs">
+      <button class="fo-tab-btn active" onclick="setBillTab('collection',this)">📥 Collection Report</button>
+      <button class="fo-tab-btn" onclick="setBillTab('projbill',this)">🧾 Project Billing</button>
     </div>
-    <div class="table-wrap">
-      <div class="table-toolbar"><div class="table-toolbar-left">
-        <div class="search-box">🔍<input type="text" placeholder="Search..." oninput="renderBilling()" id="billing-search"></div>
-      </div></div>
-      <table><thead><tr>
-        <th>Project</th><th>Client</th><th>PM</th><th>Billing Status</th><th>Invoice #</th><th>Invoice Date</th><th>Amount</th><th>Payment Status</th><th>Remarks</th>
-      </tr></thead>
-      <tbody id="billing-tbody"></tbody></table>
+
+    <!-- ── COLLECTION REPORT ── -->
+    <div class="bill-sub-panel active" id="bill-collection">
+      <div style="display:flex;align-items:baseline;gap:.6rem;margin-bottom:.75rem;flex-wrap:wrap">
+        <div style="font-size:13px;font-weight:700;color:var(--text)">Accounts Receivable — Collection Status</div>
+        <div class="mono" style="font-size:11px;color:var(--text2)" id="cr-asof">As of June 19, 2026</div>
+      </div>
+      <div class="cards-row">
+        <div class="stat-card c-total"><div class="stat-num" id="cr-total">₱0</div><div class="stat-lbl">Total Collectibles</div></div>
+        <div class="stat-card c-red"><div class="stat-num" id="cr-pastdue">₱0</div><div class="stat-lbl">Past Due <span id="cr-pastdue-n" class="mono"></span></div></div>
+        <div class="stat-card c-orange"><div class="stat-num" id="cr-over90">₱0</div><div class="stat-lbl">Over 90 Days <span id="cr-over90-n" class="mono"></span></div></div>
+        <div class="stat-card c-blue"><div class="stat-num" id="cr-current">₱0</div><div class="stat-lbl">Current 0–30 <span id="cr-current-n" class="mono"></span></div></div>
+        <div class="stat-card c-yellow"><div class="stat-num" id="cr-forcol">₱0</div><div class="stat-lbl" id="cr-forcol-lbl">For Collection</div></div>
+        <div class="stat-card c-green"><div class="stat-num" id="cr-collected">₱0</div><div class="stat-lbl">Collected</div></div>
+      </div>
+
+      <!-- Aging breakdown bar -->
+      <div style="background:var(--white);border:1px solid var(--gray-border);border-radius:10px;padding:.85rem 1rem;margin-bottom:.9rem">
+        <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.55rem">Aging of Balance</div>
+        <div class="cr-aging-bar" id="cr-aging-bar"></div>
+        <div class="cr-aging-legend" id="cr-aging-legend"></div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <div class="search-box">🔍<input type="text" placeholder="Search PGS, client, details, remarks…" oninput="renderCollection()" id="cr-search"></div>
+            <button class="filter-btn active" onclick="setCrFilter('all',this)" id="crf-all">All</button>
+            <button class="filter-btn" onclick="setCrFilter('For collection',this)">For Collection</button>
+            <button class="filter-btn" onclick="setCrFilter('Follow up',this)">Follow Up</button>
+            <button class="filter-btn" onclick="setCrFilter('With OPS Concern',this)">OPS Concern</button>
+            <button class="filter-btn" onclick="setCrFilter('For re-billing',this)">Re-billing</button>
+            <button class="filter-btn" onclick="setCrFilter('Finance concern',this)">Finance</button>
+            <button class="filter-btn" onclick="setCrFilter('Uncollectible',this)">Uncollectible</button>
+            <button class="filter-btn" onclick="setCrFilter('__collected',this)">✅ Collected</button>
+            <button class="filter-btn" onclick="setCrFilter('__uncollected',this)">◻ Outstanding</button>
+          </div>
+          <div class="mono" id="cr-count" style="font-size:11px;color:var(--text2)"></div>
+        </div>
+        <table class="cr-table"><thead><tr>
+          <th>PGS</th><th>Client</th><th>Details of the Bill</th><th style="text-align:right">Balance</th><th style="text-align:center">Days</th><th>Aging</th><th>Collection Status</th><th>Remarks / Next Step</th><th style="text-align:center">Collected</th>
+        </tr></thead>
+        <tbody id="cr-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ── PROJECT BILLING ── -->
+    <div class="bill-sub-panel" id="bill-projbill">
+      <div class="cards-row">
+        <div class="stat-card c-total"><div class="stat-num" id="bc-total">0</div><div class="stat-lbl">Projects</div></div>
+        <div class="stat-card c-green"><div class="stat-num" id="bc-paid">0</div><div class="stat-lbl">Paid</div></div>
+        <div class="stat-card c-blue"><div class="stat-num" id="bc-forbilling">0</div><div class="stat-lbl">For Billing</div></div>
+        <div class="stat-card c-yellow"><div class="stat-num" id="bc-partial">0</div><div class="stat-lbl">Partial</div></div>
+        <div class="stat-card c-red"><div class="stat-num" id="bc-overdue">0</div><div class="stat-lbl">Overdue</div></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar"><div class="table-toolbar-left">
+          <div class="search-box">🔍<input type="text" placeholder="Search..." oninput="renderBilling()" id="billing-search"></div>
+        </div></div>
+        <table><thead><tr>
+          <th>Project</th><th>Client</th><th>PM</th><th>Billing Status</th><th>Invoice #</th><th>Invoice Date</th><th>Amount</th><th>Payment Status</th><th>Remarks</th>
+        </tr></thead>
+        <tbody id="billing-tbody"></tbody></table>
+      </div>
     </div>
   </div>
 
@@ -1486,6 +1569,8 @@ tr:hover .row-actions{opacity:1}
 
 <!-- Imported project dataset from Project Monitor (4).xlsx · Database V3 -->
 <script src="projects_imported.js"></script>
+<!-- Collection Report dataset from Collection-Report-1-with-Collected-status.xlsx (as of June 19, 2026) -->
+<script src="collection_report.js"></script>
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -2012,6 +2097,7 @@ function renderAll(){
   renderAlerts();
   renderProjects();
   renderBilling();
+  renderCollection();
   renderEquipment();
   renderPersonnel();
   renderDeployment();
@@ -2414,6 +2500,117 @@ function renderBilling(){
     <td>${billingBadge(p.billing)}</td>
     <td style="font-size:10px;color:var(--text2)">${p.billingRemarks||''}</td>
   </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// COLLECTION REPORT
+// ══════════════════════════════════════════════════════
+var crFilter='all';
+function setBillTab(tab,btn){
+  document.querySelectorAll('#panel-billing .fo-tab-btn').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  document.querySelectorAll('#panel-billing .bill-sub-panel').forEach(function(p){p.classList.remove('active');});
+  var el=document.getElementById('bill-'+tab);
+  if(el)el.classList.add('active');
+  if(tab==='collection')renderCollection();
+  else if(tab==='projbill')renderBilling();
+}
+function setCrFilter(v,btn){
+  crFilter=v;
+  document.querySelectorAll('#bill-collection .filter-btn').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  renderCollection();
+}
+function crPeso(n){
+  if(n==null||isNaN(n))return '—';
+  return '₱'+Math.round(n).toLocaleString('en-US');
+}
+function crPesoK(n){
+  if(n==null||isNaN(n))return '₱0';
+  if(Math.abs(n)>=1e6)return '₱'+(n/1e6).toFixed(2)+'M';
+  if(Math.abs(n)>=1e3)return '₱'+(n/1e3).toFixed(0)+'K';
+  return '₱'+Math.round(n).toLocaleString('en-US');
+}
+function crStatusClass(st){
+  st=(st||'').toLowerCase();
+  if(st.indexOf('for collection')>-1)return 'forcol';
+  if(st.indexOf('follow')>-1)return 'followup';
+  if(st.indexOf('ops')>-1)return 'ops';
+  if(st.indexOf('re-bill')>-1||st.indexOf('rebill')>-1)return 'rebill';
+  if(st.indexOf('finance')>-1)return 'finance';
+  if(st.indexOf('uncollect')>-1)return 'uncoll';
+  return 'other';
+}
+function crAgeClass(ag){
+  ag=(ag||'').toLowerCase();
+  if(ag.indexOf('over 90')>-1)return 'a-over90';
+  if(ag.indexOf('61')>-1)return 'a-6190';
+  if(ag.indexOf('31')>-1)return 'a-3160';
+  if(ag.indexOf('current')>-1)return 'a-cur';
+  return 'a-none';
+}
+function renderCollection(){
+  var CR=window.COLLECTION_REPORT;
+  var tbody=document.getElementById('cr-tbody');
+  if(!CR||!tbody)return;
+  var _setText=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  var s=CR.summary;
+  // Summary cards
+  _setText('cr-asof','As of '+s.asOf);
+  _setText('cr-total',crPesoK(s.totalCollectibles));
+  _setText('cr-pastdue',crPesoK(s.pastDue));
+  _setText('cr-pastdue-n','· '+s.pastDueCount);
+  _setText('cr-over90',crPesoK(s.over90));
+  _setText('cr-over90-n','· '+s.over90Count);
+  _setText('cr-current',crPesoK(s.current));
+  _setText('cr-current-n','· '+s.currentCount);
+  _setText('cr-forcol',crPesoK(s.forCollection));
+  _setText('cr-forcol-lbl','For Collection '+(s.forCollectionLabel||''));
+  _setText('cr-collected',crPesoK(s.collected));
+  // Aging bar
+  var bar=document.getElementById('cr-aging-bar'), leg=document.getElementById('cr-aging-legend');
+  if(bar&&leg){
+    var cols=['#dc2626','#ea580c','#ca8a04','#16a34a','#94a3b8'];
+    var tot=s.agingBreakdown.reduce(function(a,b){return a+b.amount;},0)||1;
+    bar.innerHTML=s.agingBreakdown.map(function(a,i){
+      var pct=(a.amount/tot*100);
+      return '<span style="width:'+pct.toFixed(1)+'%;background:'+cols[i]+'" title="'+a.label+': '+crPeso(a.amount)+' ('+a.count+')"></span>';
+    }).join('');
+    leg.innerHTML=s.agingBreakdown.map(function(a,i){
+      return '<span class="cr-leg"><span class="cr-dot" style="background:'+cols[i]+'"></span>'+a.label+' — <b>'+crPeso(a.amount)+'</b> ('+a.count+')</span>';
+    }).join('');
+  }
+  // Table rows
+  var q=((document.getElementById('cr-search')||{}).value||'').toLowerCase();
+  var rows=CR.rows.filter(function(r){
+    if(crFilter==='__collected'&&!r.collected)return false;
+    if(crFilter==='__uncollected'&&r.collected)return false;
+    if(crFilter!=='all'&&crFilter.indexOf('__')!==0&&r.status!==crFilter)return false;
+    if(q){
+      var hay=(r.pgs+' '+r.client+' '+r.details+' '+r.remarks+' '+r.status+' '+r.aging).toLowerCase();
+      if(hay.indexOf(q)<0)return false;
+    }
+    return true;
+  });
+  var cnt=document.getElementById('cr-count');
+  var outstanding=rows.reduce(function(a,r){return a+(r.collected?0:(r.balance||0));},0);
+  if(cnt)cnt.textContent=rows.length+' accounts · '+crPeso(outstanding)+' outstanding';
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="9"><div class="empty-state">No matching accounts.</div></td></tr>';return;}
+  tbody.innerHTML=rows.map(function(r){
+    var det=(r.details||'').replace(/</g,'&lt;');
+    var rem=(r.remarks||'').replace(/</g,'&lt;');
+    return '<tr class="'+(r.collected?'cr-done':'')+'">'
+      +'<td class="mono" style="font-weight:600;font-size:11px">'+(r.pgs||'—')+'</td>'
+      +'<td style="font-size:11px;font-weight:600">'+(r.client||'—')+'</td>'
+      +'<td class="cr-details" title="'+det.replace(/"/g,'&quot;')+'">'+(det||'—')+'</td>'
+      +'<td class="cr-bal">'+crPeso(r.balance)+'</td>'
+      +'<td style="text-align:center;font-size:11px">'+(r.days!=null?r.days:'—')+'</td>'
+      +'<td><span class="cr-age '+crAgeClass(r.aging)+'">'+(r.aging||'—')+'</span></td>'
+      +'<td><span class="cr-badge '+crStatusClass(r.status)+'">'+(r.status||'—')+'</span></td>'
+      +'<td class="cr-remarks">'+(rem||'—')+'</td>'
+      +'<td style="text-align:center">'+(r.collected?'<span class="cr-check">✅</span>':'<span class="cr-check" style="opacity:.3">◻</span>')+'</td>'
+    +'</tr>';
+  }).join('');
 }
 
 function renderEquipment(){
