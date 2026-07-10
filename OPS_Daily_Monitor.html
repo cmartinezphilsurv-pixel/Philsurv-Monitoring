@@ -1112,14 +1112,14 @@ tr:hover .row-actions{opacity:1}
 
     <!-- Sub-tab navigation -->
     <div class="fo-subtabs">
-      <button class="fo-tab-btn active" onclick="setFoTab('briefing',this)">📊 Daily Briefing</button>
-      <button class="fo-tab-btn" onclick="setFoTab('requests',this)">📋 Requests</button>
-      <button class="fo-tab-btn" onclick="setFoTab('wsched',this)">🗓️ Weekly Schedule</button>
-      <button class="fo-tab-btn" onclick="setFoTab('actlog',this)">📝 Activity Log</button>
-      <button class="fo-tab-btn" onclick="setFoTab('roster',this)">👥 Roster</button>
-      <button class="fo-tab-btn" onclick="setFoTab('fovehicles',this)">🚗 Vehicles</button>
-      <button class="fo-tab-btn" onclick="setFoTab('foequipment',this)">🔭 Equipment</button>
-      <button class="fo-tab-btn" onclick="setFoTab('foexport',this)">📤 Export</button>
+      <button class="fo-tab-btn active" data-fotab="briefing" onclick="setFoTab('briefing',this)">📊 Daily Briefing</button>
+      <button class="fo-tab-btn" data-fotab="requests" onclick="setFoTab('requests',this)">📋 Requests</button>
+      <button class="fo-tab-btn" data-fotab="wsched" onclick="setFoTab('wsched',this)">🗓️ Weekly Schedule</button>
+      <button class="fo-tab-btn" data-fotab="actlog" onclick="setFoTab('actlog',this)">📝 Activity Log</button>
+      <button class="fo-tab-btn" data-fotab="roster" onclick="setFoTab('roster',this)">👥 Roster</button>
+      <button class="fo-tab-btn" data-fotab="fovehicles" onclick="setFoTab('fovehicles',this)">🚗 Vehicles</button>
+      <button class="fo-tab-btn" data-fotab="foequipment" onclick="setFoTab('foequipment',this)">🔭 Equipment</button>
+      <button class="fo-tab-btn" data-fotab="foexport" onclick="setFoTab('foexport',this)">📤 Export</button>
     </div>
 
     <!-- ── DAILY BRIEFING ── -->
@@ -2384,7 +2384,7 @@ function renderOverviewCards(){
 function renderUpcomingDeadlines(){
   const tbody=document.getElementById('upcoming-deadlines');
   const upcoming=DB.projects
-    .filter(p=>{const dl=daysLeft(p.deadline);return dl!==null&&dl<=14&&p.status!=='cancelled';})
+    .filter(p=>{const dl=daysLeft(p.deadline);return dl!==null&&dl<=14&&p.status!=='cancelled'&&p.status!=='completed';})
     .sort((a,b)=>new Date(a.deadline)-new Date(b.deadline));
   if(!upcoming.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state">No deadlines in the next 14 days.</td></tr>';return;}
   tbody.innerHTML=upcoming.map(p=>{
@@ -4875,6 +4875,13 @@ var ROLE_DEFS = {
     label:'Cost Estimator', icon:'🧮',
     desc:'Billing Status & Project Kickoff',
     panels:['alerts','billing','kickoff']
+  },
+  requestor: {
+    label:'Requestor', icon:'🙋',
+    desc:'Submit & track field / schedule requests',
+    panels:['fieldops'],
+    // Field Ops sub-tabs this role may use (others are hidden). Lands on the first one.
+    foTabs:['requests','wsched']
   }
 };
 var currentRole = null;
@@ -4960,6 +4967,21 @@ function applyRolePermissions(){
     var allowed = def.panels==='all' || cats.some(function(c){ return def.panels.indexOf(c) >= 0; });
     el.style.display = allowed ? '' : 'none';
   });
+
+  // Scope Field Ops sub-tabs for roles that restrict them (e.g. Requestor sees only Requests + Weekly Schedule)
+  var foBtns = document.querySelectorAll('#panel-fieldops .fo-tab-btn');
+  if(foBtns.length){
+    var allowedFo = def.foTabs || null;
+    foBtns.forEach(function(btn){
+      var t = btn.getAttribute('data-fotab');
+      var ok = !allowedFo || allowedFo.indexOf(t) >= 0;
+      btn.style.display = ok ? '' : 'none';
+    });
+    if(allowedFo && allowedFo.length && typeof setFoTab==='function'){
+      var firstFoBtn = document.querySelector('#panel-fieldops .fo-tab-btn[data-fotab="'+allowedFo[0]+'"]');
+      setFoTab(allowedFo[0], firstFoBtn);
+    }
+  }
 
   var redirected = false;
   if(typeof activePanel!=='undefined' && !isPanelAllowed(activePanel)){
