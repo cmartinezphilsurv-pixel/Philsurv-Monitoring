@@ -672,6 +672,150 @@
   }
   .tor-apply-btn:hover { background: #155d93; }
   #tor-file-input { display: none; }
+
+  /* ── PROPOSAL GENERATOR ── */
+  .prop-gen-box {
+    background: linear-gradient(135deg, #0F2A47 0%, #1B6CA8 100%);
+    border-radius: 10px; padding: 20px 22px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  }
+  .prop-gen-icon { font-size: 32px; flex-shrink: 0; }
+  .prop-gen-text { flex: 1; }
+  .prop-gen-text h4 { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+  .prop-gen-text p  { font-size: 12px; color: #8FC8F0; line-height: 1.5; }
+  .prop-gen-actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .prop-template-row { display: flex; align-items: center; gap: 8px; }
+  .prop-template-label { font-size: 11px; color: #8FC8F0; white-space: nowrap; }
+  .prop-template-btn {
+    background: rgba(255,255,255,.12); color: #fff;
+    border: 1px solid rgba(255,255,255,.25); border-radius: 5px;
+    padding: 5px 12px; font-size: 11px; cursor: pointer;
+    font-family: 'Outfit', sans-serif; transition: background .15s;
+  }
+  .prop-template-btn:hover { background: rgba(255,255,255,.22); }
+  .prop-template-file { font-size: 10px; color: #4CAF7D; margin-top: 2px; display: none; }
+  .prop-template-file.show { display: block; }
+  .btn-gen-proposal {
+    background: #fff; color: var(--ink);
+    border: none; border-radius: 6px; padding: 10px 22px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; gap: 8px;
+    transition: background .15s, transform .1s; white-space: nowrap;
+  }
+  .btn-gen-proposal:hover:not(:disabled) { background: #E8F0FA; }
+  .btn-gen-proposal:active { transform: scale(.97); }
+  .btn-gen-proposal:disabled { opacity: .55; cursor: not-allowed; }
+  .prop-gen-status {
+    font-size: 11px; color: #8FC8F0; margin-top: 4px;
+    display: none; align-items: center; gap: 6px;
+  }
+  .prop-gen-status.show { display: flex; }
+  .prop-gen-status .pgs-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--gold); animation: tsBlink .7s infinite; flex-shrink:0;
+  }
+  .prop-gen-status.done .pgs-dot { background: #4CAF7D; animation: none; }
+  .prop-gen-status.err  .pgs-dot { background: var(--accent); animation: none; }
+  #prop-template-input { display: none; }
+
+  /* ── BUFFER DAYS (internal only) ── */
+  .buffer-toggle-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px; font-size: 12px; color: var(--muted);
+  }
+  .buffer-toggle-row input[type=checkbox] {
+    accent-color: var(--accent); width: 14px; height: 14px;
+  }
+  .buffer-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: .07em;
+    text-transform: uppercase; background: #FFF3CD;
+    color: #7D5A00; border: 1px solid #F0D080;
+    border-radius: 3px; padding: 1px 6px;
+  }
+  .col-buffer { transition: opacity .2s; }
+  .cost-table.hide-buffer .col-buffer { display: none; }
+  .buffer-total-row { background: #FFFBEE; font-style: italic; }
+  .buffer-total-row td { border-top: 1.5px solid #F0D080 !important; }
+
+  /* ── PROJECT KEY in save bar ── */
+  .save-key-wrap {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .save-key-label {
+    font-size: 11px; color: #6A8CA8; white-space: nowrap; flex-shrink: 0;
+  }
+  .save-key-input {
+    background: #0D1B2A; border: 1px solid #3A5570;
+    color: #C0D8EF; border-radius: 5px;
+    padding: 5px 10px; font-size: 12px;
+    font-family: 'DM Mono', monospace; width: 200px;
+    transition: border-color .15s;
+  }
+  .save-key-input:focus {
+    outline: none; border-color: var(--accent2); color: #fff;
+  }
+  .save-key-input::placeholder { color: #3A5570; }
+
+  /* ── API KEY MODAL ── */
+  .apikey-modal-bg {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.55); z-index: 6000;
+    align-items: center; justify-content: center;
+  }
+  .apikey-modal-bg.open { display: flex; }
+  .apikey-modal {
+    background: var(--white); border-radius: 12px;
+    border: 1.5px solid var(--border); padding: 28px;
+    width: 460px; max-width: 95vw;
+    box-shadow: 0 8px 40px rgba(0,0,0,.25);
+  }
+  .apikey-modal h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; color: var(--ink); margin-bottom: 8px;
+  }
+  .apikey-modal p { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+  .apikey-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .apikey-input {
+    flex: 1; height: 38px; padding: 0 12px;
+    border: 1.5px solid var(--border); border-radius: 6px;
+    font-size: 13px; font-family: 'DM Mono', monospace;
+    color: var(--ink); background: var(--white);
+  }
+  .apikey-input:focus { outline: none; border-color: var(--accent2); }
+  .apikey-save-btn {
+    background: var(--accent2); color: #fff; border: none;
+    border-radius: 6px; padding: 0 18px; font-size: 13px;
+    font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif;
+    white-space: nowrap;
+  }
+  .apikey-save-btn:hover { background: #155d93; }
+  .apikey-note {
+    font-size: 11px; color: var(--muted); background: var(--cream);
+    border-radius: 6px; padding: 8px 12px; line-height: 1.6;
+  }
+  .apikey-note a { color: var(--accent2); }
+  .apikey-status-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 10px; font-size: 12px;
+  }
+  .apikey-set-badge {
+    background: #E2EFDA; color: #375623; border-radius: 4px;
+    padding: 2px 8px; font-size: 11px; font-weight: 600;
+    display: none;
+  }
+  .apikey-set-badge.show { display: inline; }
+  /* API key button in save bar */
+  .btn-apikey {
+    background: transparent; color: #8FA8C0;
+    border: 1.5px solid #3A5570; border-radius: 6px;
+    padding: 6px 12px; font-size: 11px; font-weight: 500;
+    font-family: 'Outfit', sans-serif; cursor: pointer;
+    transition: all .15s; white-space: nowrap;
+  }
+  .btn-apikey:hover { background: #3A5570; color: #fff; }
+  .btn-apikey.key-set { border-color: #4CAF7D; color: #4CAF7D; }
+  .btn-apikey.key-set:hover { background: #4CAF7D; color: #fff; }
 </style>
 </head>
 <body>
@@ -684,8 +828,14 @@
     <div class="save-dot" id="saveDot"></div>
     <div>
       <div class="save-label" id="saveLabel">No saved data yet</div>
-      <div class="save-meta"  id="saveMeta">Press Save to store your work in this file</div>
+      <div class="save-meta"  id="saveMeta">Enter a Project Key and press Save</div>
     </div>
+  </div>
+  <div class="save-key-wrap">
+    <span class="save-key-label">Project Key:</span>
+    <input class="save-key-input" id="projectKey" placeholder="e.g. PGS-2025-001"
+      title="Unique ID for this project — used to identify the file"
+      oninput="syncProjectKeyToHeader()">
   </div>
   <div class="save-btns">
     <button class="btn-print2" onclick="window.print()">⎙ Print</button>
@@ -1257,8 +1407,13 @@
     <div class="pnl-card pnl-suggest">
       <div class="pnl-label">Suggested Contract Price</div>
       <div class="pnl-val" id="cc-suggest">₱ 0.00</div>
-      <div class="pnl-sub" id="cc-suggest-sub">Based on target GP%</div>
+      <div class="pnl-sub" id="cc-suggest-sub">Based on target GOP%</div>
       <button class="pnl-apply-btn" onclick="applySuggestedPrice()" title="Apply to contract price field">↑ Apply</button>
+    </div>
+    <div class="pnl-card" style="border-color:#B6D9C6;background:#EAF6F0">
+      <div class="pnl-label">Estimated Duration</div>
+      <div class="pnl-val" id="cc-est-duration" style="color:var(--ink)">0 days</div>
+      <div class="pnl-sub" id="cc-est-duration-sub">Max activity days + buffer</div>
     </div>
   </div>
 
@@ -1310,6 +1465,11 @@
     <div style="font-size:12px;color:var(--muted);margin-bottom:10px">
       💡 Type a <strong>tag code</strong> (e.g. <code>RM</code>, <code>GPS</code>, <code>VR</code>) in the Description field to auto-fill the rate from the ABC price list.
     </div>
+    <div class="buffer-toggle-row">
+      <input type="checkbox" id="showBufferCol" onchange="toggleBufferCol()">
+      <label for="showBufferCol" style="cursor:pointer">Show buffer days column</label>
+      <span class="buffer-badge">🔒 Internal / Estimator Only</span>
+    </div>
     <table class="cost-table" id="costTable">
       <thead>
         <tr>
@@ -1317,8 +1477,9 @@
           <th>Activity / Cost Item</th>
           <th>Description / Tag</th>
           <th style="width:90px" class="num">Unit Cost (₱)</th>
-          <th style="width:70px" class="num">Qty</th>
-          <th style="width:80px" class="num">Days</th>
+          <th style="width:70px" class="num">Days</th>
+          <th style="width:70px" class="num col-buffer" title="Buffer days — internal only">Buffer 🔒</th>
+          <th style="width:80px" class="num">Total Days</th>
           <th style="width:110px" class="num">Budget (₱)</th>
           <th style="width:36px"></th>
         </tr>
@@ -1326,7 +1487,7 @@
       <tbody id="costTbody"></tbody>
       <tfoot>
         <tr>
-          <td colspan="6">Total Estimated Cost incl. Admin (VAT Inc.)</td>
+          <td colspan="7">Total Estimated Cost incl. Admin (VAT Inc.)</td>
           <td class="num" id="costTotal">₱ 0.00</td>
           <td></td>
         </tr>
@@ -1390,9 +1551,34 @@
 
   <!-- ── PROPOSAL SUMMARY ── -->
   <div class="gantt-view" id="cost-proposal">
+
+    <!-- GENERATE PROPOSAL DOCUMENT BOX -->
+    <div class="prop-gen-box">
+      <div class="prop-gen-icon">📝</div>
+      <div class="prop-gen-text">
+        <h4>Generate Proposal Document (.docx)</h4>
+        <p>Claude will write a complete, professional proposal using all the data in this form — project details, scope descriptions, cost breakdown, timeline, and terms. Optionally upload your proposal template (PDF or Word .docx) — Claude will match its structure and tone.</p>
+      </div>
+      <div class="prop-gen-actions">
+        <div class="prop-template-row">
+          <span class="prop-template-label">Template (optional):</span>
+          <button class="prop-template-btn" onclick="document.getElementById('prop-template-input').click()">📎 Upload template (PDF or Word)</button>
+          <input type="file" id="prop-template-input" accept=".pdf,.docx,.doc" onchange="propTemplateSelected(event)">
+        </div>
+        <div class="prop-template-file" id="propTemplateFile"></div>
+        <button class="btn-gen-proposal" id="btnGenProposal" onclick="generateProposal()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M9 2v3h3M5 7h4M5 9.5h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Generate Proposal
+        </button>
+        <div class="prop-gen-status" id="propGenStatus">
+          <span class="pgs-dot"></span>
+          <span id="propGenStatusText">Generating…</span>
+        </div>
+      </div>
+    </div>
+
     <div class="proposal-note">
-      📄 This summary is for <strong>client proposals</strong>. Each activity shows its total cost (VAT inclusive).
-      The grand total matches the contract price exactly. Refresh after any changes to the cost table.
+      📄 Cost summary for client proposals. Grand total matches the contract price. Refresh after any cost table changes.
     </div>
     <div class="proposal-actions">
       <button class="btn-refresh-proposal" onclick="buildProposalSummary()">↻ Refresh from Cost Table</button>
@@ -1979,6 +2165,12 @@ function switchGanttView(view, btn) {
 }
 
 // ── HEADER SYNC ──────────────────────────────────────────────────────────────
+function syncProjectKeyToHeader() {
+  const pk = document.getElementById('projectKey')?.value?.trim();
+  const hdr = document.getElementById('hdr-pno');
+  if (hdr && pk) hdr.textContent = pk;
+}
+
 function syncHeader() {
   document.getElementById('hdr-client').textContent = document.getElementById('f-client').value || '—';
   document.getElementById('hdr-pno').textContent    = document.getElementById('f-projno').value || '—';
@@ -2480,15 +2672,19 @@ const costItems = [
   ]},
 ];
 
-function makeCostItemRow(desc, unit, qty, days) {
-  const budget = unit * qty * days;
+function makeCostItemRow(desc, unit, days, _unused) {
+  // signature kept backward-compatible: (desc, unit, days)
+  // 'qty' param renamed to 'days', _unused replaces old 'days'
+  const d = parseFloat(days) || 1;
+  const budget = unit * d;
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td></td>
     <td class="cost-desc-wrap"><input type="text" value="${desc}" style="min-width:150px" class="cost-desc-input" placeholder="Type tag code (e.g. RM, GPS) or description…"></td>
     <td><input type="number" class="cost-unit num" value="${unit}" style="width:86px;text-align:right" oninput="recalcRow(this)"></td>
-    <td><input type="number" class="cost-qty  num" value="${qty}"  style="width:60px;text-align:right" oninput="recalcRow(this)"></td>
-    <td><input type="number" class="cost-days num" value="${days}" style="width:60px;text-align:right" oninput="recalcRow(this)"></td>
+    <td><input type="number" class="cost-days num" value="${d}"    style="width:60px;text-align:right" oninput="recalcRow(this)"></td>
+    <td class="col-buffer"><input type="number" class="cost-buffer num" value="0" style="width:60px;text-align:right;background:#FFFBEE" oninput="recalcRow(this)" title="Buffer days (internal)"></td>
+    <td class="num cost-total-days">1</td>
     <td class="num cost-budget">₱ ${budget.toLocaleString('en-PH',{minimumFractionDigits:2})}</td>
     ${makeDelCell()}`;
   return tr;
@@ -2498,11 +2694,17 @@ function makeCostActivityRow(name) {
   const tr = document.createElement('tr');
   tr.className = 'activity-head';
   tr.innerHTML = `
-    <td colspan="6"><input type="text" value="${name}" style="background:transparent;border:none;font-weight:600;color:var(--accent2);width:100%;font-family:'Outfit',sans-serif;font-size:13px"></td>
+    <td colspan="7"><input type="text" value="${name}" style="background:transparent;border:none;font-weight:600;color:var(--accent2);width:100%;font-family:'Outfit',sans-serif;font-size:13px"></td>
     ${makeDelCell()}`;
   return tr;
 }
 
+
+function toggleBufferCol() {
+  const show = document.getElementById('showBufferCol')?.checked;
+  const table = document.getElementById('costTable');
+  if (table) table.classList.toggle('hide-buffer', !show);
+}
 function buildCostRows() {
   const tb = document.getElementById('costTbody');
   costItems.forEach(group => {
@@ -2529,12 +2731,15 @@ function addCostActivity() {
 }
 
 function recalcRow(inp) {
-  const tr   = inp.closest('tr');
-  const unit = parseFloat(tr.querySelector('.cost-unit')?.value) || 0;
-  const qty  = parseFloat(tr.querySelector('.cost-qty')?.value)  || 0;
-  const days = parseFloat(tr.querySelector('.cost-days')?.value) || 0;
-  const bud  = tr.querySelector('.cost-budget');
-  if (bud) bud.textContent = '₱ ' + (unit*qty*days).toLocaleString('en-PH',{minimumFractionDigits:2});
+  const tr     = inp.closest('tr');
+  const unit   = parseFloat(tr.querySelector('.cost-unit')?.value)   || 0;
+  const days   = parseFloat(tr.querySelector('.cost-days')?.value)   || 0;
+  const buffer = parseFloat(tr.querySelector('.cost-buffer')?.value) || 0;
+  const total  = days + buffer;
+  const bud    = tr.querySelector('.cost-budget');
+  const totEl  = tr.querySelector('.cost-total-days');
+  if (totEl) totEl.textContent = total;
+  if (bud)   bud.textContent   = '₱ ' + (unit * total).toLocaleString('en-PH',{minimumFractionDigits:2});
   updateCostCards();
 }
 
@@ -2621,6 +2826,29 @@ function updateCostCards() {
   if (el('cc-net-pct') && price > 0) el('cc-net-pct').textContent        = (netAfterTax/price*100).toFixed(1) + '% of contract price';
   if (el('cc-suggest-sub'))       el('cc-suggest-sub').textContent       = 'For ' + (targetGP*100).toFixed(0) + '% GOP target';
   if (el('costTotal'))            el('costTotal').textContent            = '\u20b1 ' + totalWithAdmin.toLocaleString('en-PH',{minimumFractionDigits:2});
+
+  // ── Estimated Duration ──
+  let totalEstDays = 0;
+  let curActName   = '';
+  let actMaxDays   = 0;
+  document.querySelectorAll('#costTbody tr').forEach(tr => {
+    if (tr.classList.contains('activity-head')) {
+      // flush previous activity
+      if (curActName) totalEstDays += actMaxDays;
+      const inp = tr.querySelector('input[type=text]');
+      curActName = (inp?.value || '').toLowerCase();
+      // Research activities run simultaneously with survey — fold into previous
+      if (curActName.includes('research')) curActName = '';
+      actMaxDays = 0;
+    } else if (curActName) {
+      const days   = parseFloat(tr.querySelector('.cost-days')?.value)   || 0;
+      const buffer = parseFloat(tr.querySelector('.cost-buffer')?.value) || 0;
+      actMaxDays   = Math.max(actMaxDays, days + buffer);
+    }
+  });
+  if (curActName) totalEstDays += actMaxDays;
+  if (el('cc-est-duration'))     el('cc-est-duration').textContent     = totalEstDays + ' days';
+  if (el('cc-est-duration-sub')) el('cc-est-duration-sub').textContent = 'Seq. totals — research runs simultaneously';
 }
 
 
@@ -2639,6 +2867,29 @@ function buildProposalSummary() {
   const activities = [];
   let current = null;
 
+  // Keywords that are kept in proposal summary
+  const PROPOSAL_KEEP = [
+    'mobilization', 'demobilization',
+    'topographic', 'relocation', 'lidar', 'aerial', 'bathymetric',
+    'as-built', 'asbuilt', 'matterport', 'tree survey', 'site condition',
+    'construction layout', 'property layout', 'property research',
+    'feasibility', 'static network', 'tidal',
+    'administrative'  // admin overhead always kept
+  ];
+  // Keywords to EXCLUDE from proposal (internal activities)
+  const PROPOSAL_HIDE = [
+    'establishment of controls', 'ocular inspection',
+    'reports and drafting', 'data processing', 'plotting',
+    'research - ', 'subscription', 'research salary'
+  ];
+
+  function shouldShowInProposal(name) {
+    const lower = name.toLowerCase();
+    if (PROPOSAL_HIDE.some(k => lower.includes(k))) return false;
+    if (PROPOSAL_KEEP.some(k => lower.includes(k))) return true;
+    return false; // hide anything unrecognized
+  }
+
   rows.forEach(tr => {
     const isHead = tr.classList.contains('activity-head');
     const budCell = tr.querySelector('.cost-budget');
@@ -2646,8 +2897,15 @@ function buildProposalSummary() {
     if (isHead) {
       const nameInp = tr.querySelector('input[type=text]');
       const name    = nameInp ? nameInp.value.trim() : 'Activity';
-      current = { name, rawTotal: 0, items: [] };
-      activities.push(current);
+      // Only include activities that should show in proposal
+      if (shouldShowInProposal(name)) {
+        current = { name, rawTotal: 0, items: [], show: true };
+        activities.push(current);
+      } else {
+        // Still accumulate costs into a hidden bucket to preserve grand total accuracy
+        current = { name, rawTotal: 0, items: [], show: false };
+        activities.push(current);
+      }
     } else if (current && budCell) {
       const amt = parseFloat(budCell.textContent.replace(/[₱,\s]/g, '')) || 0;
       const descInp = tr.querySelector('input[type=text]');
@@ -2698,15 +2956,36 @@ function buildProposalSummary() {
     return;
   }
 
+  // Only render visible activities; redistribute hidden costs proportionally into visible ones
+  const visibleActs   = activities.filter(a => a.show);
+  const hiddenTotal   = activities.filter(a => !a.show && !a.name.toLowerCase().includes('administrative'))
+                                  .reduce((s, a) => s + a.rawTotal, 0);
+
+  // Spread hidden costs across visible survey activities proportionally
+  const visibleRaw = visibleActs.filter(a => !a.name.toLowerCase().includes('administrative'))
+                                .reduce((s, a) => s + a.rawTotal, 0);
+  visibleActs.forEach(act => {
+    if (!act.name.toLowerCase().includes('administrative') && visibleRaw > 0) {
+      // Add proportional share of hidden costs
+      act.scaledWithHidden = act.scaled + (act.rawTotal / visibleRaw) * hiddenTotal * scaleFactor;
+    } else {
+      act.scaledWithHidden = act.scaled;
+    }
+  });
+
+  // Re-scale visible acts so total still equals contract price
+  const visibleSum = visibleActs.reduce((s, a) => s + a.scaledWithHidden, 0);
+  const reScale    = (contract > 0 && visibleSum > 0) ? contract / visibleSum : 1;
+
   let rowNum = 1;
-  activities.forEach(act => {
-    // Activity header row
+  visibleActs.forEach(act => {
+    const displayAmt = act.scaledWithHidden * reScale;
     const headTr = document.createElement('tr');
     headTr.className = 'act-row';
     headTr.innerHTML = `
       <td style="color:var(--muted);font-size:11px;font-family:'DM Mono',monospace">${rowNum++}</td>
       <td>${act.name.replace(' — TOR: Separate','')}</td>
-      <td class="act-num">${peso(act.scaled)}</td>`;
+      <td class="act-num">${peso(displayAmt)}</td>`;
     tbody.appendChild(headTr);
   });
 
@@ -2728,6 +3007,46 @@ function buildProposalSummary() {
 }
 
 
+
+// ══════════════════════════════════════════════════════════════════════════════
+// AI HELPER — calls a Google Apps Script proxy that holds the API key securely.
+// Users need no API key, no accounts, no setup.
+// ADMIN SETUP: Deploy the companion GAS script and paste the URL below.
+// ══════════════════════════════════════════════════════════════════════════════
+const GAS_PROXY_URL = '';  // ← paste your Google Apps Script Web App URL here
+                            //   e.g. 'https://script.google.com/macros/s/ABC.../exec'
+
+async function callClaudeAI(systemPrompt, userContent) {
+  if (!GAS_PROXY_URL) {
+    throw new Error('AI proxy not configured. Ask your admin to set up the Google Apps Script proxy.');
+  }
+
+  const userText = Array.isArray(userContent)
+    ? userContent.filter(c => c.type === 'text').map(c => c.text).join('\n')
+    : String(userContent);
+
+  const response = await fetch(GAS_PROXY_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },  // GAS requires text/plain for cross-origin
+    body: JSON.stringify({
+      system: systemPrompt,
+      user: userText,
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error('Proxy error ' + response.status + ': ' + errText.slice(0, 200));
+  }
+
+  const data = await response.json();
+  if (data.error) throw new Error(data.error);
+  return data.result || '';
+}
+}
+
+
+
 // ══════════════════════════════════════════════════════════════════════════════
 // TOR AUTO-GENERATE SYSTEM
 // Reads a PDF or DOCX TOR via the Anthropic API, extracts scopes/area/location,
@@ -2741,14 +3060,15 @@ function torFileSelected(e) {
   const file = e.target.files[0];
   if (!file) return;
   _torFile = file;
-  const mb = (file.size / 1024 / 1024).toFixed(2);
+  const mb   = (file.size / 1024 / 1024).toFixed(2);
+  const ext  = file.name.split('.').pop().toLowerCase();
+  const typeLabel = ext === 'pdf' ? 'PDF' : (ext === 'docx' || ext === 'doc') ? 'Word' : ext.toUpperCase();
   document.getElementById('torFileName').textContent = file.name;
-  document.getElementById('torFileSize').textContent = mb + ' MB';
+  document.getElementById('torFileSize').textContent = mb + ' MB · ' + typeLabel;
   document.getElementById('torFileSelected').classList.add('show');
   document.getElementById('torGenerateBtn').classList.add('show');
   document.getElementById('torExtractPreview').classList.remove('show');
   document.getElementById('torStatus').classList.remove('show');
-  // Support drag-drop visual reset
   document.getElementById('torUploadBox').classList.remove('drag-over');
 }
 
@@ -2829,21 +3149,49 @@ function estimateDays(surveyType, areaHa, lots) {
 // ── Main: send TOR to Claude API and parse response ──────────────────────────
 async function torGenerate() {
   if (!_torFile) return;
-
   const btn = document.getElementById('torGenerateBtn');
   btn.disabled = true;
   torSetStatus('', 'Reading TOR file…');
 
-  // Convert file to base64
-  const b64 = await new Promise((res, rej) => {
-    const reader = new FileReader();
-    reader.onload  = e => res(e.target.result.split(',')[1]);
-    reader.onerror = rej;
-    reader.readAsDataURL(_torFile);
-  });
-
   const isPdf  = _torFile.name.toLowerCase().endsWith('.pdf');
   const isDocx = _torFile.name.toLowerCase().endsWith('.docx') || _torFile.name.toLowerCase().endsWith('.doc');
+
+  // ── Read file based on type ──
+  let b64 = null;
+  let torTextContent = null;
+
+  if (isPdf) {
+    torSetStatus('', 'Reading PDF…');
+    b64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload  = e => res(e.target.result.split(',')[1]);
+      reader.onerror = rej;
+      reader.readAsDataURL(_torFile);
+    });
+  } else if (isDocx) {
+    torSetStatus('', 'Extracting text from Word document…');
+    try {
+      if (!window.mammoth) {
+        await new Promise((res, rej) => {
+          const s = document.createElement('script');
+          s.src = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';
+          s.onload = res; s.onerror = rej;
+          document.head.appendChild(s);
+        });
+      }
+      const arrayBuf    = await _torFile.arrayBuffer();
+      const result      = await mammoth.extractRawText({ arrayBuffer: arrayBuf });
+      torTextContent    = result.value;
+    } catch(err) {
+      torSetStatus('error', 'Could not read Word file: ' + err.message);
+      btn.disabled = false;
+      return;
+    }
+  } else {
+    torSetStatus('error', 'Unsupported file type. Please upload a PDF or Word (.docx) file.');
+    btn.disabled = false;
+    return;
+  }
 
   torSetStatus('', 'Sending to Claude…');
 
@@ -2881,36 +3229,22 @@ Instructions:
   let content;
   if (isPdf) {
     content = [
-      { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: b64 } },
+      { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: b64 }, title: _torFile.name, context: 'Terms of Reference document for a surveying project.' },
       { type: 'text', text: 'Extract the project scope and requirements from this TOR. Respond with the JSON only.' }
     ];
-  } else {
-    // For DOCX: Claude cannot read binary DOCX natively via API in this context.
-    // We inform the user and fall back gracefully.
-    torSetStatus('error', 'Word (.docx) files cannot be read directly. Please save the TOR as PDF and upload again.');
-    btn.disabled = false;
-    return;
+  } else if (torTextContent) {
+    // DOCX — send extracted text inline
+    const truncated = torTextContent.slice(0, 12000);
+    content = [
+      { type: 'text', text: 'Below is the full text of the Terms of Reference (TOR) document extracted from a Word file. Extract the project scope and requirements and respond with the JSON only.\n\n---\n' + truncated + '\n---' }
+    ];
   }
 
   try {
     torSetStatus('', 'Claude is reading the document…');
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content }]
-      })
-    });
-
-    const data = await response.json();
-    const raw  = (data.content || []).map(c => c.text || '').join('').trim();
-
-    // Strip any accidental markdown fences
-    const clean = raw.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/```\s*$/,'').trim();
+    const rawResult = await callClaudeAI(systemPrompt, content);
+    const clean = rawResult.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/```\s*$/,'').trim();
     const parsed = JSON.parse(clean);
 
     if (parsed.error) {
@@ -2937,7 +3271,7 @@ Instructions:
     document.getElementById('torExtractPreview').classList.add('show');
 
   } catch(err) {
-    torSetStatus('error', 'Error: ' + err.message);
+    torSetStatus('error', err.message.includes('not configured') ? '⚙ AI proxy not set up yet — see admin' : 'Error: ' + err.message);
     console.error(err);
   }
 
@@ -3047,6 +3381,567 @@ function torApplyToTable() {
   // Scroll to the cost table
   document.getElementById('costTable')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PROPOSAL DOCUMENT GENERATOR
+// Collects all form data, sends to Claude API to write narrative content,
+// then builds a .docx file in the browser using docx.js (CDN) and downloads it.
+// ══════════════════════════════════════════════════════════════════════════════
+
+let _propTemplateFile = null;
+let _propTemplateB64  = null;
+let _propTemplateText = null;
+let _propTemplateType = null;
+
+async function propTemplateSelected(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  _propTemplateFile  = file;
+  _propTemplateB64   = null;
+  _propTemplateText  = null;
+
+  const fileEl = document.getElementById('propTemplateFile');
+  fileEl.textContent = '⏳ Reading ' + file.name + '…';
+  fileEl.classList.add('show');
+
+  const isPdf  = file.name.toLowerCase().endsWith('.pdf');
+  const isDocx = file.name.toLowerCase().endsWith('.docx') || file.name.toLowerCase().endsWith('.doc');
+
+  if (isPdf) {
+    // Store base64 for native PDF reading
+    const reader = new FileReader();
+    reader.onload = ev => {
+      _propTemplateB64  = ev.target.result.split(',')[1];
+      _propTemplateType = 'pdf';
+      fileEl.textContent = '✓ ' + file.name + ' (PDF — ready)';
+    };
+    reader.readAsDataURL(file);
+
+  } else if (isDocx) {
+    // Extract text from DOCX using mammoth.js
+    try {
+      if (!window.mammoth) {
+        await new Promise((res, rej) => {
+          const s = document.createElement('script');
+          s.src = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';
+          s.onload = res; s.onerror = rej;
+          document.head.appendChild(s);
+        });
+      }
+      const arrayBuf = await file.arrayBuffer();
+      const result   = await mammoth.extractRawText({ arrayBuffer: arrayBuf });
+      _propTemplateText = result.value;
+      _propTemplateType = 'docx';
+      fileEl.textContent = '✓ ' + file.name + ' (Word — text extracted, ' + _propTemplateText.length + ' chars)';
+    } catch(err) {
+      fileEl.textContent = '⚠ Could not read Word file: ' + err.message;
+      console.error(err);
+    }
+  } else {
+    fileEl.textContent = '⚠ Only PDF or Word (.docx) supported';
+  }
+}
+
+function setPropStatus(state, text) {
+  const el  = document.getElementById('propGenStatus');
+  const txt = document.getElementById('propGenStatusText');
+  el.className  = 'prop-gen-status show ' + state;
+  txt.textContent = text;
+}
+
+// ── Collect all project data from the form ────────────────────────────────────
+function collectProjectData() {
+  const g = id => document.getElementById(id)?.value?.trim() || '';
+  const n = id => parseFloat(document.getElementById(id)?.value) || 0;
+
+  // Cover sheet fields
+  const project = {
+    objective:   g('f-objective'),
+    client:      g('f-client'),
+    surveyType:  g('f-survtype'),
+    location:    g('f-location'),
+    coords:      g('f-coords'),
+    size:        g('f-size'),
+    price:       g('f-price') || ('₱' + n('co-price').toLocaleString('en-PH')),
+    projectNo:   g('f-projno'),
+    receipt:     g('f-receipt'),
+    startDate:   g('f-start'),
+    duration:    g('f-dur'),
+    endDate:     g('f-end'),
+    fieldDays:   g('f-fielddays'),
+    teams:       g('f-teams'),
+    payment:     g('f-payment'),
+    pm:          g('f-pm'),
+    qar:         g('f-qar'),
+    extDate:     g('f-extdate'),
+    venue:       g('f-venue'),
+  };
+
+  // Cost breakdown from proposal table
+  const activities = [];
+  document.querySelectorAll('#proposalTbody tr.act-row').forEach(tr => {
+    const cells = tr.querySelectorAll('td');
+    if (cells.length >= 3) {
+      activities.push({
+        name:   cells[1]?.textContent?.trim() || '',
+        amount: cells[2]?.textContent?.trim() || '',
+      });
+    }
+  });
+  const totalPrice = document.getElementById('proposalTotal')?.textContent?.trim() || '';
+
+  // Gantt activities
+  const ganttItems = [];
+  document.querySelectorAll('#ganttTbody tr').forEach(tr => {
+    const inputs = tr.querySelectorAll('input');
+    const name   = inputs[0]?.value || '';
+    const start  = inputs[1]?.value || '';
+    const finish = inputs[2]?.value || '';
+    const pct    = tr.querySelector('input[type=number]')?.value || '0';
+    if (name) ganttItems.push({ name, start, finish, pct: pct + '%' });
+  });
+
+  // Outputs checklist (what will be delivered)
+  const outputs = [];
+  document.querySelectorAll('#outputsTbody tr').forEach(tr => {
+    const cb   = tr.querySelector('input[type=checkbox]');
+    const desc = tr.querySelectorAll('input[type=text]')[0]?.value || '';
+    if (desc && cb?.checked) outputs.push(desc);
+  });
+  // Also get unchecked (all planned deliverables)
+  const allOutputs = [];
+  document.querySelectorAll('#outputsTbody tr').forEach(tr => {
+    const desc = tr.querySelectorAll('input[type=text]')[0]?.value || '';
+    if (desc) allOutputs.push(desc);
+  });
+
+  // Financial summary from P&L
+  const fin = {
+    contractPrice:   document.getElementById('cc-contract')?.textContent || '',
+    totalCost:       document.getElementById('cc-cost')?.textContent || '',
+    adminCost:       document.getElementById('cc-admin-cost')?.textContent || '',
+    totalWithAdmin:  document.getElementById('cc-total-with-admin')?.textContent || '',
+    vatPayable:      document.getElementById('cc-vat-payable')?.textContent || '',
+    netAfterTax:     document.getElementById('cc-net')?.textContent || '',
+    gop:             document.getElementById('cc-gp')?.textContent || '',
+  };
+
+  return { project, activities, totalPrice, ganttItems, allOutputs, fin };
+}
+
+// ── Main proposal generator ───────────────────────────────────────────────────
+async function generateProposal() {
+  // First refresh the proposal summary to make sure it's current
+  buildProposalSummary();
+
+  const btn = document.getElementById('btnGenProposal');
+  btn.disabled = true;
+  setPropStatus('', 'Collecting project data…');
+
+  const data = collectProjectData();
+
+  // Build system prompt
+  const systemPrompt = `You are a professional technical proposal writer for PhilSurv, a surveying and geomatics company in the Philippines.
+Write a complete, formal proposal document based on the project data provided. Respond ONLY with a JSON object containing the proposal sections — no markdown fences, no explanation.
+
+Return this exact structure:
+{
+  "cover_title": "short proposal title",
+  "executive_summary": "2-3 paragraph professional summary of the project",
+  "company_profile": "2 paragraph description of PhilSurv as a professional surveying company (professional tone, mention expertise in geodetic surveys, LiDAR, drone mapping, property surveys, as-built surveys)",
+  "scope_of_work": "detailed narrative describing the scope — at least 3-4 paragraphs covering what will be done, methodology, and standards followed",
+  "deliverables": ["list each deliverable as a complete sentence"],
+  "timeline_narrative": "2 paragraph narrative describing the project timeline and phasing based on the Gantt data",
+  "terms_and_conditions": [
+    "Payment terms: [state the payment terms]",
+    "Validity: This proposal is valid for 30 days from date of submission.",
+    "Scope changes: Any additional work outside this scope will be subject to a separate variation order.",
+    "Force majeure: PhilSurv shall not be liable for delays caused by circumstances beyond its control.",
+    "Confidentiality: All survey data and outputs are confidential and for client use only."
+  ],
+  "closing_statement": "1 paragraph professional closing expressing readiness to proceed"
+}`;
+
+  const userMsg = `Generate a proposal for this project:
+
+PROJECT DETAILS:
+- Objective: ${data.project.objective || 'Survey project'}
+- Client: ${data.project.client || 'Client'}
+- Survey Type: ${data.project.surveyType || 'Survey'}
+- Location: ${data.project.location || 'Philippines'}
+- Project Size: ${data.project.size || 'TBD'}
+- Project No: ${data.project.projectNo || 'TBD'}
+- Start Date: ${data.project.startDate || 'TBD'}
+- Duration: ${data.project.duration || 'TBD'} calendar days
+- Project Manager: ${data.project.pm || 'TBD'}
+- Payment Terms: ${data.project.payment || 'To be agreed'}
+
+CONTRACT PRICE: ${data.totalPrice || data.project.price}
+
+COST BREAKDOWN BY ACTIVITY:
+${data.activities.map(a => `- ${a.name}: ${a.amount}`).join('\n') || 'See attached cost estimate'}
+
+DELIVERABLES:
+${data.allOutputs.map(o => `- ${o}`).join('\n') || '- Survey reports and plans'}
+
+PROJECT SCHEDULE (${data.ganttItems.length} activities):
+${data.ganttItems.slice(0, 8).map(g => `- ${g.name}: ${g.start} to ${g.finish}`).join('\n') || 'Schedule to be confirmed'}
+
+${_propTemplateB64 ? 'Note: Client has provided a proposal template — match its tone and structure closely.' : ''}`;
+
+  try {
+    setPropStatus('', 'Claude is writing the proposal…');
+
+    const messages = [{ role: 'user', content: userMsg }];
+
+    // If template uploaded, include it based on type
+    if (_propTemplateType === 'pdf' && _propTemplateB64) {
+      // PDF — send natively
+      messages[0].content = [
+        { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: _propTemplateB64 }, title: _propTemplateFile?.name || 'Proposal Template' },
+        { type: 'text', text: userMsg + '\n\nThe PDF above is the proposal template. Match its structure, headings, and tone exactly.' }
+      ];
+    } else if (_propTemplateType === 'docx' && _propTemplateText) {
+      // DOCX — send extracted text inline
+      const truncated = _propTemplateText.slice(0, 8000); // keep within token limits
+      messages[0].content = userMsg + '\n\n---\nPROPOSAL TEMPLATE STRUCTURE (extracted from Word file):\n' + truncated + '\n---\nMatch the structure, headings, and tone of the template above exactly.';
+    }
+
+    // Flatten messages content to text for callClaudeAI
+    const msgContent = messages[0].content;
+    const flatMsg = typeof msgContent === 'string' ? msgContent
+      : Array.isArray(msgContent)
+        ? msgContent.filter(c => c.type === 'text').map(c => c.text).join('\n')
+        : String(msgContent);
+
+    const rawResult2 = await callClaudeAI(systemPrompt, flatMsg);
+    const clean = rawResult2.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/```\s*$/,'').trim();
+    const content = JSON.parse(clean);
+
+    setPropStatus('', 'Building Word document…');
+
+    await buildProposalDocx(content, data);
+
+    setPropStatus('done', 'Proposal downloaded!');
+    showToast('✓ Proposal document generated and downloaded', 'ok');
+
+  } catch(err) {
+    const errMsg = err.message.includes('not configured') ? 'AI proxy not set up yet — see admin' : err.message;
+    setPropStatus('err', errMsg);
+    console.error(err);
+    showToast('Proposal generation failed: ' + errMsg, 'err');
+  }
+
+  btn.disabled = false;
+}
+
+// ── Build .docx using docx.js loaded from CDN ─────────────────────────────────
+async function buildProposalDocx(content, data) {
+  // Load docx.js from CDN if not already loaded
+  if (!window.docx) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/docx/9.5.0/docx.umd.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  const {
+    Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+    AlignmentType, HeadingLevel, BorderStyle, WidthType, ShadingType,
+    VerticalAlign, PageNumber, PageBreak, LevelFormat, Header, Footer,
+    TabStopPosition, TabStopType,
+  } = window.docx;
+
+  const NAVY  = '0F2A47';
+  const BLUE  = '1B6CA8';
+  const LIGHT = 'D6E4F0';
+  const WHITE = 'FFFFFF';
+  const GRAY  = 'F5F5F5';
+
+  const p = (text, opts = {}) => new Paragraph({
+    children: [new TextRun({ text, font: 'Arial', size: opts.size || 22,
+      bold: opts.bold, color: opts.color, italics: opts.italic })],
+    spacing: { before: opts.before || 120, after: opts.after || 120 },
+    alignment: opts.align || AlignmentType.LEFT,
+  });
+
+  const h1 = text => new Paragraph({
+    heading: HeadingLevel.HEADING_1,
+    children: [new TextRun({ text, font: 'Arial', size: 28, bold: true, color: NAVY })],
+    spacing: { before: 280, after: 140 },
+    border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: BLUE, space: 4 } },
+  });
+
+  const h2 = text => new Paragraph({
+    heading: HeadingLevel.HEADING_2,
+    children: [new TextRun({ text, font: 'Arial', size: 24, bold: true, color: BLUE })],
+    spacing: { before: 200, after: 100 },
+  });
+
+  const bullet = text => new Paragraph({
+    numbering: { reference: 'bullets', level: 0 },
+    children: [new TextRun({ text, font: 'Arial', size: 22 })],
+    spacing: { before: 60, after: 60 },
+  });
+
+  const sep = () => new Paragraph({
+    spacing: { before: 100, after: 100 },
+    border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: LIGHT, space: 2 } },
+    children: [],
+  });
+
+  // ── Cover page ─────────────────────────────────────────────────────────────
+  const coverChildren = [
+    new Paragraph({ children: [], spacing: { before: 1440 } }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: 'PHILSURV', font: 'Arial', size: 64, bold: true, color: NAVY })],
+      spacing: { before: 0, after: 80 },
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: 'Professional Surveying & Geomatics Services', font: 'Arial', size: 24, color: BLUE, italics: true })],
+      spacing: { before: 0, after: 400 },
+    }),
+    new Paragraph({ children: [], border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: NAVY } }, spacing: { before: 0, after: 400 } }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: 'TECHNICAL AND FINANCIAL PROPOSAL', font: 'Arial', size: 36, bold: true, color: NAVY })],
+      spacing: { before: 0, after: 200 },
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: content.cover_title || data.project.objective || 'Survey Project', font: 'Arial', size: 28, color: BLUE })],
+      spacing: { before: 0, after: 400 },
+    }),
+    new Paragraph({ children: [], border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: LIGHT } }, spacing: { before: 0, after: 200 } }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: 'Prepared for:', font: 'Arial', size: 22, color: '666666' })],
+      spacing: { before: 0, after: 60 },
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: data.project.client || 'Client', font: 'Arial', size: 28, bold: true, color: NAVY })],
+      spacing: { before: 0, after: 200 },
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' }), font: 'Arial', size: 22, color: '666666' })],
+      spacing: { before: 0, after: 60 },
+    }),
+    ...(data.project.projectNo ? [new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: 'Project No: ' + data.project.projectNo, font: 'Arial', size: 20, color: '888888' })],
+      spacing: { before: 0, after: 0 },
+    })] : []),
+    new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }),
+  ];
+
+  // ── Project info summary table ─────────────────────────────────────────────
+  const infoRows = [
+    ['Project', data.project.objective || '—'],
+    ['Client', data.project.client || '—'],
+    ['Location', data.project.location || '—'],
+    ['Project Size', data.project.size || '—'],
+    ['Project No.', data.project.projectNo || '—'],
+    ['Start Date', data.project.startDate || '—'],
+    ['Duration', (data.project.duration || '—') + ' calendar days'],
+    ['Project Manager', data.project.pm || '—'],
+    ['Contract Price', data.totalPrice || data.project.price || '—'],
+  ].filter(r => r[1] !== '—');
+
+  const mkBorder = () => ({ style: BorderStyle.SINGLE, size: 1, color: LIGHT });
+  const allBorders = { top: mkBorder(), bottom: mkBorder(), left: mkBorder(), right: mkBorder() };
+
+  const infoTable = new Table({
+    width: { size: 9026, type: WidthType.DXA },
+    columnWidths: [2400, 6626],
+    rows: infoRows.map(([label, val]) => new TableRow({
+      children: [
+        new TableCell({ borders: allBorders, width: { size: 2400, type: WidthType.DXA },
+          shading: { fill: 'EBF3FB', type: ShadingType.CLEAR },
+          margins: { top: 80, bottom: 80, left: 140, right: 140 },
+          children: [new Paragraph({ children: [new TextRun({ text: label, font: 'Arial', size: 20, bold: true, color: NAVY })] })] }),
+        new TableCell({ borders: allBorders, width: { size: 6626, type: WidthType.DXA },
+          margins: { top: 80, bottom: 80, left: 140, right: 140 },
+          children: [new Paragraph({ children: [new TextRun({ text: val, font: 'Arial', size: 20 })] })] }),
+      ]
+    }))
+  });
+
+  // ── Cost breakdown table ────────────────────────────────────────────────────
+  const costTable = new Table({
+    width: { size: 9026, type: WidthType.DXA },
+    columnWidths: [400, 6200, 2426],
+    rows: [
+      new TableRow({
+        tableHeader: true,
+        children: [
+          new TableCell({ borders: allBorders, width: { size: 400, type: WidthType.DXA },
+            shading: { fill: NAVY, type: ShadingType.CLEAR },
+            margins: { top: 80, bottom: 80, left: 120, right: 120 },
+            children: [new Paragraph({ children: [new TextRun({ text: '#', font: 'Arial', size: 20, bold: true, color: WHITE })] })] }),
+          new TableCell({ borders: allBorders, width: { size: 6200, type: WidthType.DXA },
+            shading: { fill: NAVY, type: ShadingType.CLEAR },
+            margins: { top: 80, bottom: 80, left: 120, right: 120 },
+            children: [new Paragraph({ children: [new TextRun({ text: 'Scope of Work / Activity', font: 'Arial', size: 20, bold: true, color: WHITE })] })] }),
+          new TableCell({ borders: allBorders, width: { size: 2426, type: WidthType.DXA },
+            shading: { fill: NAVY, type: ShadingType.CLEAR },
+            margins: { top: 80, bottom: 80, left: 120, right: 120 },
+            children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'Amount (VAT Inc.)', font: 'Arial', size: 20, bold: true, color: WHITE })] })] }),
+        ]
+      }),
+      ...data.activities.map((act, i) => new TableRow({
+        children: [
+          new TableCell({ borders: allBorders, width: { size: 400, type: WidthType.DXA },
+            shading: { fill: i%2===0 ? WHITE : GRAY, type: ShadingType.CLEAR },
+            margins: { top: 80, bottom: 80, left: 120, right: 120 },
+            children: [new Paragraph({ children: [new TextRun({ text: String(i+1), font: 'Arial', size: 20, color: '888888' })] })] }),
+          new TableCell({ borders: allBorders, width: { size: 6200, type: WidthType.DXA },
+            shading: { fill: i%2===0 ? WHITE : GRAY, type: ShadingType.CLEAR },
+            margins: { top: 80, bottom: 80, left: 120, right: 120 },
+            children: [new Paragraph({ children: [new TextRun({ text: act.name, font: 'Arial', size: 20, bold: act.name.includes('Administrative') })] })] }),
+          new TableCell({ borders: allBorders, width: { size: 2426, type: WidthType.DXA },
+            shading: { fill: i%2===0 ? WHITE : GRAY, type: ShadingType.CLEAR },
+            margins: { top: 80, bottom: 80, left: 120, right: 120 },
+            children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: act.amount, font: 'Arial', size: 20, bold: true })] })] }),
+        ]
+      })),
+      new TableRow({
+        children: [
+          new TableCell({ borders: allBorders, width: { size: 6600, type: WidthType.DXA },
+            columnSpan: 2,
+            shading: { fill: NAVY, type: ShadingType.CLEAR },
+            margins: { top: 80, bottom: 80, left: 120, right: 120 },
+            children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'TOTAL CONTRACT PRICE (VAT INCLUSIVE)', font: 'Arial', size: 22, bold: true, color: WHITE })] })] }),
+          new TableCell({ borders: allBorders, width: { size: 2426, type: WidthType.DXA },
+            shading: { fill: BLUE, type: ShadingType.CLEAR },
+            margins: { top: 80, bottom: 80, left: 120, right: 120 },
+            children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: data.totalPrice || '—', font: 'Arial', size: 22, bold: true, color: WHITE })] })] }),
+        ]
+      }),
+    ]
+  });
+
+  // ── Assemble document sections ─────────────────────────────────────────────
+  const mainChildren = [
+    // Executive Summary
+    h1('1. Executive Summary'),
+    ...( content.executive_summary || '' ).split('\n').filter(Boolean).map(l => p(l.trim())),
+    sep(),
+
+    // Company Profile
+    h1('2. Company Profile'),
+    ...( content.company_profile || '' ).split('\n').filter(Boolean).map(l => p(l.trim())),
+    sep(),
+
+    // Project Information
+    h1('3. Project Information'),
+    infoTable,
+    sep(),
+
+    // Scope of Work
+    h1('4. Scope of Work'),
+    ...( content.scope_of_work || '' ).split('\n').filter(Boolean).map(l => p(l.trim())),
+    sep(),
+
+    // Deliverables
+    h1('5. Deliverables'),
+    ...( Array.isArray(content.deliverables) ? content.deliverables : (data.allOutputs || []) ).map(d => bullet(d)),
+    sep(),
+
+    // Cost Breakdown
+    h1('6. Cost Breakdown'),
+    p('The following table presents the detailed cost breakdown for the project, inclusive of 12% Value Added Tax (VAT):'),
+    new Paragraph({ children: [], spacing: { before: 80 } }),
+    costTable,
+    new Paragraph({ children: [], spacing: { before: 120 } }),
+    p('* All amounts are in Philippine Peso (₱) and inclusive of 12% Value Added Tax (VAT).', { size: 18, color: '888888', italic: true }),
+    sep(),
+
+    // Timeline
+    h1('7. Project Timeline'),
+    ...( content.timeline_narrative || '' ).split('\n').filter(Boolean).map(l => p(l.trim())),
+    sep(),
+
+    // Terms and Conditions
+    h1('8. Terms and Conditions'),
+    ...( Array.isArray(content.terms_and_conditions) ? content.terms_and_conditions : [] ).map(t => bullet(t)),
+    sep(),
+
+    // Closing
+    h1('9. Closing Statement'),
+    ...( content.closing_statement || '' ).split('\n').filter(Boolean).map(l => p(l.trim())),
+    new Paragraph({ children: [], spacing: { before: 400 } }),
+
+    // Signature block
+    new Table({
+      width: { size: 9026, type: WidthType.DXA },
+      columnWidths: [4513, 4513],
+      rows: [new TableRow({ children: [
+        new TableCell({ borders: { top: mkBorder(), bottom: {style:BorderStyle.NIL}, left: {style:BorderStyle.NIL}, right: {style:BorderStyle.NIL} },
+          width: { size: 4513, type: WidthType.DXA },
+          margins: { top: 80, bottom: 80, left: 0, right: 200 },
+          children: [
+            new Paragraph({ children: [new TextRun({ text: 'Prepared by:', font: 'Arial', size: 20, color: '666666' })] }),
+            new Paragraph({ children: [], spacing: { before: 480 } }),
+            new Paragraph({ children: [new TextRun({ text: data.project.pm || 'Project Manager', font: 'Arial', size: 22, bold: true })] }),
+            new Paragraph({ children: [new TextRun({ text: 'PhilSurv', font: 'Arial', size: 20, color: BLUE })] }),
+          ] }),
+        new TableCell({ borders: { top: mkBorder(), bottom: {style:BorderStyle.NIL}, left: {style:BorderStyle.NIL}, right: {style:BorderStyle.NIL} },
+          width: { size: 4513, type: WidthType.DXA },
+          margins: { top: 80, bottom: 80, left: 200, right: 0 },
+          children: [
+            new Paragraph({ children: [new TextRun({ text: 'Received by:', font: 'Arial', size: 20, color: '666666' })] }),
+            new Paragraph({ children: [], spacing: { before: 480 } }),
+            new Paragraph({ children: [new TextRun({ text: data.project.client || 'Client Representative', font: 'Arial', size: 22, bold: true })] }),
+            new Paragraph({ children: [new TextRun({ text: 'Date: ___________________', font: 'Arial', size: 20, color: '888888' })] }),
+          ] }),
+      ]})]
+    }),
+  ];
+
+  const doc = new window.docx.Document({
+    numbering: {
+      config: [{
+        reference: 'bullets',
+        levels: [{ level: 0, format: LevelFormat.BULLET, text: '\u2022',
+          alignment: AlignmentType.LEFT,
+          style: { paragraph: { indent: { left: 720, hanging: 360 } } } }]
+      }]
+    },
+    styles: {
+      default: { document: { run: { font: 'Arial', size: 22 } } },
+      paragraphStyles: [
+        { id: 'Heading1', name: 'Heading 1', basedOn: 'Normal', next: 'Normal', quickFormat: true,
+          run: { size: 28, bold: true, font: 'Arial', color: NAVY },
+          paragraph: { spacing: { before: 280, after: 140 }, outlineLevel: 0 } },
+        { id: 'Heading2', name: 'Heading 2', basedOn: 'Normal', next: 'Normal', quickFormat: true,
+          run: { size: 24, bold: true, font: 'Arial', color: BLUE },
+          paragraph: { spacing: { before: 200, after: 100 }, outlineLevel: 1 } },
+      ]
+    },
+    sections: [
+      // Cover page section
+      { properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 } } },
+        children: coverChildren },
+      // Main content section
+      { properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 } } },
+        children: mainChildren },
+    ]
+  });
+
+  const buffer = await window.docx.Packer.toBuffer(doc);
+  const blob   = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  const url    = URL.createObjectURL(blob);
+  const a      = document.createElement('a');
+  const fname  = (data.project.client || 'PhilSurv').replace(/[^\w\s]/g,'').replace(/\s+/g,'_') + '_Proposal.docx';
+  a.href = url; a.download = fname; a.click();
+  URL.revokeObjectURL(url);
+}
 // ══════════════════════════════════════════════════════════════════════════════
 // SAVE SYSTEM — Self-contained, single-file
 // How it works:
@@ -3079,10 +3974,12 @@ function showToast(msg, type) {
 }
 
 // ── Mark dirty on any change ──────────────────────────────────────────────────
-let _dirty = false;
+let _dirty   = false;
+let _restoring = false;   // suppresses markDirty during restoreData()
 document.addEventListener('input',  markDirty);
 document.addEventListener('change', markDirty);
 function markDirty() {
+  if (_restoring) return;   // ignore events fired during restore
   if (_dirty) return;
   _dirty = true;
   setDot('dirty');
@@ -3092,6 +3989,9 @@ function markDirty() {
 // ── COLLECT all form values ───────────────────────────────────────────────────
 function collectData() {
   const out = { v: '4.1', ts: new Date().toISOString(), fields: {}, tables: {} };
+
+  // Project key
+  out.projectKey = document.getElementById('projectKey')?.value?.trim() || '';
 
   // Named form controls
   document.querySelectorAll('[id]').forEach(el => {
@@ -3132,6 +4032,7 @@ function collectData() {
 // ── RESTORE all form values ───────────────────────────────────────────────────
 function restoreData(data) {
   if (!data) return;
+  _restoring = true;
 
   // Named fields
   Object.entries(data.fields || {}).forEach(([id, v]) => {
@@ -3238,6 +4139,15 @@ function restoreData(data) {
 
 // ── SAVE — embed data into THIS file and download it ─────────────────────────
 function saveData() {
+  // Require project key
+  const pk = document.getElementById('projectKey')?.value?.trim();
+  if (!pk) {
+    document.getElementById('projectKey').focus();
+    setDot('dirty');
+    setLabel('Enter a Project Key before saving');
+    showToast('⚠ Please enter a Project Key first', 'err');
+    return;
+  }
   const btn = document.getElementById('btnSave');
   btn.disabled = true;
   setDot('saving');
@@ -3261,8 +4171,10 @@ function saveData() {
     const blob = new Blob([src], { type: 'text/html;charset=utf-8' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
-    // Suggest same filename if possible
-    a.download = (document.title || 'philsurv_kickoff').replace(/[^\w\s\-]/g,'_') + '.html';
+    // Use project key in filename if set
+    const _pk  = document.getElementById('projectKey')?.value?.trim();
+    const _base = _pk ? _pk.replace(/[^\w\-]/g,'_') : (document.title || 'philsurv_kickoff').replace(/[^\w\s\-]/g,'_');
+    a.download = _base + '_kickoff.html';
     a.href = url;
     a.click();
     URL.revokeObjectURL(url);
@@ -3272,8 +4184,9 @@ function saveData() {
     const ts = new Date().toLocaleString('en-PH', {
       month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'
     });
+    const _savedKey = document.getElementById('projectKey')?.value?.trim();
     setDot('saved');
-    setLabel('<strong>Saved</strong> — replace the file on your computer with the download');
+    setLabel('<strong>Saved' + (_savedKey ? ' · ' + _savedKey : '') + '</strong> — replace the file with the download');
     setMeta('Last saved: ' + ts);
     showToast('✓ File downloaded — replace the old file with this one', 'ok');
 
@@ -3309,7 +4222,7 @@ updateCoverProgress();
   if (!store || !store.textContent.trim()) {
     setDot('');
     setLabel('New project — no saved data');
-    setMeta('Fill in the form and press Save when ready');
+    setMeta('Enter a Project Key below and press Save when ready');
     return;
   }
   try {
@@ -3319,8 +4232,9 @@ updateCoverProgress();
     const ts = data.ts ? new Date(data.ts).toLocaleString('en-PH',{
       month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'
     }) : '';
+    const restoredKey = data.projectKey || '';
     setDot('saved');
-    setLabel('<strong>Data loaded</strong>');
+    setLabel('<strong>Loaded' + (restoredKey ? ' · ' + restoredKey : '') + '</strong>');
     setMeta(ts ? 'Last saved: ' + ts : '');
     _dirty = false;
   } catch(e) {
@@ -3333,6 +4247,7 @@ updateCoverProgress();
 
 <!-- ═══ PHILSURV SAVED DATA — DO NOT EDIT MANUALLY ═══ -->
 <script id="savedDataStore" type="application/json"></script>
+
 
 
 
