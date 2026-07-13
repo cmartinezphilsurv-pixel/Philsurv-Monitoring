@@ -87,6 +87,23 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4f8;color:var(--text);min-h
 .stat-card.c-orange .stat-num{color:var(--orange)}
 .stat-lbl{font-size:10px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
 
+/* ── PPE ISSUANCE TRACKER ── */
+.per-sub-panel{display:none}.per-sub-panel.active{display:block}
+.ppe-scroll{overflow-x:auto}
+.ppe-table{border-collapse:collapse;width:100%;min-width:900px}
+.ppe-table th,.ppe-table td{padding:.4rem .5rem;border-bottom:1px solid var(--gray-border);font-size:11px;text-align:center;white-space:nowrap}
+.ppe-table thead th{position:sticky;top:0;background:var(--gray-light);font-size:9px;text-transform:uppercase;letter-spacing:.03em;color:var(--text2);font-weight:700;z-index:1}
+.ppe-table th.ppe-name-h,.ppe-table td.ppe-name{text-align:left;position:sticky;left:0;background:var(--white);font-weight:600;color:var(--text);z-index:1;min-width:170px}
+.ppe-table thead th.ppe-name-h{z-index:2;background:var(--gray-light)}
+.ppe-table tr:hover td{background:var(--blue-light)}
+.ppe-table tr:hover td.ppe-name{background:var(--blue-light)}
+.ppe-cell-date{color:var(--green-dark);font-weight:600;font-size:10px}
+.ppe-cell-none{color:var(--gray-border);font-size:13px}
+.ppe-table td.ppe-core-missing{background:rgba(220,38,38,.06)}
+.ppe-corebadge{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:.35rem;vertical-align:middle}
+.ppe-corebadge.ok{background:var(--green-light);color:var(--green-dark)}
+.ppe-corebadge.gap{background:#fee2e2;color:#991b1b}
+
 /* ── COLLECTION REPORT ── */
 .bill-sub-panel{display:none}.bill-sub-panel.active{display:block}
 .cr-aging-bar{display:flex;height:20px;border-radius:5px;overflow:hidden;background:var(--gray-border)}
@@ -1324,29 +1341,69 @@ tr:hover .row-actions{opacity:1}
   <!-- ══ PERSONNEL / PPE ══ -->
   <div class="tab-panel" id="panel-personnel">
     <div class="section-header">
-      <div><div class="section-title">👷 Personnel / PPE</div><div class="section-subtitle">Deployment status, PPE compliance, and uniform tracking</div></div>
+      <div><div class="section-title">👷 Personnel / PPE</div><div class="section-subtitle">Deployment status, PPE compliance, and issuance tracking</div></div>
       <button class="btn-add" onclick="openModal('personnel')">＋ Add Staff</button>
     </div>
-    <div class="cards-row">
-      <div class="stat-card c-total" onclick="setFilter('per','all')"><div class="stat-num" id="prc-total">0</div><div class="stat-lbl">Total Staff</div></div>
-      <div class="stat-card c-blue" onclick="setFilter('per','office')"><div class="stat-num" id="prc-office">0</div><div class="stat-lbl">In Office</div></div>
-      <div class="stat-card c-teal" onclick="setFilter('per','deployed')"><div class="stat-num" id="prc-deployed">0</div><div class="stat-lbl">Deployed</div></div>
-      <div class="stat-card c-gray" onclick="setFilter('per','leave')"><div class="stat-num" id="prc-leave">0</div><div class="stat-lbl">On Leave</div></div>
-      <div class="stat-card c-red" onclick="setFilter('per','noncompliant')"><div class="stat-num" id="prc-noncompliant">0</div><div class="stat-lbl">PPE ⚠</div></div>
+
+    <!-- Sub-tab navigation -->
+    <div class="fo-subtabs">
+      <button class="fo-tab-btn active" onclick="setPerTab('roster',this)">👥 Staff Roster</button>
+      <button class="fo-tab-btn" onclick="setPerTab('ppe',this)">🦺 PPE Issuance Tracker</button>
     </div>
-    <div class="table-wrap">
-      <div class="table-toolbar">
-        <div class="table-toolbar-left">
-          <div class="search-box">🔍<input type="text" placeholder="Search staff..." oninput="renderPersonnel()" id="per-search"></div>
-          <button class="filter-btn active" onclick="setFilter('per','all')" id="prf-all">All</button>
-          <button class="filter-btn" onclick="setFilter('per','deployed')" id="prf-deployed">Deployed</button>
-          <button class="filter-btn" onclick="setFilter('per','noncompliant')" id="prf-noncompliant">PPE ⚠</button>
+
+    <!-- ── STAFF ROSTER ── -->
+    <div class="per-sub-panel active" id="per-roster">
+      <div class="cards-row">
+        <div class="stat-card c-total" onclick="setFilter('per','all')"><div class="stat-num" id="prc-total">0</div><div class="stat-lbl">Total Staff</div></div>
+        <div class="stat-card c-blue" onclick="setFilter('per','office')"><div class="stat-num" id="prc-office">0</div><div class="stat-lbl">In Office</div></div>
+        <div class="stat-card c-teal" onclick="setFilter('per','deployed')"><div class="stat-num" id="prc-deployed">0</div><div class="stat-lbl">Deployed</div></div>
+        <div class="stat-card c-gray" onclick="setFilter('per','leave')"><div class="stat-num" id="prc-leave">0</div><div class="stat-lbl">On Leave</div></div>
+        <div class="stat-card c-red" onclick="setFilter('per','noncompliant')"><div class="stat-num" id="prc-noncompliant">0</div><div class="stat-lbl">PPE ⚠</div></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <div class="search-box">🔍<input type="text" placeholder="Search staff..." oninput="renderPersonnel()" id="per-search"></div>
+            <button class="filter-btn active" onclick="setFilter('per','all')" id="prf-all">All</button>
+            <button class="filter-btn" onclick="setFilter('per','deployed')" id="prf-deployed">Deployed</button>
+            <button class="filter-btn" onclick="setFilter('per','noncompliant')" id="prf-noncompliant">PPE ⚠</button>
+          </div>
+        </div>
+        <table><thead><tr>
+          <th>Name</th><th>Position / Team</th><th>Status</th><th>Deployed To</th><th>Location</th><th>PPE</th><th>Uniform</th><th>Eq. Clearance</th><th>Remarks</th><th></th>
+        </tr></thead>
+        <tbody id="per-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ── PPE ISSUANCE TRACKER ── -->
+    <div class="per-sub-panel" id="per-ppe">
+      <div style="display:flex;align-items:baseline;gap:.6rem;margin-bottom:.75rem;flex-wrap:wrap">
+        <div style="font-size:13px;font-weight:700;color:var(--text)">PPE Issuance Monitoring</div>
+        <div class="mono" style="font-size:11px;color:var(--text2)" id="ppe-src">2026</div>
+      </div>
+      <div class="cards-row">
+        <div class="stat-card c-total"><div class="stat-num" id="ppe-total">0</div><div class="stat-lbl">People Tracked</div></div>
+        <div class="stat-card c-green"><div class="stat-num" id="ppe-complete">0</div><div class="stat-lbl">Core Complete</div></div>
+        <div class="stat-card c-red"><div class="stat-num" id="ppe-gap">0</div><div class="stat-lbl">Missing Core PPE</div></div>
+        <div class="stat-card c-blue"><div class="stat-num" id="ppe-issued">0</div><div class="stat-lbl">Items Issued</div></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <div class="search-box">🔍<input type="text" placeholder="Search name…" oninput="renderPpeTracker()" id="ppe-search"></div>
+            <button class="filter-btn active" onclick="setPpeFilter('all',this)">All</button>
+            <button class="filter-btn" onclick="setPpeFilter('__gap',this)">⚠ Missing Core PPE</button>
+            <button class="filter-btn" onclick="setPpeFilter('__complete',this)">✅ Core Complete</button>
+          </div>
+          <div class="mono" id="ppe-count" style="font-size:11px;color:var(--text2)"></div>
+        </div>
+        <div class="ppe-scroll">
+          <table class="ppe-table"><thead id="ppe-thead"></thead>
+          <tbody id="ppe-tbody"></tbody></table>
         </div>
       </div>
-      <table><thead><tr>
-        <th>Name</th><th>Position / Team</th><th>Status</th><th>Deployed To</th><th>Location</th><th>PPE</th><th>Uniform</th><th>Eq. Clearance</th><th>Remarks</th><th></th>
-      </tr></thead>
-      <tbody id="per-tbody"></tbody></table>
+      <div style="font-size:10px;color:var(--text2);margin-top:.5rem">💡 A dated cell means that PPE item was issued on that date. A grey dash means it hasn't been issued. Core PPE = Safety Vest, Uniform, Safety Shoes, Hard Hat, Boots, Mountain Shoes, Raincoat, Goggles.</div>
     </div>
   </div>
 
@@ -1617,6 +1674,8 @@ tr:hover .row-actions{opacity:1}
 <script src="projects_imported.js?v=20260709a"></script>
 <!-- Collection Report dataset from Collection-Report-1-with-Collected-status.xlsx (as of June 19, 2026) -->
 <script src="collection_report.js?v=20260709a"></script>
+<!-- PPE Issuance Tracker dataset from 'APRIL - PPE REQUEST 2026.xlsx' -->
+<script src="ppe_tracker.js?v=20260713b"></script>
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -2146,6 +2205,7 @@ function renderAll(){
   renderCollection();
   renderEquipment();
   renderPersonnel();
+  renderPpeTracker();
   renderDeployment();
   renderSubcon();
   renderCommitments();
@@ -2799,6 +2859,78 @@ function renderPersonnel(){
     <td style="font-size:10px;color:var(--text2)">${p.remarks||''}</td>
     <td><div class="row-actions"><button class="act-btn edit" onclick="editItem('personnel',${p.id},event)" title="Edit">✏️</button><button class="act-btn del" onclick="deleteItem('personnel',${p.id},event)" title="Delete">🗑️</button></div></td>
   </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// PPE ISSUANCE TRACKER
+// ══════════════════════════════════════════════════════
+var ppeFilter='all';
+function setPerTab(tab,btn){
+  document.querySelectorAll('#panel-personnel .fo-tab-btn').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  document.querySelectorAll('#panel-personnel .per-sub-panel').forEach(function(p){p.classList.remove('active');});
+  var el=document.getElementById('per-'+tab);
+  if(el)el.classList.add('active');
+  if(tab==='roster')renderPersonnel();
+  else if(tab==='ppe')renderPpeTracker();
+}
+function setPpeFilter(v,btn){
+  ppeFilter=v;
+  document.querySelectorAll('#per-ppe .filter-btn').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  renderPpeTracker();
+}
+function ppeFmtDate(s){
+  if(!s)return '';
+  var d=new Date(s);
+  if(isNaN(d))return s;
+  return d.toLocaleDateString('en-PH',{month:'short',day:'numeric'});
+}
+function ppeCoreCount(row,core){ return core.filter(function(c){return row.items[c];}).length; }
+function renderPpeTracker(){
+  var T=window.PPE_TRACKER;
+  var thead=document.getElementById('ppe-thead'), tbody=document.getElementById('ppe-tbody');
+  if(!T||!tbody||!thead)return;
+  var core=T.coreTypes||[];
+  var _setText=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  // summary
+  var total=T.rows.length;
+  var complete=T.rows.filter(function(r){return core.every(function(c){return r.items[c];});}).length;
+  var issued=T.rows.reduce(function(a,r){return a+Object.keys(r.items).length;},0);
+  _setText('ppe-src',(T.sourceLabel||'')+' · '+(T.year||''));
+  _setText('ppe-total',total);
+  _setText('ppe-complete',complete);
+  _setText('ppe-gap',total-complete);
+  _setText('ppe-issued',issued);
+  // header row
+  thead.innerHTML='<tr><th class="ppe-name-h">Name</th>'+T.types.map(function(t){
+    var isCore=core.indexOf(t)>=0;
+    return '<th'+(isCore?' style="color:var(--navy)"':'')+'>'+t+(isCore?' *':'')+'</th>';
+  }).join('')+'<th>Note</th></tr>';
+  // filter rows
+  var q=((document.getElementById('ppe-search')||{}).value||'').toLowerCase();
+  var rows=T.rows.filter(function(r){
+    var isComplete=core.every(function(c){return r.items[c];});
+    if(ppeFilter==='__gap'&&isComplete)return false;
+    if(ppeFilter==='__complete'&&!isComplete)return false;
+    if(q&&r.name.toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+  var cnt=document.getElementById('ppe-count');
+  if(cnt)cnt.textContent=rows.length+' of '+total+' people';
+  if(!rows.length){tbody.innerHTML='<tr><td class="ppe-name">—</td><td colspan="'+(T.types.length+1)+'"><div class="empty-state" style="padding:1rem">No matching people.</div></td></tr>';return;}
+  tbody.innerHTML=rows.map(function(r){
+    var isComplete=core.every(function(c){return r.items[c];});
+    var badge='<span class="ppe-corebadge '+(isComplete?'ok':'gap')+'">'+ppeCoreCount(r,core)+'/'+core.length+'</span>';
+    var cells=T.types.map(function(t){
+      var v=r.items[t];
+      var isCore=core.indexOf(t)>=0;
+      if(v)return '<td><span class="ppe-cell-date">'+ppeFmtDate(v)+'</span></td>';
+      return '<td'+(isCore?' class="ppe-core-missing"':'')+'><span class="ppe-cell-none">–</span></td>';
+    }).join('');
+    var note=(r.note||'').replace(/</g,'&lt;');
+    return '<tr><td class="ppe-name">'+r.name+badge+'</td>'+cells+'<td style="text-align:left;font-size:10px;color:var(--text2);max-width:160px;white-space:normal">'+note+'</td></tr>';
+  }).join('');
 }
 
 function renderDeployment(){
