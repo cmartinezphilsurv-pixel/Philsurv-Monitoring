@@ -960,6 +960,7 @@ tr:hover .row-actions{opacity:1}
             <option value="completed">✅ Completed</option>
             <option value="cancelled">🚫 Cancelled</option>
             <option value="ongoing">🔵 Ongoing</option>
+            <option value="on-hold">⏸ On Hold</option>
           </select>
         </div>
         <div id="bulk-list" style="max-height:46vh;overflow:auto;border:1px solid var(--gray-border);border-radius:8px"></div>
@@ -1005,6 +1006,7 @@ tr:hover .row-actions{opacity:1}
         <option value="cancelled">Cancelled</option>
         <option value="late">Late</option>
         <option value="risk">At Risk</option>
+        <option value="on-hold">On Hold</option>
       </select>
       <select class="pm-select" id="pm-pic" onchange="renderProjects()"><option value="all">All people</option></select>
       <select class="pm-select" id="pm-sort" onchange="renderProjects()">
@@ -2083,7 +2085,7 @@ function isCalDue(dateStr){
   return dl!==null && dl<=30;
 }
 function projStatusBadge(s){
-  const m={ongoing:'<span class="badge green">On Track</span>',risk:'<span class="badge yellow">At Risk</span>',late:'<span class="badge red">Late</span>',cancelled:'<span class="badge gray">Cancelled</span>',completed:'<span class="badge navy">Completed</span>'};
+  const m={ongoing:'<span class="badge green">On Track</span>',risk:'<span class="badge yellow">At Risk</span>',late:'<span class="badge red">Late</span>','on-hold':'<span class="badge purple">⏸ On Hold</span>',cancelled:'<span class="badge gray">Cancelled</span>',completed:'<span class="badge navy">Completed</span>'};
   return m[s]||s;
 }
 function billingBadge(s){
@@ -2337,7 +2339,7 @@ function syncSelectAll(){
 function updateBulkCount(){
   var n=Object.keys(bulkSelected).length;
   var tgt=(document.getElementById('bulk-target')||{}).value||'completed';
-  var lbl={completed:'Completed',cancelled:'Cancelled',ongoing:'Ongoing'}[tgt]||tgt;
+  var lbl={completed:'Completed',cancelled:'Cancelled',ongoing:'Ongoing','on-hold':'On Hold'}[tgt]||tgt;
   var cnt=document.getElementById('bulk-count'); if(cnt)cnt.textContent=n+' selected';
   var btn=document.getElementById('bulk-apply-btn');
   if(btn){ btn.textContent=n?('Mark '+n+' as '+lbl):'Apply'; btn.disabled=n===0; btn.style.opacity=n?'1':'.5'; }
@@ -2346,7 +2348,7 @@ function applyBulkStatus(){
   var ids=Object.keys(bulkSelected);
   if(!ids.length)return;
   var tgt=(document.getElementById('bulk-target')||{}).value||'completed';
-  var lbl={completed:'Completed',cancelled:'Cancelled',ongoing:'Ongoing'}[tgt]||tgt;
+  var lbl={completed:'Completed',cancelled:'Cancelled',ongoing:'Ongoing','on-hold':'On Hold'}[tgt]||tgt;
   if(!confirm('Mark '+ids.length+' project(s) as '+lbl+'?\n\nThis updates their status and clears their related alerts. You can still edit each project individually afterward.'))return;
   var idset={}; ids.forEach(function(i){idset[String(i)]=true;});
   var changed=0;
@@ -2444,7 +2446,7 @@ function renderOverviewCards(){
 function renderUpcomingDeadlines(){
   const tbody=document.getElementById('upcoming-deadlines');
   const upcoming=DB.projects
-    .filter(p=>{const dl=daysLeft(p.deadline);return dl!==null&&dl<=14&&p.status!=='cancelled'&&p.status!=='completed';})
+    .filter(p=>{const dl=daysLeft(p.deadline);return dl!==null&&dl<=14&&p.status!=='cancelled'&&p.status!=='completed'&&p.status!=='on-hold';})
     .sort((a,b)=>new Date(a.deadline)-new Date(b.deadline));
   if(!upcoming.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state">No deadlines in the next 14 days.</td></tr>';return;}
   tbody.innerHTML=upcoming.map(p=>{
@@ -2465,7 +2467,8 @@ var PM_SCHED_FILTER = 'all';
 var PM_GROUPS_COLLAPSED = {};
 function pmCompact(n){ if(n==null||isNaN(n))return '—'; var a=Math.abs(n); if(a>=1e6)return '₱'+(n/1e6).toFixed(a>=1e7?1:2)+'M'; if(a>=1e3)return '₱'+Math.round(n/1e3)+'K'; return '₱'+Math.round(n); }
 function pmSchedClass(p){
-  // late if status==='late', or deadline past and not completed/cancelled
+  // late if status==='late', or deadline past and not completed/cancelled/on-hold
+  if(p.status==='on-hold') return 'unknown';
   if(p.status==='late') return 'late';
   if(p.deadline && p.status!=='completed' && p.status!=='cancelled'){
     var dl=daysLeft(p.deadline);
@@ -2480,6 +2483,7 @@ function pmStatusBucket(s){
   if(s==='completed') return 'Complete';
   if(s==='cancelled') return 'Cancelled';
   if(s==='late') return 'Late';
+  if(s==='on-hold') return 'On Hold';
   return 'Unassigned';
 }
 function pmDur(p){
@@ -4610,15 +4614,16 @@ const FORMS={
       <div class="form-field full"><label class="form-label">Client</label><input class="form-input" id="f-client" placeholder="Client name"></div>
       <div class="form-field"><label class="form-label">PM In-Charge</label><input class="form-input" id="f-pm" placeholder="PM name"></div>
       <div class="form-field"><label class="form-label">PE In-Charge</label><input class="form-input" id="f-pe" placeholder="PE name"></div>
-      <div class="form-field"><label class="form-label">Status</label><select class="form-input form-select" id="f-status"><option value="ongoing">On Track</option><option value="risk">At Risk</option><option value="late">Late</option><option value="cancelled">Cancelled</option><option value="completed">Completed</option></select></div>
+      <div class="form-field"><label class="form-label">Status</label><select class="form-input form-select" id="f-status"><option value="ongoing">On Track</option><option value="risk">At Risk</option><option value="late">Late</option><option value="on-hold">On Hold</option><option value="cancelled">Cancelled</option><option value="completed">Completed</option></select></div>
       <div class="form-field"><label class="form-label">Gantt Health</label><select class="form-input form-select" id="f-gantt"><option value="green">Green — Current</option><option value="yellow">Yellow — Minor gaps</option><option value="red">Red — Outdated</option></select></div>
-      <div class="form-field"><label class="form-label">Billing Status</label><select class="form-input form-select" id="f-billing"><option value="for-billing">For Billing</option><option value="paid">Paid</option><option value="partial">Partial Payment</option><option value="unpaid">Unpaid</option><option value="overdue">Overdue</option></select></div>
+      <div class="form-field"><label class="form-label">Billing Status <span style="font-weight:400;color:var(--text2)">(auto)</span></label><input class="form-input" id="f-billing-display" type="text" readonly tabindex="-1" style="background:var(--gray-light);font-weight:700" placeholder="—"><input type="hidden" id="f-billing"><div style="font-size:10px;color:var(--text2);margin-top:2px">Auto from Collected vs Contract</div></div>
       <div class="form-field"><label class="form-label">Start Date</label><input class="form-input" id="f-startDate" type="date"></div>
       <div class="form-field"><label class="form-label">Deadline</label><input class="form-input" id="f-deadline" type="date"></div>
       <div class="form-field"><label class="form-label">Invoice No.</label><input class="form-input" id="f-invoiceNo" placeholder="INV-2026-001"></div>
       <div class="form-field"><label class="form-label">Invoice Date</label><input class="form-input" id="f-invoiceDate" type="date"></div>
-      <div class="form-field"><label class="form-label">Contract Amount (₱)</label><input class="form-input" id="f-amount" type="number" placeholder="0"></div>
-      <div class="form-field"><label class="form-label">Collected (₱)</label><input class="form-input" id="f-collected" type="number" placeholder="0"></div>
+      <div class="form-field"><label class="form-label">Contract Amount (₱)</label><input class="form-input" id="f-amount" type="number" placeholder="0" oninput="updateRemainingBilling()"></div>
+      <div class="form-field"><label class="form-label">Collected (₱)</label><input class="form-input" id="f-collected" type="number" placeholder="0" oninput="updateRemainingBilling()"></div>
+      <div class="form-field"><label class="form-label">Remaining Billing (₱)</label><input class="form-input" id="f-remaining" type="text" readonly tabindex="-1" style="background:var(--gray-light);font-weight:700;color:var(--navy)" placeholder="—"><div style="font-size:10px;color:var(--text2);margin-top:2px">Auto: Contract − Collected</div></div>
       <div class="form-field full"><label class="form-label">Notes</label><textarea class="form-input form-textarea" id="f-notes" placeholder="Any risks, updates, or follow-ups..."></textarea></div>
     </div>`,
   equipment:`
@@ -4796,6 +4801,40 @@ const FORMS={
     </div>`,
 };
 
+// Derives billing status from the recorded figures: nothing collected → For Billing,
+// collected in full → Paid, otherwise → Partial. Billing status is fully automatic.
+function deriveBilling(p){
+  var contract=Number(p&&p.amount)||0;
+  var collected=Number(p&&p.collected)||0;
+  if(collected<=0) return 'for-billing';
+  if(contract>0 && collected>=contract) return 'paid';
+  return 'partial';
+}
+// Recomputes billing status for every project from its Contract/Collected figures.
+function reconcileAllBilling(){
+  (DB.projects||[]).forEach(function(p){ p.billing=deriveBilling(p); });
+}
+var BILLING_LABELS={'for-billing':'For Billing','partial':'Partial Payment','paid':'Paid','unpaid':'Unpaid','overdue':'Overdue'};
+var BILLING_COLORS={'for-billing':'var(--blue)','partial':'var(--yellow)','paid':'var(--green)'};
+// Live-calculates Remaining Billing (= Contract − Collected) and the auto Billing Status in the project modal.
+function updateRemainingBilling(){
+  var amtEl=document.getElementById('f-amount'), colEl=document.getElementById('f-collected'), remEl=document.getElementById('f-remaining');
+  var amt=parseFloat(amtEl&&amtEl.value)||0;
+  var col=parseFloat(colEl&&colEl.value)||0;
+  if(remEl){
+    if(!amt&&!col){ remEl.value='—'; remEl.style.color='var(--text2)'; }
+    else{
+      var rem=Math.round(amt-col)||0;  // ||0 collapses -0 to 0
+      remEl.value='₱'+rem.toLocaleString('en-US');
+      remEl.style.color = rem>0 ? 'var(--red)' : (rem<0 ? 'var(--orange)' : 'var(--green)');
+    }
+  }
+  // Auto billing status
+  var bill=deriveBilling({amount:amt,collected:col});
+  var billHidden=document.getElementById('f-billing'), billDisp=document.getElementById('f-billing-display');
+  if(billHidden) billHidden.value=bill;
+  if(billDisp){ billDisp.value=BILLING_LABELS[bill]||bill; billDisp.style.color=BILLING_COLORS[bill]||'var(--text)'; }
+}
 function openModal(type, data){
   modalType=type;
   modalEditId=data?data.id:null;
@@ -4809,6 +4848,7 @@ function openModal(type, data){
       if(el)el.value=data[k]||'';
     });
   }
+  if(type==='project') updateRemainingBilling();
   document.getElementById('modal-save-btn').onclick=saveModal;
   // Populate reportsTo dropdown for team modal
   if(type==='team'){
@@ -4877,6 +4917,7 @@ function saveModal(){
   let obj={};
   if(type==='project'){
     obj={id:modalEditId||getNextId(dbKey),name:getFieldVal('name'),pgs:getFieldVal('pgs'),client:getFieldVal('client'),pm:getFieldVal('pm'),pe:getFieldVal('pe'),status:getFieldVal('status'),gantt:getFieldVal('gantt'),billing:getFieldVal('billing'),startDate:getFieldVal('startDate'),deadline:getFieldVal('deadline'),invoiceNo:getFieldVal('invoiceNo'),invoiceDate:getFieldVal('invoiceDate'),amount:getFieldVal('amount'),collected:getFieldVal('collected'),notes:getFieldVal('notes')};
+    obj.billing=deriveBilling(obj); // billing status is always auto-derived from the figures
   } else if(type==='equipment'){
     obj={id:modalEditId||getNextId(dbKey),name:getFieldVal('name'),type:getFieldVal('type'),serial:getFieldVal('serial'),status:getFieldVal('status'),assignedTo:getFieldVal('assignedTo'),location:getFieldVal('location'),lastCal:getFieldVal('lastCal'),nextCal:getFieldVal('nextCal'),clearedStaff:getFieldVal('clearedStaff')};
   } else if(type==='personnel'){
@@ -4969,6 +5010,8 @@ function deleteMember(id, e){
 // ══════════════════════════════════════════════════════
 loadDB();
 seedData();
+reconcileAllBilling(); // billing status is fully auto-derived from Contract vs Collected
+saveDB();
 initHeader();
 renderAll();
 
