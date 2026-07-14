@@ -545,6 +545,9 @@ tr:hover .row-actions{opacity:1}
 .pm-leg-count{font-family:ui-monospace,'IBM Plex Mono',monospace;border-left:1px solid #d7dbe0;padding-left:14px;font-size:11px;color:#6a727b}
 .pm-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:11px;margin-bottom:14px}
 .pm-kpi{background:#fff;border:1px solid #e4e7eb;border-radius:11px;padding:14px 15px;display:flex;flex-direction:column;gap:7px;min-width:0}
+.pm-kpi-click{cursor:pointer;transition:transform .1s,box-shadow .12s,border-color .12s}
+.pm-kpi-click:hover{transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.09);border-color:#c7ccd2}
+.pm-kpi-click.active{border-color:#1a1e23;box-shadow:0 0 0 2px rgba(26,30,35,.14)}
 .pm-kpi-lbl{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#9aa1a9}
 .pm-kpi-val{font-family:ui-monospace,'IBM Plex Mono',monospace;font-size:26px;font-weight:600;line-height:1;letter-spacing:-.5px}
 .pm-kpi-sub{font-size:11px;color:#838b93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -2478,6 +2481,19 @@ function pmSchedClass(p){
   if(p.status==='completed') return 'ok';
   return 'unknown';
 }
+// Click handler for the Project Monitor KPI cards — filters/sorts the list to the projects behind each number.
+function pmKpiAction(act){
+  var sortSel=document.getElementById('pm-sort');
+  if(act==='projects'){ PM_SCHED_FILTER='all'; }
+  else if(act==='on-schedule'){ PM_SCHED_FILTER='On Schedule'; }
+  else if(act==='late'){ PM_SCHED_FILTER='Late'; }
+  else if(act==='contract'){ PM_SCHED_FILTER='all'; if(sortSel)sortSel.value='value'; }
+  else if(act==='collected'){ PM_SCHED_FILTER='all'; if(sortSel)sortSel.value='billing'; }
+  else if(act==='outstanding'){ PM_SCHED_FILTER='all'; if(sortSel)sortSel.value='billing'; }
+  renderProjects();
+  var tbl=document.getElementById('proj-tbody');
+  if(tbl&&tbl.scrollIntoView) tbl.scrollIntoView({behavior:'smooth',block:'start'});
+}
 function pmStatusBucket(s){
   if(s==='ongoing'||s==='risk') return 'On-going';
   if(s==='completed') return 'Complete';
@@ -2562,14 +2578,17 @@ function renderProjects(){
   function pctOf(n){return count?Math.round(n/count*100)+'% of view':'—';}
   var vBase='font-family:ui-monospace,\'IBM Plex Mono\',monospace;font-size:26px;font-weight:600;line-height:1;letter-spacing:-.5px;';
   var kpis=[
-    {label:'Projects',val:String(count),sub:'in view',color:'#1a1e23'},
-    {label:'On schedule',val:String(okN),sub:pctOf(okN),color:'#1f7a4d'},
-    {label:'Late',val:String(lateN),sub:pctOf(lateN),color:'#b8362e'},
-    {label:'Contract value',val:pmCompact(totalSum),sub:count+' projects',color:'#1a1e23'},
-    {label:'Collected',val:pmCompact(collSum),sub:collRate+'% of contract',color:'#1f4d5c'},
-    {label:'Outstanding',val:pmCompact(outstanding),sub:'uncollected',color:outstanding>0?'#b8362e':'#1a1e23'}
+    {label:'Projects',val:String(count),sub:'in view',color:'#1a1e23',act:'projects'},
+    {label:'On schedule',val:String(okN),sub:pctOf(okN),color:'#1f7a4d',act:'on-schedule'},
+    {label:'Late',val:String(lateN),sub:pctOf(lateN),color:'#b8362e',act:'late'},
+    {label:'Contract value',val:pmCompact(totalSum),sub:count+' projects',color:'#1a1e23',act:'contract'},
+    {label:'Collected',val:pmCompact(collSum),sub:collRate+'% of contract',color:'#1f4d5c',act:'collected'},
+    {label:'Outstanding',val:pmCompact(outstanding),sub:'uncollected',color:outstanding>0?'#b8362e':'#1a1e23',act:'outstanding'}
   ];
-  var kpiHtml=kpis.map(function(k){return '<div class="pm-kpi"><div class="pm-kpi-lbl">'+k.label+'</div><div class="pm-kpi-val" style="color:'+k.color+'">'+k.val+'</div><div class="pm-kpi-sub">'+k.sub+'</div></div>';}).join('');
+  var kpiHtml=kpis.map(function(k){
+    var active=(k.act==='late'&&PM_SCHED_FILTER==='Late')||(k.act==='on-schedule'&&PM_SCHED_FILTER==='On Schedule')||(k.act==='projects'&&PM_SCHED_FILTER==='all'&&statusFilter==='all');
+    return '<div class="pm-kpi pm-kpi-click'+(active?' active':'')+'" onclick="pmKpiAction(\''+k.act+'\')" title="Click to see the projects involved"><div class="pm-kpi-lbl">'+k.label+'</div><div class="pm-kpi-val" style="color:'+k.color+'">'+k.val+'</div><div class="pm-kpi-sub">'+k.sub+'</div></div>';
+  }).join('');
   document.getElementById('pm-kpis').innerHTML=kpiHtml;
   document.getElementById('pm-total-count').textContent=raw.length;
   document.getElementById('pm-result-count').textContent=count+(count===1?' project':' projects');
