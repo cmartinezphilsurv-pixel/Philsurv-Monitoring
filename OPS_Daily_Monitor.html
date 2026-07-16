@@ -979,6 +979,17 @@ tr:hover .row-actions{opacity:1}
     </div>
   </div>
 
+  <!-- ══ PROJECT BILLING SUMMARY POPUP ══ -->
+  <div class="modal-overlay" id="billpop-overlay" onclick="billpopCloseOutside(event)">
+    <div class="modal-box" id="billpop-box" style="max-width:380px;width:100%">
+      <div class="modal-head">
+        <div class="modal-head-title">💰 Billing Summary</div>
+        <button class="modal-close" onclick="closeProjectBilling()">✕</button>
+      </div>
+      <div class="modal-body" id="billpop-body"></div>
+    </div>
+  </div>
+
   <!-- ══ PROJECTS ══ -->
   <div class="tab-panel pm-panel" id="panel-projects">
     <!-- Header -->
@@ -2503,6 +2514,39 @@ function pmKpiAction(act){
   var tbl=document.getElementById('proj-tbody');
   if(tbl&&tbl.scrollIntoView) tbl.scrollIntoView({behavior:'smooth',block:'start'});
 }
+// Shows a compact billing summary popup for a single project (Contract / Collected / Remaining / % / status).
+function showProjectBilling(id, e){
+  if(e&&e.stopPropagation)e.stopPropagation();
+  var p=(DB.projects||[]).find(function(x){return String(x.id)===String(id);});
+  if(!p){ alert('Project not found.'); return; }
+  var contract=Number(p.amount)||0, collected=Number(p.collected)||0;
+  var remaining=contract-collected;
+  var pct=contract>0?Math.round(collected/contract*100):0;
+  var billKey=deriveBilling(p);
+  var billLbl=BILLING_LABELS[billKey]||billKey;
+  var billCol=BILLING_COLORS[billKey]||'var(--text)';
+  var fmt=function(n){return '₱'+Math.round(n).toLocaleString('en-US');};
+  function line(lbl,val,valColor){
+    return '<div style="display:flex;justify-content:space-between;align-items:baseline;padding:.5rem 0;border-bottom:1px solid var(--gray-border)">'
+      +'<span style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.04em">'+lbl+'</span>'
+      +'<span style="font-family:\'JetBrains Mono\',monospace;font-weight:700;font-size:13px;'+(valColor?'color:'+valColor:'')+'">'+val+'</span></div>';
+  }
+  var body='<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:.15rem">'+(p.name||'—')+'</div>'
+    +'<div class="mono" style="font-size:11px;color:var(--text2);margin-bottom:.85rem">'+(p.pgs||'')+(p.client?' · '+p.client:'')+(p.pm?' · PM: '+p.pm:'')+'</div>'
+    +line('Contract', fmt(contract))
+    +line('Collected', fmt(collected)+' ('+pct+'%)', 'var(--green-dark)')
+    +line('Remaining', fmt(remaining), remaining>0?'var(--red)':'var(--green)')
+    +line('Billing Status', billLbl, billCol)
+    +'<div style="margin-top:.85rem">'
+      +'<div style="height:8px;border-radius:5px;background:var(--gray-border);overflow:hidden"><div style="height:100%;width:'+Math.max(0,Math.min(100,pct))+'%;background:'+(pct>=100?'var(--green)':pct>0?'var(--accent)':'var(--gray)')+'"></div></div>'
+      +'<div style="font-size:10px;color:var(--text2);margin-top:.35rem;text-align:right">'+pct+'% collected</div>'
+    +'</div>';
+  document.getElementById('billpop-body').innerHTML=body;
+  document.getElementById('billpop-overlay').classList.add('show');
+}
+function closeProjectBilling(){ document.getElementById('billpop-overlay').classList.remove('show'); }
+function billpopCloseOutside(e){ if(e.target&&e.target.id==='billpop-overlay')closeProjectBilling(); }
+
 // Exports the projects currently in view (all active filters applied) to a CSV that opens in Excel.
 function exportProjectsCSV(){
   var rows=PM_EXPORT_ROWS||[];
@@ -2731,6 +2775,7 @@ function renderProjects(){
         +'<div class="pm-actions">'
           +(p.kickoffUrl?'<a class="pm-act-btn" title="Open Kickoff Sheet in Google Sheets" href="'+p.kickoffUrl+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="text-decoration:none">📄</a>':'')
           +'<button class="pm-act-btn" title="Gantt" onclick="openGanttPanel('+p.id+');event.stopPropagation()">📊</button>'
+          +'<button class="pm-act-btn" title="Billing summary" onclick="showProjectBilling('+p.id+',event)">💰</button>'
           +'<button class="pm-act-btn" title="Edit" onclick="editItem(\'project\','+p.id+',event)">✏️</button>'
           +'<button class="pm-act-btn" title="Delete" onclick="deleteItem(\'projects\','+p.id+',event)">🗑️</button>'
         +'</div>'
